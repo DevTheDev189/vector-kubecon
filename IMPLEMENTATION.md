@@ -242,7 +242,7 @@ You are an autonomous principal engineer executing this specification from top t
 
 ### 4.4 Phase 4 Verification Gate & PR #4
 - [x] Run `cargo test --workspace` and test `POST /api/surge` followed by `POST /api/surge/reset`.
-- [ ] Push Commit 2 to **PR #4**, verify CI passes cleanly, and merge to `main`.
+- [x] Push Commit 2 to **PR #4**, verify CI passes cleanly, and merge to `main`.
 
 ---
 
