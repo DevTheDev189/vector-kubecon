@@ -1,3 +1,13 @@
+> **Recovery update (2026-11-09):** Phase 4 PR #4 is merged. Phase 5 frontend
+> recovered and verified: production build, five Pinia state tests, and a live
+> desktop/mobile browser flow (profile sync, 12-room map, surge reroute, quiet mode,
+> QR badge, handshake/vault, reset, deep links, Escape, and overflow checks).
+> Fixed room hydration/SSE race and first-install offline asset caching.
+> `/swapfile_fast` provides 16 GB additional swap. Continue using one Cargo job
+> and the low-memory linker wrapper; do not restart WSL or Tailscale.
+> Recommendations are personalized: Kelsey's live profile routed to the
+> Mezzanine Community Circle, so Room 250A is not a universal result.
+>
 > **Continuation update (2026-11-09):** Phase 3 was already merged as PR #3.
 > Phase 4 implementation is complete on `feat/phase-4-crowd-surge-and-sre-trap`
 > in PR #4. All six workspace tests, Clippy, and the live simulator smoke tests
