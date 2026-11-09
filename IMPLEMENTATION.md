@@ -23,46 +23,46 @@ You are an autonomous principal engineer executing this specification from top t
 **Goal:** Establish the Rust Cargo workspace, Sonar Gitar repository rules, GitHub Actions CI, local Elasticsearch + Kubernetes manifests for Radar, and the foundational Rust `axum` configuration, error handling, and Dash0 OpenTelemetry pipeline.
 
 ### 1.1 Repository Root & Sonar Gitar Configuration
-- [ ] **Create `.gitignore`**
+- [x] **Create `.gitignore`**
   - Ignore `/target`, `/frontend-pwa/node_modules`, `/frontend-pwa/dist`, `.env`, `*.log`, `.DS_Store`.
-- [ ] **Create `.env.example`**
+- [x] **Create `.env.example`**
   - Define documented keys: `PORT=8080`, `PUBLIC_BASE_URL=https://vector.winslow.plus`, `SESSION_SECRET`, `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `OPENAI_API_KEY`, `OPENAI_MODEL=gpt-6.1-sol`, `OPENAI_EMBEDDING_MODEL=text-embedding-3-small`, `ELASTICSEARCH_URL=http://127.0.0.1:9200`, `DASH0_OTLP_ENDPOINT`, `DASH0_AUTH_TOKEN`, `DASH0_DATASET=default`, `RUST_LOG=info,backend_api=debug`.
-- [ ] **Create `.gitar/rules.md` (Sonar / Gitar Track — Mandatory)**
+- [x] **Create `.gitar/rules.md` (Sonar / Gitar Track — Mandatory)**
   - Define 5 strict repository invariants for Gitar automated PR review and auto-fixing:
     1. All public `axum` handlers in `backend-api/src/routes/*.rs` MUST carry `#[tracing::instrument(skip_all, fields(http.route = ...))]` for Dash0 observability.
     2. All timestamps across models and Elasticsearch payloads MUST use `chrono::DateTime<chrono::Utc>` (RFC3339 UTC). Naive timestamps are forbidden.
     3. Route handlers and services MUST NOT use `.unwrap()` or `.expect()` on fallible I/O, HTTP, or JSON operations; propagate via `?` into `ApiError`.
     4. All session cookies MUST enforce `HttpOnly`, `SameSite::Lax`, and HMAC-SHA256 signature verification.
     5. All talk and room queries MUST preserve `accessibility` and `decibel_level` metadata required by the Merge Forward sensory router.
-- [ ] **Create `.github/workflows/ci.yml`**
+- [x] **Create `.github/workflows/ci.yml`**
   - Configure GitHub Actions workflow triggered on `pull_request` and `push` to `main`:
     - Job 1 (`rust-check`): Runs `cargo fmt --check`, `cargo clippy --all-targets -- -D warnings`, and `cargo test --workspace`.
     - Job 2 (`frontend-check`): Runs `npm ci`, `npm run typecheck`, and `npm run build` in `frontend-pwa/`.
-- [ ] **Create `Caddyfile`**
+- [x] **Create `Caddyfile`**
   - Document reverse proxy for `vector.winslow.plus` -> `127.0.0.1:8080` with `flush_interval -1` (for zero-buffering SSE streams) and `encode zstd gzip`.
-- [ ] **Create `docker-compose.yml`**
+- [x] **Create `docker-compose.yml`**
   - Define `elasticsearch` service (`docker.elastic.co/elasticsearch/elasticsearch:8.15.0`) with `discovery.type=single-node`, `xpack.security.enabled=false`, `ES_JAVA_OPTS=-Xms1g -Xmx1g`, port `9200:9200`, and healthcheck on `http://localhost:9200/_cluster/health`.
 
 ### 1.2 Kubernetes Manifests for Radar Track (`k8s/`)
-- [ ] **Create `k8s/namespace.yaml`**
+- [x] **Create `k8s/namespace.yaml`**
   - Define namespace `vector-prod` with labels `app.kubernetes.io/part-of: vector-kubecon` and `radar.skyhook.io/monitored: "true"`.
-- [ ] **Create `k8s/elasticsearch-statefulset.yaml`**
+- [x] **Create `k8s/elasticsearch-statefulset.yaml`**
   - Define `StatefulSet` and headless `Service` (`elasticsearch:9200`) inside `vector-prod` with readiness probes and memory limits (`2Gi`).
-- [ ] **Create `k8s/vector-api-deployment.yaml`**
+- [x] **Create `k8s/vector-api-deployment.yaml`**
   - Define `Deployment` (`vector-api`, 2 replicas) and `Service` (`NodePort` `30080` -> container port `8080`, mapped to host `18081`) with `/api/health` liveness and readiness probes, env vars from `Secret`/`ConfigMap`, and resource requests/limits (`cpu: 250m/1000m`, `memory: 256Mi/512Mi`).
-- [ ] **Create `Dockerfile`**
+- [x] **Create `Dockerfile`**
   - Multi-stage build: Stage 1 (`node:22-alpine`) builds `frontend-pwa/dist`; Stage 2 (`rust:1.82-bookworm`) compiles `backend-api` and `crowd-simulator` in `--release`; Stage 3 (`debian:bookworm-slim` with `ca-certificates` and `libssl3`) copies binaries, `seed/`, and `frontend-pwa/dist` into `/app`.
 
 ### 1.3 Rust Workspace & Core Telemetry (`backend-api/src/`)
-- [ ] **Create Root `Cargo.toml` and `backend-api/Cargo.toml` + `crowd-simulator/Cargo.toml`**
+- [x] **Create Root `Cargo.toml` and `backend-api/Cargo.toml` + `crowd-simulator/Cargo.toml`**
   - Configure workspace members `["backend-api", "crowd-simulator"]` and all dependencies (`axum 0.7`, `axum-extra 0.9`, `tokio`, `reqwest 0.12`, `serde`, `serde_json`, `chrono`, `uuid`, `hmac`, `sha2`, `base64`, `opentelemetry 0.26`, `opentelemetry_sdk 0.26`, `opentelemetry-otlp 0.26`, `tracing-opentelemetry 0.27`, `tower-http 0.6`).
-- [ ] **Create `backend-api/src/config.rs` (~140 LOC)**
+- [x] **Create `backend-api/src/config.rs` (~140 LOC)**
   - Implement `AppConfig::from_env()` loading all environment variables with sensible local defaults so `cargo test` and local dev boot cleanly even if optional keys are missing.
-- [ ] **Create `backend-api/src/error.rs` (~160 LOC)**
+- [x] **Create `backend-api/src/error.rs` (~160 LOC)**
   - Implement `ApiError` enum (`BadRequest`, `Unauthorized`, `NotFound`, `ElasticError`, `OpenAiError`, `GitHubError`, `InternalError`) implementing `axum::response::IntoResponse`.
   - Automatically extract the current OpenTelemetry `trace_id` from the active `tracing::Span` and return structured JSON:
     `{ "error": { "code": "...", "message": "...", "trace_id": "...", "timestamp_utc": "..." } }`.
-- [ ] **Create `backend-api/src/telemetry.rs` (~280 LOC) (Dash0 $4,000 Track Core)**
+- [x] **Create `backend-api/src/telemetry.rs` (~280 LOC) (Dash0 $4,000 Track Core)**
   - Initialize `opentelemetry_otlp` trace exporter and periodic metric reader pointed at `DASH0_OTLP_ENDPOINT` with `Authorization: Bearer <DASH0_AUTH_TOKEN>` headers (falling back gracefully to stdout structured JSON spans when `DASH0_OTLP_ENDPOINT` is empty during unit tests).
   - Create singleton `TelemetryMetrics` struct holding OpenTelemetry instruments:
     - `room_occupancy_ratio: Gauge<f64>` (`vector.room.occupancy_ratio`)
@@ -72,15 +72,15 @@ You are an autonomous principal engineer executing this specification from top t
     - `openai_tokens_total: Counter<u64>` (`vector.gen_ai.tokens_total`)
     - `active_sse_clients: UpDownCounter<i64>` (`vector.sse.active_clients`)
   - Provide helper `current_trace_id() -> String` to attach live Dash0 trace IDs to API responses and SSE events.
-- [ ] **Create `backend-api/src/state.rs` (~120 LOC)**
+- [x] **Create `backend-api/src/state.rs` (~120 LOC)**
   - Define `AppState` (`Arc<InnerState>`) holding `config: AppConfig`, `http: reqwest::Client`, `elastic: ElasticClient`, `openai: OpenAiEngine`, `github: GitHubScraper`, `metrics: TelemetryMetrics`, and `sse_tx: tokio::sync::broadcast::Sender<SseEvent>`.
-- [ ] **Create minimal `backend-api/src/main.rs` and `crowd-simulator/src/main.rs` stubs**
+- [x] **Create minimal `backend-api/src/main.rs` and `crowd-simulator/src/main.rs` stubs**
   - Expose `GET /api/health` returning `{ "status": "ok", "service": "vector-api", "trace_id": "...", "timestamp_utc": "..." }`.
 
 ### 1.4 Phase 1 Verification Gate & PR #1
-- [ ] Run `cargo check --workspace` and `cargo test --workspace` — must exit `0` with zero warnings.
-- [ ] Start Elasticsearch (`docker compose up -d elasticsearch`) and verify `curl -s http://127.0.0.1:9200` returns cluster info.
-- [ ] Commit all files on `feat/phase-1-workspace-and-infra`, push to GitHub, open **PR #1**, verify Gitar/CI runs, and merge to `main`.
+- [x] Run `cargo check --workspace` and `cargo test --workspace` — must exit `0` with zero warnings.
+- [x] Start Elasticsearch (`docker compose up -d elasticsearch`) and verify `curl -s http://127.0.0.1:9200` returns cluster info.
+- [x] Commit all files on `feat/phase-1-workspace-and-infra`, push to GitHub, open **PR #1**, verify Gitar/CI runs, and merge to `main`.
 
 ---
 

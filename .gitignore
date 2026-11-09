@@ -1,0 +1,6 @@
+/target
+/frontend-pwa/node_modules
+/frontend-pwa/dist
+.env
+*.log
+.DS_Store
