@@ -8,7 +8,10 @@
 > Both localhost:8080 and https://vector.winslow.plus return the built SPA (200).
 > The running host API is a foreground development process, not a durable
 > systemd/Kubernetes deployment. See docs/LOCAL_DEVELOPMENT.md for repeatable checks.
-> Phase 6 PR/CI/merge status will be recorded after publishing.
+> Phase 6 implementation is in PR #6:
+> https://github.com/DevTheDev189/vector-kubecon/pull/6
+> Both GitHub CI jobs passed, including the integrated browser tests.
+> Consult that PR for the final merge record. All six implementation phases are complete.
 >
 > **Recovery update (2026-11-09):** Phase 4 PR #4 is merged. Phase 5 frontend
 > recovered and verified: production build, five Pinia state tests, and a live

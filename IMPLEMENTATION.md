@@ -346,4 +346,4 @@ You are an autonomous principal engineer executing this specification from top t
 ### 6.3 Final Verification Gate & PR #6
 - [x] Run `cargo test --workspace` — all unit and E2E tests must pass 100%.
 - [x] Start `backend-api` on port `8080` and verify `curl -I http://127.0.0.1:8080` serves the Vue SPA `index.html` and `curl -s http://127.0.0.1:8080/api/health` returns `200 OK`.
-- [ ] Commit final state (with all `[x]` boxes checked in `IMPLEMENTATION.md`) on `feat/phase-6-production-deploy-and-e2e`, push to GitHub, open **PR #6**, verify available automated review and CI, and merge to `main` (no Gitar review was configured on PR #5).
+- [x] Commit final state (with all `[x]` boxes checked in `IMPLEMENTATION.md`) on `feat/phase-6-production-deploy-and-e2e`, push to GitHub, open **PR #6**, verify available automated review and CI, and merge to `main` (no Gitar review was configured on PR #5).
