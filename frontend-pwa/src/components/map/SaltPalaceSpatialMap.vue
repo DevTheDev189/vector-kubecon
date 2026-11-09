@@ -26,7 +26,30 @@ const floor = ref<Floor>(1),
   zoom = ref(1),
   offset = ref({ x: 0, y: 0 });
 const searchQuery = ref(""),
-  quietOnly = ref(false);
+  quietOnly = ref(false),
+  finderOpen = ref(false);
+const searchInput = ref<HTMLInputElement>(),
+  finderButton = ref<HTMLButtonElement>(),
+  searchPanel = ref<HTMLElement>(),
+  mapSection = ref<HTMLElement>();
+function openFinder(quiet = false) {
+  finderOpen.value = true;
+  quietOnly.value = quiet;
+  searchQuery.value = "";
+  void nextTick(() =>
+    quiet
+      ? searchPanel.value
+          ?.querySelector<HTMLButtonElement>(".room-search-results button")
+          ?.focus()
+      : searchInput.value?.focus(),
+  );
+}
+function closeFinder(restoreFocus = true) {
+  finderOpen.value = false;
+  searchQuery.value = "";
+  quietOnly.value = false;
+  if (restoreFocus) void nextTick(() => finderButton.value?.focus());
+}
 const isQuiet = (room: RoomState) =>
   !room.active_talk_id && room.decibel_level < 45 && room.occupancy_ratio < 0.2;
 const quietRooms = computed(() =>
@@ -51,21 +74,7 @@ const searchResults = computed(() => {
     .slice(0, 8);
 });
 function focusRoom(roomId: string) {
-  const space = roomSpace(roomId);
-  if (!space) return;
-  store.selectedRoomId = roomId;
-  floor.value = space.floor;
-  resetView();
-  searchQuery.value = "";
-  quietOnly.value = false;
-  void nextTick(() =>
-    svg.value?.scrollIntoView({
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        ? "auto"
-        : "smooth",
-      block: "center",
-    }),
-  );
+  store.inspectRoomOnMap(roomId);
 }
 const svg = ref<SVGSVGElement>();
 let drag: { x: number; y: number; ox: number; oy: number } | null = null;
@@ -84,8 +93,10 @@ const origin = computed(() =>
 const focused = computed(() =>
   roomSpace(
     store.selectedRoomId ||
-      destination.value?.roomId ||
-      store.activeTalk?.room_id,
+      store.activeTalk?.room_id ||
+      (store.selectedSlot?.is_sensory_break
+        ? store.haven?.room_id
+        : destination.value?.roomId),
   ),
 );
 watch(
@@ -96,6 +107,31 @@ watch(
       resetView();
     }
   },
+);
+watch(
+  () => store.mapFocusVersion,
+  () => {
+    closeFinder(false);
+    const target = focused.value;
+    if (target) floor.value = target.floor;
+    resetView();
+    void nextTick(() => {
+      mapSection.value?.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "auto"
+          : "smooth",
+        block: "start",
+      });
+      svg.value?.focus({ preventScroll: true });
+    });
+  },
+);
+const inspectingRoom = computed(
+  () =>
+    !!store.selectedRoomId &&
+    store.selectedRoomId !==
+      (store.activeTalk?.room_id ||
+        (store.selectedSlot?.is_sensory_break ? store.haven?.room_id : "")),
 );
 const displayed = computed(() =>
   spaces.filter((space) => space.floor === floor.value),
@@ -171,13 +207,21 @@ const visibleOrigin = computed(() =>
 </script>
 <template>
   <section
+    ref="mapSection"
     class="spatial-map architectural-map"
     :class="{ expanded: store.isMapExpanded }"
   >
     <div class="map-heading">
       <div>
         <span class="eyebrow"><Layers :size="13" /> SALT PALACE</span>
-        <p class="map-subtitle">A little perspective. Your next move.</p>
+        <p class="map-subtitle">
+          {{
+            store.activeTalk
+              ? "Selected session · " +
+                store.activeTalk.room_name.replace(/\s*\(.*/, "")
+              : "Explore the conference spaces."
+          }}
+        </p>
       </div>
       <button
         class="icon-button"
@@ -191,13 +235,48 @@ const visibleOrigin = computed(() =>
         />
       </button>
     </div>
-    <div class="room-discovery">
+    <div v-if="store.authenticated" class="map-discovery-actions">
+      <button
+        ref="finderButton"
+        :aria-expanded="finderOpen"
+        aria-controls="room-finder-panel"
+        @click="finderOpen ? closeFinder() : openFinder()"
+      >
+        <Search :size="15" /> Find your room
+      </button>
+      <button
+        class="quiet-spaces-shortcut"
+        :aria-expanded="finderOpen && quietOnly"
+        aria-controls="room-finder-panel"
+        @click="openFinder(true)"
+      >
+        <Leaf :size="15" /> Quiet spaces <span>{{ quietRooms.length }}</span>
+      </button>
+    </div>
+    <div
+      v-if="finderOpen"
+      id="room-finder-panel"
+      ref="searchPanel"
+      class="room-discovery"
+      @keydown.esc.stop.prevent="closeFinder()"
+    >
+      <div class="finder-panel-heading">
+        <strong>Find a room</strong
+        ><button
+          class="icon-button"
+          aria-label="Close room search"
+          @click="closeFinder()"
+        >
+          <X :size="16" />
+        </button>
+      </div>
       <label class="room-search-label" for="room-search"
         ><Search :size="17" /> Find your room</label
       >
       <div class="room-search-field">
         <Search :size="18" /><input
           id="room-search"
+          ref="searchInput"
           v-model="searchQuery"
           type="search"
           placeholder="Room number, hall, or session…"
@@ -279,6 +358,7 @@ const visibleOrigin = computed(() =>
     <div class="map-viewport">
       <svg
         ref="svg"
+        tabindex="-1"
         :viewBox="viewBox"
         role="group"
         :aria-label="`Salt Palace architectural map, ${floorNames[floor]}`"
@@ -466,6 +546,9 @@ const visibleOrigin = computed(() =>
       ><span class="muted">{{ floorNames[floor] }}</span>
     </div>
     <div v-if="store.selectedRoom" class="map-selection" aria-live="polite">
+      <span class="map-context-label">{{
+        inspectingRoom ? "ROOM LOOKUP" : "YOUR SELECTED SESSION"
+      }}</span>
       <div>
         <strong>{{ store.selectedRoom.room_name }}</strong
         ><span>{{
@@ -479,6 +562,13 @@ const visibleOrigin = computed(() =>
         ><span>{{ store.selectedRoom.decibel_level.toFixed(1) }} dB</span>
       </div>
     </div>
+    <button
+      v-if="inspectingRoom && (store.activeTalk || store.haven)"
+      class="return-to-session"
+      @click="store.showSessionOnMap()"
+    >
+      <MoveUpRight :size="15" /> Back to my session
+    </button>
     <div v-if="destination" class="route-summary">
       <MoveUpRight :size="17" />
       <div>

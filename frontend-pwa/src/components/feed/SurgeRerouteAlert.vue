@@ -16,7 +16,7 @@ const store = useVectorStore();
       </p>
       <span>{{
         store.activeSurgeAlert.recommended_alternative
-          ? "Your next best match is ready below."
+          ? "Your recommended day now includes an open alternative."
           : "No open alternative meets your preferences yet."
       }}</span>
     </div>

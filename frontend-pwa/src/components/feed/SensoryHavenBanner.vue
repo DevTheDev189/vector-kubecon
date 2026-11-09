@@ -26,6 +26,13 @@ const store = useVectorStore();
         </p></template
       >
       <p v-else>No verified quiet room is available right now.</p>
+      <button
+        v-if="store.haven"
+        class="text-button"
+        @click="store.inspectRoomOnMap(store.haven.room_id)"
+      >
+        Show quiet space ↗
+      </button>
     </div>
   </div>
 </template>

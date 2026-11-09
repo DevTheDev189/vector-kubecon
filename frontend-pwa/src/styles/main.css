@@ -2117,3 +2117,462 @@ label {
 .quiet-map-pin path {
   fill: #8bf4ff;
 }
+
+/* Schedule-first attendee flow: day, map, then people. */
+.mobile-shell {
+  overflow: clip;
+}
+.attendee-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  margin: 0;
+  padding: 13px 16px;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  background: #101416f5;
+  backdrop-filter: blur(18px);
+  gap: 7px;
+}
+.attendee-toolbar .telemetry-location {
+  gap: 8px;
+}
+.attendee-toolbar .telemetry-location strong {
+  font-size: 16px;
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+.attendee-toolbar .telemetry-location small {
+  font-size: 9px;
+  margin-top: 4px;
+}
+.attendee-toolbar .quiet-toggle {
+  font-size: 11px;
+  padding-inline: 9px;
+}
+.toolbar-vault {
+  position: relative;
+}
+.toolbar-vault > span {
+  position: absolute;
+  top: -4px;
+  right: -3px;
+  display: grid;
+  place-items: center;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 3px;
+  border-radius: 6px;
+  background: #67e8f9;
+  color: #062e36;
+  font:
+    9px "Geist Mono Variable",
+    monospace;
+}
+.day-calendar {
+  padding: 22px 18px 18px;
+  scroll-margin-top: 85px;
+}
+.day-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 12px;
+  margin-bottom: 17px;
+}
+.day-heading .eyebrow {
+  font-size: 8px;
+  color: #87bfc8;
+  letter-spacing: 1px;
+}
+.day-heading h1 {
+  font-size: 23px;
+  line-height: 1.13;
+  letter-spacing: -0.8px;
+  font-weight: 550;
+  margin-top: 7px;
+  max-width: 240px;
+}
+.day-date {
+  flex-shrink: 0;
+  text-align: right;
+  padding-bottom: 1px;
+}
+.day-date strong {
+  font-size: 11px;
+  font-weight: 500;
+  display: block;
+}
+.day-date span {
+  display: block;
+  color: var(--muted);
+  margin-top: 5px;
+  font-size: 9px;
+}
+.agenda-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  overflow: hidden;
+}
+.agenda-row + .agenda-row {
+  border-top: 1px solid #ffffff0b;
+}
+.agenda-select {
+  display: flex;
+  width: 100%;
+  gap: 12px;
+  align-items: center;
+  border: 0;
+  border-radius: 0;
+  padding: 12px;
+  min-height: 70px;
+  text-align: left;
+  background: #141719;
+  position: relative;
+}
+.agenda-select:hover:not(:disabled) {
+  background: #1b2225;
+}
+.agenda-row.selected .agenda-select {
+  background: linear-gradient(110deg, #22d3ee16, #132023 80%);
+  box-shadow: inset 3px 0 #67e8f9;
+}
+.agenda-time {
+  width: 65px;
+  flex-shrink: 0;
+}
+.agenda-time time {
+  font:
+    11px "Geist Mono Variable",
+    monospace;
+  color: #e4edef;
+  white-space: nowrap;
+}
+.agenda-time small {
+  display: block;
+  margin-top: 5px;
+  color: #80949b;
+  font:
+    9px "Geist Mono Variable",
+    monospace;
+}
+.agenda-row.selected .agenda-time time {
+  color: #a5f3fc;
+}
+.agenda-session {
+  min-width: 0;
+  flex: 1;
+}
+.agenda-session > strong {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.agenda-session > span {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: #9aadb4;
+  margin-top: 5px;
+  line-height: 1.4;
+}
+.agenda-session em {
+  color: #f4a8cf;
+  font-size: 9px;
+  font-style: normal;
+  padding-left: 4px;
+}
+.agenda-bookmark {
+  flex-shrink: 0;
+  color: #95cbd5;
+}
+.agenda-selected-dot {
+  width: 5px;
+  height: 5px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #67e8f9;
+}
+.session-actions {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 9px;
+  position: relative;
+}
+.session-details {
+  flex: 1;
+  min-width: 0;
+}
+.session-details > summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #b8c9cf;
+  font-size: 11px;
+  width: fit-content;
+}
+.session-details > summary::marker {
+  content: "";
+}
+.session-details[open] > summary svg {
+  transform: rotate(180deg);
+}
+.session-details[open] {
+  padding-top: 44px;
+  width: 100%;
+}
+.session-details[open] > summary {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.session-details .talk-card {
+  margin-top: 8px;
+}
+.session-details .talk-card h2 {
+  font-size: 18px;
+}
+.session-map-button {
+  min-height: 44px;
+  font-size: 11px;
+  color: #b9f5ff;
+  border-color: #22d3ee2b;
+  background: #22d3ee08;
+  white-space: nowrap;
+}
+.session-details[open] + .session-map-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.session-details[open] .talk-card {
+  width: calc(100% + 0px);
+}
+.session-empty {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--muted);
+  font-size: 12px;
+  display: flex;
+  gap: 10px;
+  line-height: 1.6;
+  margin-top: 8px;
+}
+.day-calendar > .haven-banner {
+  margin: 12px 0 0;
+}
+.day-calendar > .surge-banner {
+  margin-top: -3px;
+}
+.architectural-map {
+  scroll-margin-top: 75px;
+}
+.architectural-map .map-heading {
+  padding: 18px 18px 12px;
+}
+.map-subtitle {
+  font-size: 11px;
+  line-height: 1.5;
+}
+.map-discovery-actions {
+  display: flex;
+  gap: 8px;
+  padding: 0 16px 14px;
+}
+.map-discovery-actions > button {
+  min-height: 44px;
+  font-size: 11px;
+  flex: 1;
+  justify-content: center;
+}
+.map-discovery-actions .quiet-spaces-shortcut {
+  color: #abe8ee;
+  background: #22d3ee06;
+  border-color: #22d3ee1c;
+}
+.quiet-spaces-shortcut > span {
+  color: #071b20;
+  background: #9ae5ef;
+  min-width: 17px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 9px;
+}
+.finder-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: -7px -5px 8px 0;
+}
+.finder-panel-heading strong {
+  color: #e2f5f9;
+  font-size: 13px;
+}
+.room-discovery .room-search-label {
+  font-size: 12px;
+  margin-top: 4px;
+}
+.map-context-label {
+  color: #7a9ba6 !important;
+  font-size: 8px !important;
+  letter-spacing: 1px;
+  font-family: "Geist Mono Variable", monospace;
+  margin: 0 0 4px !important;
+}
+.return-to-session {
+  margin: 0 18px 15px;
+  min-height: 44px;
+  color: #b9f5ff;
+  font-size: 11px;
+}
+.builder-identity {
+  padding: 23px 20px 14px;
+  border-top: 1px solid var(--border);
+}
+.builder-identity h2 {
+  font-size: 18px;
+  font-weight: 550;
+}
+.builder-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 17px;
+}
+.builder-summary .avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+}
+.builder-summary strong {
+  font-size: 14px;
+  font-weight: 550;
+}
+.builder-summary p {
+  font-size: 11px;
+  margin-top: 3px;
+  color: #a6bac2;
+  line-height: 1.5;
+}
+.builder-identity .tag-list {
+  margin-top: 14px;
+}
+.builder-identity .tag-list span {
+  font-size: 10px;
+  padding: 5px 7px;
+}
+.builder-identity .icebreaker {
+  margin: 4px 0 0;
+}
+.builder-identity .icebreaker > summary,
+.account-options > summary {
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 5px 0;
+  color: #aebfc6;
+}
+.builder-identity .icebreaker p {
+  font-size: 12px;
+  padding: 5px 0 12px;
+}
+.account-options .signed-in-account {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 4px;
+}
+.hallway-section {
+  padding-top: 7px;
+}
+.hallway-section .eyebrow {
+  font-size: 8px;
+}
+.hallway-section h2 {
+  font-size: 19px;
+  font-weight: 550;
+}
+.peer-info strong {
+  font-size: 12px;
+}
+.peer-info span {
+  font-size: 10px;
+  line-height: 1.5;
+}
+.peer-info small {
+  font-size: 9px;
+  line-height: 1.5;
+}
+.mobile-demo-controls {
+  border-top: 1px solid var(--border);
+}
+.attendee-toolbar .icon-button {
+  flex-shrink: 0;
+}
+@media (max-width: 1023px) {
+  .attendee-toolbar {
+    padding-top: max(12px, env(safe-area-inset-top));
+  }
+  .day-heading h1 {
+    font-size: 22px;
+    max-width: 210px;
+  }
+  .day-date strong {
+    font-size: 10px;
+  }
+  .agenda-select {
+    padding: 11px;
+    min-height: 70px;
+    gap: 10px;
+  }
+  .agenda-time {
+    width: 60px;
+  }
+  .agenda-time time {
+    font-size: 10px;
+  }
+  .agenda-session > strong {
+    font-size: 12px;
+  }
+  .agenda-time small {
+    font-size: 8px;
+  }
+  .day-calendar {
+    padding-top: 20px;
+  }
+  .day-date span {
+    font-size: 8px;
+  }
+}
+.agenda-select {
+  min-height: 60px;
+  padding-block: 10px;
+}
+.agenda-session > strong {
+  -webkit-line-clamp: 1;
+}
+.agenda-row.selected .agenda-session > strong {
+  -webkit-line-clamp: 2;
+}
+@media (max-width: 1023px) {
+  .agenda-select {
+    min-height: 60px;
+    padding-block: 10px;
+  }
+}

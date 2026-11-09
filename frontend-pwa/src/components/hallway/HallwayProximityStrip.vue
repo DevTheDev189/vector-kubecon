@@ -7,8 +7,8 @@ const store = useVectorStore();
   <section class="hallway-section">
     <div class="section-heading">
       <div>
-        <span class="eyebrow">THE HALLWAY TRACK</span>
-        <h2>Your kind of people.</h2>
+        <span class="eyebrow">NEARBY BUILDERS</span>
+        <h2>People like you</h2>
       </div>
       <span class="live-label"><span class="status-dot" /> NEARBY</span>
     </div>

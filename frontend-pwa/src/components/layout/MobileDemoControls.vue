@@ -4,9 +4,19 @@ import { SlidersHorizontal, Zap, RotateCcw } from "lucide-vue-next";
 import { useVectorStore } from "../../stores/vectorStore";
 const store = useVectorStore(),
   panel = ref<HTMLDetailsElement>();
-async function trigger() {
-  await store.triggerCrowdSurge();
-  if (!store.error && panel.value) panel.value.open = false;
+async function runDemo(action: () => Promise<void>) {
+  await action();
+  if (!store.error && panel.value) {
+    panel.value.open = false;
+    document
+      .querySelector(".day-calendar")
+      ?.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "auto"
+          : "smooth",
+        block: "start",
+      });
+  }
 }
 </script>
 <template>
@@ -15,9 +25,9 @@ async function trigger() {
       <SlidersHorizontal :size="14" /> Demo controls<span>ADMIN</span>
     </summary>
     <div>
-      <button :disabled="store.busy" @click="trigger">
+      <button :disabled="store.busy" @click="runDemo(store.triggerCrowdSurge)">
         <Zap :size="15" /> Trigger surge</button
-      ><button :disabled="store.busy" @click="store.resetSurge()">
+      ><button :disabled="store.busy" @click="runDemo(store.resetSurge)">
         <RotateCcw :size="15" /> Reset surge
       </button>
     </div>

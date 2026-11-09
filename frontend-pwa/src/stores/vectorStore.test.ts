@@ -7,6 +7,8 @@ import type {
   RoomState,
   SseEvent,
   StateResponse,
+  ScheduleSlot,
+  ScoredTalk,
 } from "../types/vector";
 const room = {
   room_id: "ballroom-b",
@@ -228,5 +230,54 @@ describe("quiet space discovery", () => {
     expect(store.sensoryHavens.map((r) => r.room_id)).toContain("quiet-test");
     store.handleEvent(update(61));
     expect(store.sensoryHavens).toEqual([]);
+  });
+});
+
+describe("calendar and map selection", () => {
+  it("keeps room lookup separate from the selected session and returns to it", () => {
+    const store = useVectorStore();
+    const talk = {
+      talk_id: "session-a",
+      room_id: "ballroom-b",
+      start_time: "2026-11-12T20:00:00Z",
+    } as ScoredTalk;
+    store.schedule = {
+      slots: [
+        { start_time: talk.start_time, primary_talk: talk },
+        {
+          start_time: "2026-11-12T21:15:00Z",
+          primary_talk: { ...talk, talk_id: "session-b", room_id: "room-250a" },
+        } as ScheduleSlot,
+      ],
+    } as typeof store.schedule;
+    store.rooms = [room, { ...room, room_id: "room-250a" }];
+    store.selectSlot(0);
+    store.inspectRoomOnMap("room-250a");
+    expect(store.selectedSlotIndex).toBe(0);
+    expect(store.activeTalk?.talk_id).toBe("session-a");
+    expect(store.selectedRoom?.room_id).toBe("room-250a");
+    store.showSessionOnMap();
+    expect(store.selectedRoom?.room_id).toBe("ballroom-b");
+    store.selectSlot(1);
+    expect(store.activeTalk?.talk_id).toBe("session-b");
+    expect(store.selectedRoom?.room_id).toBe("room-250a");
+  });
+  it("shows a surge alternative consistently in both calendar and map", () => {
+    const store = useVectorStore();
+    const slot = {
+      start_time: "2026-11-12T20:00:00Z",
+      primary_talk: { talk_id: "original", room_id: "ballroom-b" },
+    } as ScheduleSlot;
+    store.schedule = { slots: [slot] } as typeof store.schedule;
+    store.selectSlot(0);
+    store.activeSurgeAlert = {
+      recommended_alternative: {
+        talk_id: "alternative",
+        room_id: "room-250a",
+        start_time: slot.start_time,
+      },
+    } as typeof store.activeSurgeAlert;
+    expect(store.talkForSlot(slot)?.talk_id).toBe("alternative");
+    expect(store.activeTalk?.talk_id).toBe("alternative");
   });
 });

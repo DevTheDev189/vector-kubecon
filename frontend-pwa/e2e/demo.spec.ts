@@ -92,7 +92,52 @@ test("desktop and mobile attendee demo", async ({ page, context }) => {
   let handshakeId = "";
   try {
     await page.goto("/");
-    await expect(page.locator(".talk-card")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Your recommended day", exact: true }),
+    ).toBeVisible();
+    expect(await page.locator(".agenda-row").count()).toBeGreaterThanOrEqual(5);
+    expect(
+      await page
+        .locator(".day-calendar")
+        .evaluate(
+          (calendar) =>
+            !!(
+              calendar.compareDocumentPosition(
+                document.querySelector(".architectural-map")!,
+              ) & Node.DOCUMENT_POSITION_FOLLOWING
+            ),
+        ),
+    ).toBe(true);
+    expect(
+      await page
+        .locator(".architectural-map")
+        .evaluate(
+          (map) =>
+            !!(
+              map.compareDocumentPosition(
+                document.querySelector(".builder-identity")!,
+              ) & Node.DOCUMENT_POSITION_FOLLOWING
+            ),
+        ),
+    ).toBe(true);
+    await expect(
+      page.getByRole("searchbox", { name: "Find your room" }),
+    ).toHaveCount(0);
+    await expect(page.locator(".account-options")).not.toHaveAttribute(
+      "open",
+      "",
+    );
+    const dayState = await (await request.get("/api/state")).json();
+    const firstTalk = dayState.schedule.slots[0].primary_talk;
+    await page.locator('.agenda-row[data-slot-index="0"] button').click();
+    await page
+      .getByRole("button", { name: "View on map", exact: true })
+      .click();
+    if (firstTalk)
+      await expect(
+        page.locator(`.map-room[data-room-id="${firstTalk.room_id}"]`),
+      ).toHaveAttribute("aria-pressed", "true");
+    await page.locator('.agenda-row[data-slot-index="2"] button').click();
     await page
       .getByRole("button", { name: "01 First floor", exact: true })
       .click();
@@ -116,6 +161,19 @@ test("desktop and mobile attendee demo", async ({ page, context }) => {
     await page.locator('.map-room[data-room-id="room-250a"]').click();
     await expect(page.locator(".map-selection")).toContainText("Room 250A");
     const search = page.getByRole("searchbox", { name: "Find your room" });
+    await page
+      .getByRole("button", { name: "Find your room", exact: true })
+      .click();
+    await expect(search).toBeFocused();
+    await search.fill("355a");
+    await page.keyboard.press("Escape");
+    await expect(search).toHaveCount(0);
+    await expect(
+      page.getByRole("button", { name: "Find your room", exact: true }),
+    ).toBeFocused();
+    await page
+      .getByRole("button", { name: "Find your room", exact: true })
+      .click();
     await search.fill("355a");
     await page
       .locator(".room-search-results")
@@ -126,7 +184,7 @@ test("desktop and mobile attendee demo", async ({ page, context }) => {
       page.locator('.map-room[data-room-id="room-355a-quiet"]'),
     ).toBeVisible();
     await expect(page.locator(".quiet-map-pin")).toHaveCount(1);
-    await page.getByRole("button", { name: /Find a quiet space/ }).click();
+    await page.getByRole("button", { name: /Quiet spaces/ }).click();
     await expect(page.locator(".room-search-results button")).toHaveCount(5);
     await page
       .locator(".room-search-results")
@@ -134,6 +192,9 @@ test("desktop and mobile attendee demo", async ({ page, context }) => {
       .click();
     await expect(page.locator(".map-selection")).toContainText("Room 204B");
     await expect(page.locator(".avatar").first()).toHaveCSS("filter", "none");
+    await page
+      .getByRole("button", { name: "Find your room", exact: true })
+      .click();
     await search.fill("250a");
     await page
       .locator(".room-search-results")
@@ -165,14 +226,22 @@ test("desktop and mobile attendee demo", async ({ page, context }) => {
     expect(alert.recommended_alternative.room_id).not.toBe("ballroom-b");
     expect(alert.recommended_alternative.occupancy_ratio).toBeLessThan(0.98);
     await expect(page.locator(".surge-banner")).toBeVisible();
+    await expect(page.locator(".agenda-row.selected")).toContainText(
+      alert.recommended_alternative.title,
+    );
+    await page.locator(".session-details > summary").click();
+    await expect(page.locator(".agenda-list")).toBeVisible();
     await expect(page.locator(".talk-card")).toContainText(
       alert.recommended_alternative.title,
     );
+    await page.locator(".session-details > summary").click();
     await expect(page.locator(".reroute-path")).toHaveCount(0);
     await page
       .getByRole("button", { name: "Try quiet mode", exact: true })
       .click();
     await expect(page.locator(".haven-banner")).toBeVisible();
+    await page.getByRole("button", { name: "Show quiet space" }).click();
+    await expect(page.locator(".map-selection")).toContainText("Room 204B");
     await page
       .getByRole("button", { name: "Open QR badge", exact: true })
       .click();
@@ -210,6 +279,12 @@ test("desktop and mobile attendee demo", async ({ page, context }) => {
     ).toBe(true);
     await expect(page.locator(".judge-dock")).toBeHidden();
     await expect(page.locator(".spatial-map")).toBeVisible();
+    const selectedIndex = await page
+      .locator(".agenda-row.selected")
+      .getAttribute("data-slot-index");
+    await page
+      .getByRole("button", { name: "Find your room", exact: true })
+      .click();
     await search.fill("203a");
     await expect(page.locator(".room-search-results")).toBeVisible();
     expect(
@@ -222,6 +297,16 @@ test("desktop and mobile attendee demo", async ({ page, context }) => {
       .getByRole("button", { name: /Room 203A/ })
       .click();
     await expect(page.locator(".map-selection")).toContainText("Room 203A");
+    await expect(page.locator(".agenda-row.selected")).toHaveAttribute(
+      "data-slot-index",
+      selectedIndex!,
+    );
+    await page
+      .getByRole("button", { name: "Back to my session", exact: true })
+      .click();
+    await expect(
+      page.getByRole("button", { name: "Back to my session", exact: true }),
+    ).toHaveCount(0);
     const mobileControls = page.locator(".mobile-demo-controls");
     await mobileControls.locator("summary").click();
     await mobileControls
@@ -244,6 +329,7 @@ test("desktop and mobile attendee demo", async ({ page, context }) => {
     await request.post("/api/rooms/checkin", {
       data: { room_id: "room-250a", delta: 0, decibel_reading: originalNoise },
     });
+    await page.locator(".account-options > summary").click();
     await page.getByRole("button", { name: "Sign out", exact: true }).click();
     await expect(page.locator(".signin-copy")).toBeVisible();
     await expect(page.locator(".talk-card")).toHaveCount(0);
@@ -265,7 +351,7 @@ test("installed shell reloads offline without caching API responses", async ({
 }) => {
   await signInFixture(context);
   await page.goto("/");
-  await expect(page.locator(".talk-card")).toBeVisible();
+  await expect(page.locator(".agenda-list")).toBeVisible();
   await page.evaluate(async () => {
     await navigator.serviceWorker.ready;
     const keys = await caches.keys();

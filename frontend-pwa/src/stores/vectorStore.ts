@@ -10,6 +10,7 @@ import type {
   MatchedBuilder,
   RoomState,
   ScoredTalk,
+  ScheduleSlot,
   SseEvent,
   StateResponse,
   SurgeAlert,
@@ -60,18 +61,38 @@ export const useVectorStore = defineStore("vector", () => {
   );
   const slots = computed(() => schedule.value?.slots ?? []);
   const selectedSlot = computed(() => slots.value[selectedSlotIndex.value]);
-  const activeTalk = computed(() => {
+  function talkForSlot(slot?: ScheduleSlot) {
     const alternative = activeSurgeAlert.value?.recommended_alternative;
-    if (
-      alternative &&
-      alternative.start_time === selectedSlot.value?.start_time
-    )
-      return alternative;
-    return selectedSlot.value?.primary_talk ?? null;
-  });
+    return alternative && alternative.start_time === slot?.start_time
+      ? alternative
+      : (slot?.primary_talk ?? null);
+  }
+  const activeTalk = computed(() => talkForSlot(selectedSlot.value));
+  const mapFocusVersion = ref(0);
+  function selectSlot(index: number) {
+    if (index < 0 || index >= slots.value.length) return;
+    selectedSlotIndex.value = index;
+    selectedRoomId.value = "";
+  }
+  function inspectRoomOnMap(roomId: string) {
+    if (!rooms.value.some((room) => room.room_id === roomId)) return;
+    selectedRoomId.value = roomId;
+    mapFocusVersion.value++;
+  }
+  function showSessionOnMap() {
+    selectedRoomId.value =
+      !activeTalk.value && selectedSlot.value?.is_sensory_break
+        ? haven.value?.room_id || selectedSlot.value.sensory_haven_room || ""
+        : "";
+    mapFocusVersion.value++;
+  }
   const selectedRoom = computed(() =>
     rooms.value.find(
-      (r) => r.room_id === (selectedRoomId.value || activeTalk.value?.room_id),
+      (r) =>
+        r.room_id ===
+        (selectedRoomId.value ||
+          activeTalk.value?.room_id ||
+          (selectedSlot.value?.is_sensory_break ? haven.value?.room_id : "")),
     ),
   );
   const currentRoom = computed(() =>
@@ -409,6 +430,11 @@ export const useVectorStore = defineStore("vector", () => {
     sensoryHavens,
     hallwayMatches,
     handshakes,
+    talkForSlot,
+    selectSlot,
+    showSessionOnMap,
+    inspectRoomOnMap,
+    mapFocusVersion,
     selectedSlotIndex,
     selectedRoomId,
     isMapExpanded,
