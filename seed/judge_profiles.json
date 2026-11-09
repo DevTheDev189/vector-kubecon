@@ -1,0 +1,490 @@
+[
+  {
+    "username": "kelseyhightower",
+    "github_id": 110292,
+    "display_name": "Kelsey Hightower",
+    "avatar_url": "https://avatars.githubusercontent.com/u/110292?v=4",
+    "bio": "Open source developer. Minimalist. Cloud-Native evangelist.",
+    "company": "Community",
+    "github_url": "https://github.com/kelseyhightower",
+    "linkedin_url": "https://www.linkedin.com/in/kelseyhightower/",
+    "email": "kelsey@example.com",
+    "persona_title": "Cloud-Native Pioneer & Open Source Mentor",
+    "dna_tags": ["Kubernetes", "Architecture", "Minimalism", "eBPF", "Go", "Cloud-Native"],
+    "top_languages": ["Go", "Shell", "Python"],
+    "hallway_icebreaker": "Still advocating for deleting code instead of writing it. Let's discuss removing service mesh sidecars with pure eBPF.",
+    "ideal_talk_query": "minimalist kubernetes service mesh eBPF zero sidecar",
+    "top_repos": [
+      {
+        "name": "kubernetes-the-hard-way",
+        "description": "Bootstrap Kubernetes the hard way on Google Cloud Platform. No scripts.",
+        "language": "Shell",
+        "stars": 39500,
+        "topics": ["kubernetes", "tutorial", "cloud"],
+        "readme_excerpt": "Bootstrap Kubernetes the hard way without automated installers to understand every systemd daemon and TLS certificate."
+      },
+      {
+        "name": "nocode",
+        "description": "The best way to write secure and reliable applications. Write nothing; deploy nowhere.",
+        "language": "Text",
+        "stars": 58000,
+        "topics": ["philosophy", "security"],
+        "readme_excerpt": "No code is the best way to write secure and reliable applications."
+      }
+    ],
+    "current_room_id": "ballroom-b",
+    "coordinates": { "lat": 40.76630, "lon": -111.89670 },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.90,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": ["talk-keynote-opening", "talk-ebpf-rust-mesh"],
+    "bumped_from_talk_id": null,
+    "pin_code": "1942",
+    "updated_at": "2026-11-12T20:00:00Z"
+  },
+  {
+    "username": "wesnovack",
+    "github_id": 483921,
+    "display_name": "Wes Novack",
+    "avatar_url": "https://avatars.githubusercontent.com/u/483921?v=4",
+    "bio": "Staff Platform Engineer & Kubernetes Architect. Rust advocate.",
+    "company": "Plural",
+    "github_url": "https://github.com/wesnovack",
+    "linkedin_url": "https://www.linkedin.com/in/wesnovack/",
+    "email": "wes@example.com",
+    "persona_title": "Kubernetes Controller & Platform Architect",
+    "dna_tags": ["Rust", "Kubernetes", "Operators", "Controllers", "Platform Engineering", "Async"],
+    "top_languages": ["Rust", "Go", "TypeScript"],
+    "hallway_icebreaker": "Ask me about writing high-concurrency Kubernetes operators in Rust with kube-rs and eliminating memory leaks.",
+    "ideal_talk_query": "high speed kubernetes operators controllers rust kube-rs",
+    "top_repos": [
+      {
+        "name": "plural-artifacts",
+        "description": "Enterprise deployment manifests and custom Kubernetes controllers.",
+        "language": "Rust",
+        "stars": 1420,
+        "topics": ["kubernetes", "operators", "rust"],
+        "readme_excerpt": "High speed multi-cluster orchestration operators built in Rust."
+      }
+    ],
+    "current_room_id": "room-250a",
+    "coordinates": { "lat": 40.76655, "lon": -111.89645 },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.85,
+      "max_decibels": 72.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": ["talk-k8s-rust-operators"],
+    "bumped_from_talk_id": null,
+    "pin_code": "3821",
+    "updated_at": "2026-11-12T20:00:00Z"
+  },
+  {
+    "username": "rust-sre-dan",
+    "github_id": 921402,
+    "display_name": "Dan Reynolds",
+    "avatar_url": "https://avatars.githubusercontent.com/u/921402?v=4",
+    "bio": "Principal SRE & Telemetry Systems Engineer at Dash0.",
+    "company": "Dash0",
+    "github_url": "https://github.com/rust-sre-dan",
+    "linkedin_url": "https://www.linkedin.com/in/dan-reynolds-sre/",
+    "email": "dan@example.com",
+    "persona_title": "OpenTelemetry & Autonomous AI SRE Lead",
+    "dna_tags": ["OpenTelemetry", "Tracing", "Metrics", "Rust", "Dash0", "Autonomous SRE"],
+    "top_languages": ["Rust", "Go", "C++"],
+    "hallway_icebreaker": "Working on feeding distributed trace spans directly to autonomous LLM remediators. Ask about OTLP compression.",
+    "ideal_talk_query": "deep opentelemetry tracing autonomous AI SRE loops dash0",
+    "top_repos": [
+      {
+        "name": "dash0-rust-sdk",
+        "description": "Ultra low overhead OTLP exporter and trace context propagator.",
+        "language": "Rust",
+        "stars": 890,
+        "topics": ["opentelemetry", "tracing", "rust"],
+        "readme_excerpt": "Zero-alloc OTLP metrics and trace ingestion for Dash0."
+      }
+    ],
+    "current_room_id": "room-251c",
+    "coordinates": { "lat": 40.76670, "lon": -111.89630 },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.85,
+      "max_decibels": 70.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": true,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": ["talk-otel-ai-sre"],
+    "bumped_from_talk_id": null,
+    "pin_code": "7412",
+    "updated_at": "2026-11-12T20:00:00Z"
+  },
+  {
+    "username": "saiyampathak",
+    "github_id": 142857,
+    "display_name": "Saiyam Pathak",
+    "avatar_url": "https://avatars.githubusercontent.com/u/142857?v=4",
+    "bio": "Director of Technical Evangelism @ Civo. CNCF Ambassador.",
+    "company": "Civo",
+    "github_url": "https://github.com/saiyampathak",
+    "linkedin_url": "https://www.linkedin.com/in/saiyampathak/",
+    "email": "saiyam@example.com",
+    "persona_title": "Cloud-Native Evangelist & Kubernetes Educator",
+    "dna_tags": ["Kubernetes", "GitOps", "CNCF", "Civo", "DevOps", "Community"],
+    "top_languages": ["Go", "Python", "Shell"],
+    "hallway_icebreaker": "Passionate about simplifying cloud-native education and GitOps for junior developers.",
+    "ideal_talk_query": "continuous delivery GitOps flux argo kubernetes",
+    "top_repos": [
+      {
+        "name": "kubesimplify",
+        "description": "Making Cloud-Native easy for everyone.",
+        "language": "Markdown",
+        "stars": 4200,
+        "topics": ["kubernetes", "education", "cncf"],
+        "readme_excerpt": "Hands-on tutorials for modern container architectures."
+      }
+    ],
+    "current_room_id": "ballroom-b",
+    "coordinates": { "lat": 40.76630, "lon": -111.89670 },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.95,
+      "max_decibels": 80.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": ["talk-gitops-flux-argo"],
+    "bumped_from_talk_id": null,
+    "pin_code": "5512",
+    "updated_at": "2026-11-12T20:00:00Z"
+  },
+  {
+    "username": "estesp",
+    "github_id": 819201,
+    "display_name": "Phil Estes",
+    "avatar_url": "https://avatars.githubusercontent.com/u/819201?v=4",
+    "bio": "Principal Engineer @ AWS. containerd maintainer, Docker captain.",
+    "company": "AWS",
+    "github_url": "https://github.com/estesp",
+    "linkedin_url": "https://www.linkedin.com/in/philestes/",
+    "email": "phil@example.com",
+    "persona_title": "Container Runtime & AI Orchestration Architect",
+    "dna_tags": ["containerd", "Linux", "Runtimes", "AI", "vLLM", "OCI"],
+    "top_languages": ["Go", "C", "Rust"],
+    "hallway_icebreaker": "Co-maintaining containerd for a decade. Now working on dynamic GPU scheduling for massive LLMs.",
+    "ideal_talk_query": "container runtimes GPU fractioning vLLM distributed inference",
+    "top_repos": [
+      {
+        "name": "containerd",
+        "description": "An open and reliable container runtime.",
+        "language": "Go",
+        "stars": 16500,
+        "topics": ["containers", "oci", "runtimes"],
+        "readme_excerpt": "Core container runtime execution engine."
+      }
+    ],
+    "current_room_id": "room-151",
+    "coordinates": { "lat": 40.76560, "lon": -111.89740 },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.85,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": ["talk-gpu-scheduling-vllm"],
+    "bumped_from_talk_id": null,
+    "pin_code": "9123",
+    "updated_at": "2026-11-12T20:00:00Z"
+  },
+  {
+    "username": "mayak8s",
+    "github_id": 551920,
+    "display_name": "Maya Kube",
+    "avatar_url": "https://avatars.githubusercontent.com/u/551920?v=4",
+    "bio": "eBPF kernel hacker & Cilium core contributor.",
+    "company": "Isovalent",
+    "github_url": "https://github.com/mayak8s",
+    "linkedin_url": "https://www.linkedin.com/in/mayak8s/",
+    "email": "maya@example.com",
+    "persona_title": "eBPF Kernel Hacker & Cilium Specialist",
+    "dna_tags": ["eBPF", "Cilium", "Rust", "Networking", "Security", "Kernel"],
+    "top_languages": ["C", "Rust", "Go"],
+    "hallway_icebreaker": "Writing BPF map helpers for sockops redirection. Let's talk about removing proxy hops.",
+    "ideal_talk_query": "zero overhead service mesh ebpf cilium rust networking",
+    "top_repos": [
+      {
+        "name": "cilium-sockops",
+        "description": "Direct socket-level acceleration for Kubernetes pods.",
+        "language": "C",
+        "stars": 1100,
+        "topics": ["ebpf", "networking", "cilium"],
+        "readme_excerpt": "Socket bypass kernel program."
+      }
+    ],
+    "current_room_id": "ballroom-b",
+    "coordinates": { "lat": 40.76630, "lon": -111.89670 },
+    "sensory_prefs": {
+      "sensory_mode_enabled": true,
+      "max_crowd_ratio": 0.70,
+      "max_decibels": 55.0,
+      "require_wheelchair_access": true,
+      "require_live_captions": true,
+      "prefer_quiet_zones": true
+    },
+    "bookmarked_talk_ids": ["talk-ebpf-rust-mesh"],
+    "bumped_from_talk_id": "ballroom-b",
+    "pin_code": "2918",
+    "updated_at": "2026-11-12T20:00:00Z"
+  },
+  {
+    "username": "ebpf-alex",
+    "github_id": 718293,
+    "display_name": "Alex Chipman",
+    "avatar_url": "https://avatars.githubusercontent.com/u/718293?v=4",
+    "bio": "Staff eBPF Architect. Building Aya Rust framework for kernel tracing.",
+    "company": "Isovalent",
+    "github_url": "https://github.com/ebpf-alex",
+    "linkedin_url": "https://www.linkedin.com/in/ebpf-alex/",
+    "email": "alex@example.com",
+    "persona_title": "Aya Rust eBPF Framework Maintainer",
+    "dna_tags": ["eBPF", "Aya", "Rust", "Kernel", "Networking", "Systems"],
+    "top_languages": ["Rust", "C"],
+    "hallway_icebreaker": "Author of Aya eBPF probes in Rust. Ask me how to compile BPF bytecode with cargo.",
+    "ideal_talk_query": "service mesh ebpf aya rust zero overhead",
+    "top_repos": [
+      {
+        "name": "aya-examples",
+        "description": "Production eBPF tracing programs written purely in Rust.",
+        "language": "Rust",
+        "stars": 2400,
+        "topics": ["ebpf", "rust", "aya"],
+        "readme_excerpt": "Pure Rust eBPF framework."
+      }
+    ],
+    "current_room_id": "ballroom-b",
+    "coordinates": { "lat": 40.76630, "lon": -111.89670 },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.85,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": ["talk-ebpf-rust-mesh"],
+    "bumped_from_talk_id": null,
+    "pin_code": "4102",
+    "updated_at": "2026-11-12T20:00:00Z"
+  },
+  {
+    "username": "simonschrottner",
+    "github_id": 319204,
+    "display_name": "Simon Schrottner",
+    "avatar_url": "https://avatars.githubusercontent.com/u/319204?v=4",
+    "bio": "Search & Database Engineer @ Elastic. Vector retrieval specialist.",
+    "company": "Elastic",
+    "github_url": "https://github.com/simonschrottner",
+    "linkedin_url": "https://www.linkedin.com/in/simon-schrottner/",
+    "email": "simon@example.com",
+    "persona_title": "Elasticsearch 8.15 & Hybrid RRF Search Specialist",
+    "dna_tags": ["Elasticsearch", "Vector Search", "RRF", "Dense Retrieval", "Databases"],
+    "top_languages": ["Java", "Rust", "Python"],
+    "hallway_icebreaker": "Optimizing Reciprocal Rank Fusion and HNSW cosine vector search in Elasticsearch 8.15.",
+    "ideal_talk_query": "hybrid rrf elasticsearch dense vector search BM25",
+    "top_repos": [
+      {
+        "name": "elasticsearch-rs-client",
+        "description": "High performance Rust client for Elasticsearch 8.x.",
+        "language": "Rust",
+        "stars": 750,
+        "topics": ["elasticsearch", "vector-search", "rust"],
+        "readme_excerpt": "Async REST client for vector queries."
+      }
+    ],
+    "current_room_id": "room-150",
+    "coordinates": { "lat": 40.76575, "lon": -111.89725 },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.80,
+      "max_decibels": 65.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": ["talk-clickhouse-vector-k8s"],
+    "bumped_from_talk_id": null,
+    "pin_code": "8841",
+    "updated_at": "2026-11-12T20:00:00Z"
+  },
+  {
+    "username": "tomas-cline",
+    "github_id": 612849,
+    "display_name": "Tomas Cline",
+    "avatar_url": "https://avatars.githubusercontent.com/u/612849?v=4",
+    "bio": "WebAssembly Runtime Engineer @ Fermyon. Wasmtime contributor.",
+    "company": "Fermyon",
+    "github_url": "https://github.com/tomas-cline",
+    "linkedin_url": "https://www.linkedin.com/in/tomas-cline/",
+    "email": "tomas@example.com",
+    "persona_title": "WebAssembly & Wasmtime Systems Engineer",
+    "dna_tags": ["WebAssembly", "Wasmtime", "Rust", "Edge", "Microservices"],
+    "top_languages": ["Rust", "WebAssembly", "C"],
+    "hallway_icebreaker": "Building sub-millisecond cold start serverless runtimes using Wasm components in Rust.",
+    "ideal_talk_query": "webassembly component model wasmtime edge rust",
+    "top_repos": [
+      {
+        "name": "spin-plugins",
+        "description": "High speed HTTP request handlers in WebAssembly.",
+        "language": "Rust",
+        "stars": 920,
+        "topics": ["wasm", "rust", "spin"],
+        "readme_excerpt": "Microsecond cold start microservices."
+      }
+    ],
+    "current_room_id": "room-155b",
+    "coordinates": { "lat": 40.76605, "lon": -111.89695 },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.80,
+      "max_decibels": 65.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": ["talk-wasm-edge-runtimes"],
+    "bumped_from_talk_id": null,
+    "pin_code": "6723",
+    "updated_at": "2026-11-12T20:00:00Z"
+  },
+  {
+    "username": "joesandoval",
+    "github_id": 418290,
+    "display_name": "Joe Sandoval",
+    "avatar_url": "https://avatars.githubusercontent.com/u/418290?v=4",
+    "bio": "Supply Chain Security Architect @ Chainguard.",
+    "company": "Chainguard",
+    "github_url": "https://github.com/joesandoval",
+    "linkedin_url": "https://www.linkedin.com/in/joe-sandoval/",
+    "email": "joe@example.com",
+    "persona_title": "Cloud-Native Supply Chain Security Specialist",
+    "dna_tags": ["Security", "Sigstore", "Cosign", "SLSA", "Supply Chain", "Zero-Trust"],
+    "top_languages": ["Go", "Python", "Rust"],
+    "hallway_icebreaker": "Securing container image provenance with Sigstore Cosign without long-lived private keys.",
+    "ideal_talk_query": "end to end slsa level 3 provenance sigstore cosign",
+    "top_repos": [
+      {
+        "name": "k8s-cosign-verifier",
+        "description": "Admission webhook enforcing cryptographic container signatures.",
+        "language": "Go",
+        "stars": 1340,
+        "topics": ["security", "sigstore", "kubernetes"],
+        "readme_excerpt": "Cosign signature validation controller."
+      }
+    ],
+    "current_room_id": "room-355e",
+    "coordinates": { "lat": 40.76590, "lon": -111.89710 },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.85,
+      "max_decibels": 70.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": ["talk-sigstore-slsa-provenance"],
+    "bumped_from_talk_id": null,
+    "pin_code": "5019",
+    "updated_at": "2026-11-12T20:00:00Z"
+  },
+  {
+    "username": "zircon-dev",
+    "github_id": 981245,
+    "display_name": "Deven Winslow",
+    "avatar_url": "https://avatars.githubusercontent.com/u/981245?v=4",
+    "bio": "Lead Architect for VECTOR. Autonomous Cloud-Native Systems Engineer.",
+    "company": "Winslow Systems",
+    "github_url": "https://github.com/DevTheDev189",
+    "linkedin_url": "https://www.linkedin.com/in/devenwinslow/",
+    "email": "devenwinslow@gmail.com",
+    "persona_title": "Autonomous Systems Engineer & VECTOR Architect",
+    "dna_tags": ["Rust", "Axum", "OpenTelemetry", "Elasticsearch", "Vue", "Kubernetes"],
+    "top_languages": ["Rust", "TypeScript", "Java", "Go"],
+    "hallway_icebreaker": "Creator of VECTOR: Autonomous KubeCon conference OS with real-time crowd surge rerouting and sensory havens.",
+    "ideal_talk_query": "autonomous cloud-native telemetry open telemetry rust axum elasticsearch",
+    "top_repos": [
+      {
+        "name": "vector-kubecon",
+        "description": "Autonomous Conference OS: Rust Axum + Elasticsearch 8.15 + Dash0 OTel + Vue 3 PWA.",
+        "language": "Rust",
+        "stars": 500,
+        "topics": ["rust", "elasticsearch", "opentelemetry", "vue3", "kubernetes"],
+        "readme_excerpt": "Zero-config conference companion and crowd surge orchestrator."
+      }
+    ],
+    "current_room_id": "room-204b-quiet",
+    "coordinates": { "lat": 40.76685, "lon": -111.89615 },
+    "sensory_prefs": {
+      "sensory_mode_enabled": true,
+      "max_crowd_ratio": 0.50,
+      "max_decibels": 45.0,
+      "require_wheelchair_access": true,
+      "require_live_captions": true,
+      "prefer_quiet_zones": true
+    },
+    "bookmarked_talk_ids": ["talk-k8s-rust-operators", "talk-otel-ai-sre"],
+    "bumped_from_talk_id": null,
+    "pin_code": "4829",
+    "updated_at": "2026-11-12T20:00:00Z"
+  },
+  {
+    "username": "ellen-dev",
+    "github_id": 782190,
+    "display_name": "Ellen Vance",
+    "avatar_url": "https://avatars.githubusercontent.com/u/782190?v=4",
+    "bio": "Accessibility Lead & UX Researcher in Cloud Computing.",
+    "company": "Merge Forward",
+    "github_url": "https://github.com/ellen-dev",
+    "linkedin_url": "https://www.linkedin.com/in/ellenvance/",
+    "email": "ellen@example.com",
+    "persona_title": "Accessibility Architect & Sensory Routing Lead",
+    "dna_tags": ["Accessibility", "Sensory Routing", "UX", "Inclusive Design", "Cloud-Native"],
+    "top_languages": ["TypeScript", "Python"],
+    "hallway_icebreaker": "Designing low-sensory corridors and accessible conference routing systems for neurodivergent engineers.",
+    "ideal_talk_query": "accessibility low sensory load conference quiet haven",
+    "top_repos": [
+      {
+        "name": "sensory-router",
+        "description": "Sensory-safe pathfinding and quiet space optimization algorithms.",
+        "language": "TypeScript",
+        "stars": 320,
+        "topics": ["accessibility", "neurodiversity", "sensory"],
+        "readme_excerpt": "Real-time decibel and crowd density pathfinding."
+      }
+    ],
+    "current_room_id": "room-204b-quiet",
+    "coordinates": { "lat": 40.76685, "lon": -111.89615 },
+    "sensory_prefs": {
+      "sensory_mode_enabled": true,
+      "max_crowd_ratio": 0.40,
+      "max_decibels": 40.0,
+      "require_wheelchair_access": true,
+      "require_live_captions": true,
+      "prefer_quiet_zones": true
+    },
+    "bookmarked_talk_ids": ["talk-community-open-source"],
+    "bumped_from_talk_id": null,
+    "pin_code": "1049",
+    "updated_at": "2026-11-12T20:00:00Z"
+  }
+]

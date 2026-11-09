@@ -89,22 +89,22 @@ You are an autonomous principal engineer executing this specification from top t
 **Goal:** Build all domain data models, the realistic KubeCon SLC seed dataset (25 talks, 12 rooms, 12 builder/judge profiles), the Elasticsearch 8.15 index manager, the 3-Way Hybrid RRF search engine, the conflict-free DAG schedule solver, and the Merge Forward Sensory Haven room router.
 
 ### 2.1 Comprehensive Domain Models (`backend-api/src/models/`)
-- [ ] **Create `backend-api/src/models/mod.rs`**
-- [ ] **Create `backend-api/src/models/talk.rs` (~220 LOC)**
+- [x] **Create `backend-api/src/models/mod.rs`**
+- [x] **Create `backend-api/src/models/talk.rs` (~220 LOC)**
   - Define `AccessibilityMeta`: `wheelchair_accessible: bool`, `asl_interpreter: bool`, `live_captioning: bool`, `sensory_load: SensoryLoad` (`Low`, `Medium`, `High`), `quiet_zone_nearby: String`.
   - Define `GeoPoint { lat: f64, lon: f64 }`, `MapPoint { x: f64, y: f64 }`, and `RoomZone` (`MainHall`, `NorthWing`, `SouthWing`, `Mezzanine`).
   - Define `ConferenceTalk`: `talk_id`, `title`, `abstract_text`, `speaker`, `speaker_github`, `company`, `track`, `tags: Vec<String>`, `room_id`, `room_name`, `floor: i32`, `zone: RoomZone`, `coordinates: GeoPoint`, `map_point: MapPoint`, `start_time: DateTime<Utc>`, `end_time: DateTime<Utc>`, `capacity_max: i32`, `capacity_current: i32`, `occupancy_ratio: f64`, `decibel_level: f64`, `accessibility: AccessibilityMeta`, `embedding: Vec<f32>`.
   - Define `ScoredTalk`: wraps `ConferenceTalk` with `rrf_score: f64`, `vector_similarity: f64`, `keyword_score: f64`, `match_reasons: Vec<String>`, `is_rerouted_alternative: bool`.
   - Define `RoomState`: `room_id`, `room_name`, `floor`, `zone`, `coordinates`, `map_point: MapPoint`, `capacity_max`, `capacity_current`, `occupancy_ratio`, `decibel_level`, `active_talk_id: Option<String>`, `active_talk_title: Option<String>`, `next_talk_start: Option<DateTime<Utc>>`, `is_sensory_haven: bool`, `accessibility: AccessibilityMeta`, `updated_at: DateTime<Utc>`.
-- [ ] **Create `backend-api/src/models/builder.rs` (~200 LOC)**
+- [x] **Create `backend-api/src/models/builder.rs` (~200 LOC)**
   - Define `SensoryPreferences`: `sensory_mode_enabled: bool`, `max_crowd_ratio: f64`, `max_decibels: f64`, `require_wheelchair_access: bool`, `require_live_captions: bool`, `prefer_quiet_zones: bool`.
   - Define `RepoSummary`: `name: String`, `description: String`, `language: String`, `stars: u32`, `topics: Vec<String>`, `readme_excerpt: String`.
   - Define `BuilderProfile`: `username: String`, `github_id: u64`, `display_name: String`, `avatar_url: String`, `bio: String`, `company: Option<String>`, `github_url: String`, `linkedin_url: Option<String>`, `email: Option<String>`, `persona_title: String`, `dna_tags: Vec<String>`, `top_languages: Vec<String>`, `hallway_icebreaker: String`, `ideal_talk_query: String`, `top_repos: Vec<RepoSummary>`, `current_room_id: String`, `coordinates: GeoPoint`, `sensory_prefs: SensoryPreferences`, `bookmarked_talk_ids: Vec<String>`, `bumped_from_talk_id: Option<String>`, `pin_code: String`, `embedding: Vec<f32>`, `updated_at: DateTime<Utc>`.
   - Define `MatchedBuilder`: wraps public `BuilderProfile` (excluding raw 1536-float embedding vector to save bandwidth) with `similarity_pct: f64`, `shared_tags: Vec<String>`, `shared_context_reason: String`, `distance_meters: f64`.
-- [ ] **Create `backend-api/src/models/handshake.rs` (~130 LOC)**
+- [x] **Create `backend-api/src/models/handshake.rs` (~130 LOC)**
   - Define `QrHandshakeToken`: signed payload `{ username, pin_code, current_room_id, active_talk_id, issued_at_utc, signature }`.
   - Define `HandshakeRecord`: `handshake_id: String`, `initiator_username: String`, `peer_username: String`, `peer_display_name: String`, `peer_avatar_url: String`, `peer_persona_title: String`, `peer_github_url: String`, `peer_linkedin_url: Option<String>`, `met_room_id: String`, `met_room_name: String`, `met_during_talk_title: Option<String>`, `shared_dna_tags: Vec<String>`, `ai_context_summary: String`, `draft_linkedin_dm: String`, `draft_email_subject: String`, `draft_email_body: String`, `created_at: DateTime<Utc>`.
-- [ ] **Create `backend-api/src/models/sse.rs` (~120 LOC)**
+- [x] **Create `backend-api/src/models/sse.rs` (~120 LOC)**
   - Define `SseEvent` tagged enum (`#[serde(tag = "event_type", content = "data")]`):
     - `RoomTelemetryUpdate { room: RoomState, trace_id: String, timestamp_utc: DateTime<Utc> }`
     - `CrowdSurgeAlert { jammed_room_id: String, jammed_room_name: String, jammed_talk_id: String, jammed_talk_title: String, occupancy_current: i32, occupancy_max: i32, decibel_level: f64, recommended_alternative: Option<ScoredTalk>, bumped_hallway_peers: Vec<MatchedBuilder>, trace_id: String, timestamp_utc: DateTime<Utc> }`
@@ -113,24 +113,24 @@ You are an autonomous principal engineer executing this specification from top t
     - `SensoryHavenUpdate { recommended_haven: RoomState, reason: String, timestamp_utc: DateTime<Utc> }`
 
 ### 2.2 Rich Seed Datasets (`seed/`)
-- [ ] **Create `seed/kubecon_rooms.json` (~150 LOC)**
+- [x] **Create `seed/kubecon_rooms.json` (~150 LOC)**
   - Define 12 authentic Salt Palace Convention Center rooms across Floors 1 & 2 (`ballroom-b`, `room-250a`, `room-251c`, `room-155b`, `room-204b-quiet`, `room-355e`, `hall-4-keynote`, `lounge-sensory-north`, etc.) with SVG map `(x, y)` coordinates, `GeoPoint`, baseline capacities, baseline decibels (`36.0` to `78.0` dB), and accessibility flags. Ensure at least 3 rooms have scheduled gaps so the Sensory Haven router finds real empty conference rooms!
-- [ ] **Create `seed/kubecon_talks.json` (~350 LOC)**
+- [x] **Create `seed/kubecon_talks.json` (~350 LOC)**
   - Define 25 realistic KubeCon NA Salt Lake City sessions across 5 time slots (11:00 AM, 1:00 PM, 2:00 PM, 3:15 PM, 4:30 PM) covering Rust in Cloud-Native, eBPF & Cilium, Kubernetes Operators, OpenTelemetry at Scale, AI/LLM Inference on K8s, WebAssembly, Platform Engineering, and Security.
   - Ensure the **2:00 PM slot** has:
     - Talk A in `ballroom-b`: *"Zero-Overhead Service Mesh with eBPF and Rust"* (`capacity_max: 150, capacity_current: 142` — ready to surge to `150/150`).
     - Talk B in `room-250a`: *"Building High-Speed Kubernetes Operators & Multiplexers in Rust"* (`capacity_max: 120, capacity_current: 64` — open seats, high semantic overlap for auto-rerouting).
     - Talk C in `room-251c`: *"Deep OpenTelemetry Tracing & Autonomous AI SRE Loops on K8s"* (`capacity_max: 100, capacity_current: 58`).
     - Room `room-204b-quiet`: **0 talks scheduled during the 2:00 PM slot** (`capacity_current: 6, capacity_max: 80, decibel_level: 37.5` — the verified empty conference room for Merge Forward Sensory Routing!).
-- [ ] **Create `seed/judge_profiles.json` (~200 LOC)**
+- [x] **Create `seed/judge_profiles.json` (~200 LOC)**
   - Pre-seed 12 rich builder profiles including hackathon judges and notable cloud-native engineers (`kelseyhightower`, `saiyampathak`, `estesp`, `wesnovack`, `joesandoval`, `simonschrottner`, `tomas-cline`, `mayak8s`, `ebpf-alex`, `rust-sre-dan`, `zircon-dev`) with realistic `dna_tags`, `top_languages`, `hallway_icebreaker`, and deterministic 1536-dim normalized fallback embeddings.
 
 ### 2.3 Elasticsearch Client, 3-Way Hybrid RRF & Schedule Solver (`backend-api/src/services/`)
-- [ ] **Create `backend-api/src/services/elastic_client.rs` (~320 LOC)**
+- [x] **Create `backend-api/src/services/elastic_client.rs` (~320 LOC)**
   - Implement raw REST JSON DSL client over `reqwest::Client`.
   - Implement `ensure_indices_and_seed(&self)`: creates `conference_talks`, `builders`, `rooms_state`, and `handshakes` indices with `dense_vector` (`dims: 1536, index: true, similarity: "cosine"`) mappings and bulk-indexes `seed/*.json` if the indices are empty.
   - Implement deterministic fallback 1536-dim semantic hash embedding generator (`generate_deterministic_embedding(text: &str) -> Vec<f32>`) used at initial seed boot so all 25 talks and 12 profiles have valid unit-normalized cosine vectors within 50ms of startup, while `openai_engine.rs` generates live `text-embedding-3-small` vectors during user syncs.
-- [ ] **Create `backend-api/src/services/hybrid_search.rs` (~300 LOC) (Elasticsearch $4,000 Track Core)**
+- [x] **Create `backend-api/src/services/hybrid_search.rs` (~300 LOC) (Elasticsearch $4,000 Track Core)**
   - Implement `search_talks_hybrid_rrf(&self, profile: &BuilderProfile, slot_filter: Option<DateTime<Utc>>, exclude_full_rooms: bool) -> Result<(Vec<ScoredTalk>, serde_json::Value), ApiError>`:
     - Executes an Elasticsearch compound query combining:
       1. `knn` vector search on `embedding` (`k: 20, num_candidates: 50, boost: 0.65`).
@@ -139,17 +139,17 @@ You are an autonomous principal engineer executing this specification from top t
     - Computes Reciprocal Rank Fusion (RRF) + cosine similarity % and returns **both** the ranked `Vec<ScoredTalk>` AND the exact Elasticsearch JSON query DSL + execution time (`took` ms) so the frontend Judge Control Dock can display the live Elasticsearch query!
   - Implement `match_hallway_builders(&self, profile: &BuilderProfile, room_filter: Option<&str>, bumped_talk_id: Option<&str>) -> Result<Vec<MatchedBuilder>, ApiError>`:
     - Queries the `builders` index via `knn` vector similarity (`embedding`), excluding `profile.username`, boosting peers in the same room or who were also bumped from `bumped_talk_id`.
-- [ ] **Create `backend-api/src/services/schedule_solver.rs` (~220 LOC)**
+- [x] **Create `backend-api/src/services/schedule_solver.rs` (~220 LOC)**
   - Implement `build_conflict_free_schedule(scored_talks: &[ScoredTalk], bookmarked_ids: &[String], sensory_mode: bool) -> CustomSchedule`:
     - Groups talks by time slot, selects the optimal conflict-free path maximizing RRF score, injects 15-minute Sensory Decompression Buffers in verified quiet rooms if `sensory_mode == true`, and identifies immediate runner-up backups for every slot in case of a crowd surge.
-- [ ] **Create `backend-api/src/services/sensory_router.rs` (~160 LOC) (Merge Forward iPad Track Core)**
+- [x] **Create `backend-api/src/services/sensory_router.rs` (~160 LOC) (Merge Forward iPad Track Core)**
   - Implement `find_optimal_sensory_haven(&self, current_zone: &RoomZone) -> Result<Vec<RoomState>, ApiError>`:
     - Queries `rooms_state` in Elasticsearch for rooms where `active_talk_id` is `null` (unused conference room right now) OR `is_sensory_haven == true`, filtered by `occupancy_ratio < 0.20` and `decibel_level < 45.0`, sorted by lowest decibel level and proximity to `current_zone`.
 
 ### 2.4 Phase 2 Verification Gate & PR #2
-- [ ] Write integration test `backend-api/tests/elastic_rrf_test.rs` that boots `ElasticClient`, seeds the 25 talks and 12 builders, executes `search_talks_hybrid_rrf`, `match_hallway_builders`, and `find_optimal_sensory_haven`, and asserts non-empty ranked results and valid RRF scores.
-- [ ] Run `cargo test --workspace` — must pass 100%.
-- [ ] Commit on `feat/phase-2-elastic-hybrid-rrf`, push to GitHub, open **PR #2**, verify Gitar/CI checks, and merge to `main`.
+- [x] Write integration test `backend-api/tests/elastic_rrf_test.rs` that boots `ElasticClient`, seeds the 25 talks and 12 builders, executes `search_talks_hybrid_rrf`, `match_hallway_builders`, and `find_optimal_sensory_haven`, and asserts non-empty ranked results and valid RRF scores.
+- [x] Run `cargo test --workspace` — must pass 100%.
+- [x] Commit on `feat/phase-2-elastic-hybrid-rrf`, push to GitHub, open **PR #2**, verify Gitar/CI checks, and merge to `main`.
 
 ---
 
