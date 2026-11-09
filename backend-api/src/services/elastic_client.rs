@@ -177,7 +177,100 @@ impl ElasticClient {
         self.seed_rooms_if_empty().await?;
         self.seed_talks_if_empty().await?;
         self.seed_builders_if_empty().await?;
+        self.backfill_additional_demo_data().await?;
 
+        Ok(())
+    }
+
+    /// Create missing demo documents in existing databases without replacing
+    /// signed-in profiles, room check-ins, or other data changed during a demo.
+    pub async fn backfill_additional_demo_data(&self) -> Result<(), ApiError> {
+        let read_seed = |name: &str| -> Result<String, std::io::Error> {
+            let local = Path::new("seed").join(name);
+            std::fs::read_to_string(if local.exists() {
+                local
+            } else {
+                Path::new("../seed").join(name)
+            })
+        };
+        let rooms: Vec<RoomState> = serde_json::from_str(&read_seed("additional_rooms.json")?)?;
+        let mut talks: Vec<ConferenceTalk> =
+            serde_json::from_str(&read_seed("additional_talks.json")?)?;
+        let mut builders: Vec<BuilderProfile> =
+            serde_json::from_str(&read_seed("additional_builders.json")?)?;
+        let mut body = String::new();
+        let mut append = |index: &str, id: &str, document: Value| -> Result<(), ApiError> {
+            body.push_str(&serde_json::to_string(
+                &json!({"create": {"_index": index, "_id": id}}),
+            )?);
+            body.push('\n');
+            body.push_str(&serde_json::to_string(&document)?);
+            body.push('\n');
+            Ok(())
+        };
+        for room in rooms {
+            append("rooms_state", &room.room_id, serde_json::to_value(&room)?)?;
+        }
+        for talk in &mut talks {
+            if talk.embedding.is_empty() {
+                talk.embedding = Self::generate_deterministic_embedding(&format!(
+                    "{} {} {}",
+                    talk.title,
+                    talk.abstract_text,
+                    talk.tags.join(" ")
+                ));
+            }
+            append(
+                "conference_talks",
+                &talk.talk_id,
+                serde_json::to_value(&talk)?,
+            )?;
+        }
+        for builder in &mut builders {
+            if builder.embedding.is_empty() {
+                builder.embedding = Self::generate_deterministic_embedding(&format!(
+                    "{} {} {}",
+                    builder.persona_title,
+                    builder.dna_tags.join(" "),
+                    builder.top_languages.join(" ")
+                ));
+            }
+            append(
+                "builders",
+                &builder.username,
+                serde_json::to_value(&builder)?,
+            )?;
+        }
+        let response: Value = self
+            .http
+            .post(format!("{}/_bulk?refresh=wait_for", self.base_url))
+            .header("content-type", "application/x-ndjson")
+            .body(body)
+            .send()
+            .await?
+            .error_for_status()?
+            .json()
+            .await?;
+        let items = response["items"]
+            .as_array()
+            .ok_or_else(|| ApiError::ElasticError("Missing demo backfill results".into()))?;
+        let mut created = 0;
+        for item in items {
+            match item["create"]["status"].as_u64() {
+                Some(201) => created += 1,
+                Some(409) => {} // Existing document belongs to the running app.
+                _ => {
+                    return Err(ApiError::ElasticError(
+                        "Unable to create additional demo data".into(),
+                    ))
+                }
+            }
+        }
+        tracing::info!(
+            created,
+            existing = items.len() - created,
+            "Additional demo seed backfill complete"
+        );
         Ok(())
     }
 

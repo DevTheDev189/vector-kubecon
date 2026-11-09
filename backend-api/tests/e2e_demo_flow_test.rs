@@ -1,3 +1,4 @@
+mod common;
 use axum::{
     body::{to_bytes, Body},
     http::{Request, StatusCode},
@@ -84,13 +85,21 @@ async fn json_response(response: reqwest::Response) -> Value {
 
 #[tokio::test]
 async fn full_demo_flow_over_http() {
-    let mut config = AppConfig::from_env();
+    let mut config = common::config();
+    let (provider_url, provider_task, _) = common::mock_github().await;
+    config.github_client_id = Some("test-client".into());
+    config.github_client_secret = Some("test-secret".into());
+    config.github_api_base_url = provider_url.clone();
+    config.github_token_url = format!("{provider_url}/token");
     // Exercise the deterministic AI fallback without spending API credits.
     config.openai_api_key = None;
     config.public_base_url = "http://127.0.0.1".into();
     let state = AppState::new(config);
     state.elastic().ensure_indices_and_seed().await.unwrap();
-    let client = reqwest::Client::new();
+    let client = reqwest::Client::builder()
+        .redirect(reqwest::redirect::Policy::none())
+        .build()
+        .unwrap();
     let elastic = state.elastic().base_url.clone();
     let original: Value = client
         .get(format!("{elastic}/builders/_doc/kelseyhightower"))
@@ -119,34 +128,42 @@ async fn full_demo_flow_over_http() {
     assert!(trace.bytes().all(|c| c.is_ascii_hexdigit()));
     chrono::DateTime::parse_from_rfc3339(health["timestamp_utc"].as_str().unwrap()).unwrap();
 
-    let initial = json_response(
-        client
-            .get(format!("{base}/api/state"))
-            .send()
-            .await
-            .unwrap(),
-    )
-    .await;
-    assert_eq!(initial["rooms"].as_array().unwrap().len(), 12);
-    assert!(!initial["scored_talks"].as_array().unwrap().is_empty());
-    assert!(!initial["sensory_havens"].as_array().unwrap().is_empty());
-
-    let response = client
-        .post(format!("{base}/api/auth/impersonate"))
-        .json(&json!({"username":"kelseyhightower"}))
+    let start = client
+        .get(format!("{base}/api/auth/github"))
         .send()
         .await
         .unwrap();
-    let cookie = response.headers()["set-cookie"]
-        .to_str()
+    assert_eq!(start.status(), StatusCode::TEMPORARY_REDIRECT);
+    let location = reqwest::Url::parse(start.headers()["location"].to_str().unwrap()).unwrap();
+    let params: std::collections::HashMap<_, _> = location.query_pairs().into_owned().collect();
+    assert_eq!(params["code_challenge_method"], "S256");
+    assert_eq!(params["scope"], "read:user");
+    let transaction_cookies = start
+        .headers()
+        .get_all("set-cookie")
+        .iter()
+        .map(|v| v.to_str().unwrap().split(';').next().unwrap())
+        .collect::<Vec<_>>()
+        .join("; ");
+    let response = client
+        .get(format!("{base}/api/auth/github/callback"))
+        .query(&[("code", "valid-code"), ("state", params["state"].as_str())])
+        .header("cookie", transaction_cookies)
+        .send()
+        .await
+        .unwrap();
+    assert_eq!(response.status(), StatusCode::TEMPORARY_REDIRECT);
+    let cookie = response
+        .headers()
+        .get_all("set-cookie")
+        .iter()
+        .filter_map(|v| v.to_str().ok())
+        .find(|v| v.starts_with("vector_sid="))
         .unwrap()
         .to_owned();
     assert!(cookie.contains("HttpOnly"));
     assert!(cookie.contains("SameSite=Lax"));
     let cookie = cookie.split(';').next().unwrap();
-    let profile = json_response(response).await;
-    assert_eq!(profile["username"], "kelseyhightower");
-    assert!(!profile["dna_tags"].as_array().unwrap().is_empty());
     let get = |path: &str| client.get(format!("{base}{path}")).header("cookie", cookie);
     let post = |path: &str| {
         client
@@ -155,6 +172,11 @@ async fn full_demo_flow_over_http() {
     };
     let hydrated = json_response(get("/api/state").send().await.unwrap()).await;
     assert_eq!(hydrated["profile"]["username"], "kelseyhightower");
+    assert_eq!(hydrated["rooms"].as_array().unwrap().len(), 24);
+    assert!(!hydrated["profile"]["dna_tags"]
+        .as_array()
+        .unwrap()
+        .is_empty());
 
     json_response(
         post("/api/surge/reset")
@@ -256,4 +278,5 @@ async fn full_demo_flow_over_http() {
         .error_for_status()
         .unwrap();
     server.abort();
+    provider_task.abort();
 }

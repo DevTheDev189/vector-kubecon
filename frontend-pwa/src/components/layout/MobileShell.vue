@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import MobileDemoControls from "./MobileDemoControls.vue";
 import TopTelemetryPill from "./TopTelemetryPill.vue";
 import GithubLoginHero from "../onboarding/GithubLoginHero.vue";
 import DnaExtractionTerminal from "../onboarding/DnaExtractionTerminal.vue";
@@ -20,7 +21,7 @@ const store = useVectorStore();
       {{ store.error }}
       <button @click="store.error = ''" aria-label="Dismiss error">×</button>
     </div>
-    <GithubLoginHero /><DnaExtractionTerminal /><SaltPalaceSpatialMap />
+    <GithubLoginHero /><MobileDemoControls /><DnaExtractionTerminal /><SaltPalaceSpatialMap />
     <div v-if="store.loading" class="loading-state" role="status">
       <span class="status-dot" /> Connecting your conference…
     </div>

@@ -15,14 +15,10 @@ impl ElasticClient {
             "size": 10,
             "query": {
                 "bool": {
-                    "should": [
-                        { "bool": { "must_not": { "exists": { "field": "active_talk_id" } } } },
-                        { "term": { "is_sensory_haven": true } }
-                    ],
-                    "minimum_should_match": 1,
+                    "must_not": [{ "exists": { "field": "active_talk_id" } }],
                     "filter": [
-                        { "range": { "occupancy_ratio": { "lt": 0.25 } } },
-                        { "range": { "decibel_level": { "lt": 48.0 } } }
+                        { "range": { "occupancy_ratio": { "lt": 0.2 } } },
+                        { "range": { "decibel_level": { "lt": 45.0 } } }
                     ]
                 }
             },

@@ -1,11 +1,10 @@
 use axum::{extract::State, response::IntoResponse, Json};
-use axum_extra::extract::CookieJar;
 use chrono::Utc;
 use serde::Deserialize;
 use serde_json::json;
 
 use crate::{
-    auth::{sign_session_cookie, OptionalAuthUser, SessionToken},
+    auth::RequireAuthUser,
     error::ApiError,
     models::{BuilderProfile, RoomZone, SseEvent},
     routes::auth_routes::sync_and_index_profile,
@@ -31,12 +30,9 @@ pub struct ToggleSensoryRequest {
 #[tracing::instrument(skip_all, fields(http.route = "/api/me"))]
 pub async fn get_me_handler(
     State(state): State<AppState>,
-    user_opt: OptionalAuthUser,
+    user: RequireAuthUser,
 ) -> Result<impl IntoResponse, ApiError> {
-    let username = match user_opt.0 {
-        Some(token) => token.username,
-        None => "zircon-dev".to_string(), // Default landing profile
-    };
+    let username = user.0.username;
 
     let doc_url = format!("{}/builders/_doc/{}", state.elastic().base_url, username);
     let resp = state.http().get(&doc_url).send().await?;
@@ -55,6 +51,7 @@ pub async fn get_me_handler(
     let trace_id = current_trace_id();
 
     Ok(Json(json!({
+        "can_control_demo": state.config().is_admin(&username),
         "profile": profile,
         "trace_id": trace_id,
         "timestamp_utc": Utc::now()
@@ -64,18 +61,21 @@ pub async fn get_me_handler(
 #[tracing::instrument(skip_all, fields(http.route = "/api/sync-github"))]
 pub async fn sync_github_handler(
     State(state): State<AppState>,
-    jar: CookieJar,
+    RequireAuthUser(user): RequireAuthUser,
     Json(payload): Json<SyncGithubRequest>,
-) -> Result<(CookieJar, Json<serde_json::Value>), ApiError> {
+) -> Result<Json<serde_json::Value>, ApiError> {
+    if !payload.username.trim().eq_ignore_ascii_case(&user.username) {
+        return Err(ApiError::Forbidden(
+            "You may only sync your signed-in GitHub account".into(),
+        ));
+    }
     let profile =
-        sync_and_index_profile(&state, payload.username.trim(), payload.linkedin_url, None).await?;
-
-    let session = SessionToken::new(profile.username.clone(), profile.github_id);
-    let session_cookie = sign_session_cookie(
-        &session,
-        &state.config().session_secret,
-        state.config().is_secure(),
-    );
+        sync_and_index_profile(&state, &user.username, payload.linkedin_url, None).await?;
+    if profile.github_id != user.github_id {
+        return Err(ApiError::Unauthorized(
+            "GitHub account identity could not be verified. Please sign in again.".into(),
+        ));
+    }
 
     // Generate updated schedule
     let (scored, _) = state
@@ -88,28 +88,21 @@ pub async fn sync_github_handler(
         profile.sensory_prefs.sensory_mode_enabled,
     );
 
-    let updated_jar = jar.add(session_cookie);
-    Ok((
-        updated_jar,
-        Json(json!({
-            "profile": profile,
-            "schedule": schedule,
-            "trace_id": current_trace_id(),
-            "timestamp_utc": Utc::now()
-        })),
-    ))
+    Ok(Json(json!({
+        "profile": profile,
+        "schedule": schedule,
+        "trace_id": current_trace_id(),
+        "timestamp_utc": Utc::now()
+    })))
 }
 
 #[tracing::instrument(skip_all, fields(http.route = "/api/sensory"))]
 pub async fn toggle_sensory_handler(
     State(state): State<AppState>,
-    user_opt: OptionalAuthUser,
+    user: RequireAuthUser,
     Json(payload): Json<ToggleSensoryRequest>,
 ) -> Result<impl IntoResponse, ApiError> {
-    let username = match user_opt.0 {
-        Some(token) => token.username,
-        None => "zircon-dev".to_string(),
-    };
+    let username = user.0.username;
 
     let doc_url = format!("{}/builders/_doc/{}", state.elastic().base_url, username);
     let resp = state.http().get(&doc_url).send().await?;

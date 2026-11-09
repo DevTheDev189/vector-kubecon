@@ -5,7 +5,7 @@ use serde::Deserialize;
 use serde_json::{json, Value};
 
 use crate::{
-    auth::OptionalAuthUser,
+    auth::RequireAuthUser,
     models::{BuilderProfile, ConferenceTalk, RoomState, SseEvent},
     telemetry::current_trace_id,
     ApiError, AppState,
@@ -130,7 +130,7 @@ pub async fn checkin_handler(
 #[tracing::instrument(skip_all, fields(http.route = "/api/surge"))]
 pub async fn surge_handler(
     State(state): State<AppState>,
-    user: OptionalAuthUser,
+    user: RequireAuthUser,
     Json(payload): Json<SurgeRequest>,
 ) -> Result<Json<Value>, ApiError> {
     let _guard = state.inner.room_updates.lock().await;
@@ -162,10 +162,7 @@ pub async fn surge_handler(
     )
     .await?;
     tracing::warn!(room.id = %room.room_id, room.occupancy_ratio = 1.0, "CROWD_SURGE_THRESHOLD_EXCEEDED: triggering 3-way RRF auto-reroute");
-    let username = user
-        .0
-        .map(|t| t.username)
-        .unwrap_or_else(|| "zircon-dev".into());
+    let username = user.0.username;
     let body = elastic_json(state.http().get(format!(
         "{}/builders/_doc/{}",
         state.elastic().base_url,

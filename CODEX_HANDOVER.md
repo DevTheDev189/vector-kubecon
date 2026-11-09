@@ -1,3 +1,31 @@
+> **Room discovery/data update (2026-11-09):** Full-color avatars restored;
+> map route line removed. Prominent cross-floor room search and a quiet-space
+> discovery button now sit above the map; quiet rooms have cyan labels/fills.
+> Supplemental seeds add 12 rooms, 24 demo sessions, and 24 clearly labeled
+> fictional attendees with colorful local avatars. Live DB verified: 24 rooms,
+> 49 sessions, 37 profiles (including the existing OAuth account), five quiet
+> spaces. Startup uses create-only bulk backfill and preserves existing records.
+> See `seed/README.md`. Eleven Rust tests, ten frontend state/geometry tests,
+> Clippy/build, and three desktop/mobile browser tests pass.
+> GitHub OAuth credentials are now configured in the ignored host `.env`; the
+> public API has been switched to the authentication-required build. Never
+> print credential values or reintroduce bypass login.
+>
+> **Map/auth redesign update (2026-11-09):** Work continues on
+> `feat/architectural-map-and-github-auth`. The SVG follows the user's Salt Palace
+> reference with floors, zoom/pan, room picker, live details, and schematic routes.
+> Dark charcoal + cyan/yellow/magenta gradients, self-hosted Geist fonts, and mobile
+> admin controls are implemented. OAuth is now mandatory: impersonation/header
+> bypasses removed, state/PKCE verified, GitHub `/user` identity required, signed
+> cookies versioned, attendee APIs protected, demo mutations admin-only, handshakes
+> scoped to owner, and private frontend state cleared on 401/sign-out.
+> See `docs/GITHUB_OAUTH_SETUP.md` and `docs/MAP_AND_AUTH_PLAN.md`.
+> The local sample SESSION_SECRET was replaced with a private random value.
+> GitHub client ID/secret remain missing; user will configure them, then restart
+> only the API. Do not restart WSL or Tailscale. Production sign-in cannot be
+> verified until the credentials are configured and the user consents in GitHub.
+> Prior phase/demo instructions below are historical; never restore bypass login.
+>
 > **Phase 6 update (2026-11-09):** Phase 5 PR #5 is merged with both CI checks
 > green. Phase 6 integrates SPA serving, startup seeding and room gauges, HTTP
 > tracing/compression, JSON API 404s, and one-job build defaults. Eight Rust tests,

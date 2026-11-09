@@ -12,6 +12,7 @@ type HmacSha256 = Hmac<Sha256>;
 
 pub const COOKIE_NAME: &str = "vector_sid";
 pub const OAUTH_STATE_COOKIE: &str = "vector_oauth_state";
+pub const OAUTH_VERIFIER_COOKIE: &str = "vector_oauth_verifier";
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct SessionToken {
@@ -19,6 +20,8 @@ pub struct SessionToken {
     pub github_id: u64,
     pub iat: i64,
     pub exp: i64,
+    #[serde(default)]
+    pub auth_version: u8,
 }
 
 impl SessionToken {
@@ -29,11 +32,12 @@ impl SessionToken {
             github_id,
             iat: now,
             exp: now + 86400 * 7, // 7 days
+            auth_version: 1,      // old impersonated sessions are invalid
         }
     }
 
     pub fn is_expired(&self) -> bool {
-        Utc::now().timestamp() > self.exp
+        Utc::now().timestamp() >= self.exp
     }
 }
 
@@ -77,7 +81,7 @@ pub fn verify_session_cookie(cookie_value: &str, secret: &[u8]) -> Option<Sessio
     let payload_bytes = URL_SAFE_NO_PAD.decode(payload_b64).ok()?;
     let token: SessionToken = serde_json::from_slice(&payload_bytes).ok()?;
 
-    if token.is_expired() {
+    if token.is_expired() || token.auth_version != 1 {
         return None;
     }
 

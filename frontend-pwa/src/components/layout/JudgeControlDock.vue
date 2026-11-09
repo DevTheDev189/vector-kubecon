@@ -13,7 +13,7 @@ import {
   Smartphone,
 } from "lucide-vue-next";
 import { requestTelemetry } from "../../api/client";
-import { judgeHandles, useVectorStore } from "../../stores/vectorStore";
+import { useVectorStore } from "../../stores/vectorStore";
 const store = useVectorStore(),
   tab = ref("telemetry"),
   phoneQr = ref("");
@@ -49,7 +49,7 @@ onMounted(async () => {
         that happens between the talks.
       </p>
     </div>
-    <section class="control-panel">
+    <section v-if="store.canControlDemo" class="control-panel">
       <div class="section-heading">
         <span class="eyebrow"><Activity :size="14" /> LIVE CONTROL ROOM</span
         ><span class="live-label"
@@ -98,20 +98,6 @@ onMounted(async () => {
         <p class="micro muted">
           Reuses the latest reading; no microphone recording.
         </p>
-      </div>
-      <div class="judge-presets">
-        <span class="eyebrow muted">EXPLORE A DIFFERENT BUILDER DNA</span>
-        <div class="preset-list">
-          <button
-            v-for="handle in judgeHandles"
-            :key="handle"
-            :class="{ active: store.profile?.username === handle }"
-            :disabled="store.busy"
-            @click="store.sync(handle)"
-          >
-            @{{ handle }}
-          </button>
-        </div>
       </div>
     </section>
     <section class="proof-panel">

@@ -1,9 +1,8 @@
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
-use std::path::Path;
 
 use crate::error::ApiError;
-use crate::models::{BuilderProfile, RepoSummary};
+use crate::models::RepoSummary;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct ScrapedGitHubData {
@@ -22,6 +21,7 @@ pub struct ScrapedGitHubData {
 #[derive(Clone)]
 pub struct GitHubScraper {
     pub http: Client,
+    pub api_base_url: String,
 }
 
 #[derive(Deserialize)]
@@ -48,20 +48,51 @@ struct GitHubRepoDto {
 
 impl GitHubScraper {
     pub fn new(http: Client) -> Self {
-        Self { http }
+        Self {
+            http,
+            api_base_url: "https://api.github.com".into(),
+        }
+    }
+
+    pub async fn authenticated_identity(&self, token: &str) -> Result<(String, u64), ApiError> {
+        let response = self
+            .http
+            .get(format!("{}/user", self.api_base_url))
+            .bearer_auth(token)
+            .header("User-Agent", "VECTOR-KubeCon-OS/1.0")
+            .send()
+            .await?;
+        if !response.status().is_success() {
+            return Err(ApiError::Unauthorized(
+                "GitHub could not verify your identity".into(),
+            ));
+        }
+        let user: GitHubUserDto = response.json().await?;
+        if user.id == 0
+            || user.login.is_empty()
+            || !user
+                .login
+                .bytes()
+                .all(|c| c.is_ascii_alphanumeric() || c == b'-')
+        {
+            return Err(ApiError::Unauthorized(
+                "GitHub returned an invalid identity".into(),
+            ));
+        }
+        Ok((user.login, user.id))
     }
 
     /// Scrapes public GitHub profile & top pushed repositories using concurrent tokio tasks.
-    /// Falls back gracefully to seed/judge_profiles.json if rate-limited or offline.
+    /// Identity/profile errors are surfaced; authentication never uses seed identities.
     pub async fn scrape_github_user(
         &self,
         username: &str,
         oauth_token: Option<&str>,
     ) -> Result<ScrapedGitHubData, ApiError> {
-        let user_url = format!("https://api.github.com/users/{}", username);
+        let user_url = format!("{}/users/{}", self.api_base_url, username);
         let repos_url = format!(
-            "https://api.github.com/users/{}/repos?sort=pushed&per_page=8",
-            username
+            "{}/users/{}/repos?sort=pushed&per_page=8",
+            self.api_base_url, username
         );
 
         let mut req_user = self
@@ -91,15 +122,13 @@ impl GitHubScraper {
             .unwrap_or(false);
 
         if !user_ok || !repos_ok {
-            tracing::warn!(
-                username = %username,
-                "GitHub API rate limit or error; falling back to offline seed dataset"
-            );
-            return self.fallback_from_seed(username);
+            return Err(ApiError::GitHubError(
+                "Unable to fetch your GitHub profile. Please retry.".into(),
+            ));
         }
 
-        let user_dto: GitHubUserDto = user_resp.unwrap().json().await?;
-        let repos_dto: Vec<GitHubRepoDto> = repos_resp.unwrap().json().await.unwrap_or_default();
+        let user_dto: GitHubUserDto = user_resp?.json().await?;
+        let repos_dto: Vec<GitHubRepoDto> = repos_resp?.json().await.unwrap_or_default();
 
         let mut top_repos = Vec::new();
         let mut lang_set = std::collections::BTreeSet::new();
@@ -177,73 +206,5 @@ impl GitHubScraper {
             }
         }
         None
-    }
-
-    fn fallback_from_seed(&self, username: &str) -> Result<ScrapedGitHubData, ApiError> {
-        let seed_paths = ["seed/judge_profiles.json", "../seed/judge_profiles.json"];
-        let mut profiles: Vec<BuilderProfile> = Vec::new();
-
-        for p in &seed_paths {
-            if Path::new(p).exists() {
-                if let Ok(content) = std::fs::read_to_string(p) {
-                    if let Ok(parsed) = serde_json::from_str(&content) {
-                        profiles = parsed;
-                        break;
-                    }
-                }
-            }
-        }
-
-        // Look for exact match or default to first
-        let matched = profiles
-            .into_iter()
-            .find(|p| p.username.eq_ignore_ascii_case(username))
-            .unwrap_or_else(|| BuilderProfile {
-                username: username.to_string(),
-                github_id: 123456,
-                display_name: username.to_string(),
-                avatar_url: format!("https://github.com/{}.png", username),
-                bio: "Cloud-native builder attending KubeCon NA SLC.".to_string(),
-                company: Some("Community".to_string()),
-                github_url: format!("https://github.com/{}", username),
-                linkedin_url: None,
-                email: None,
-                persona_title: "Cloud-Native Infrastructure Engineer".to_string(),
-                dna_tags: vec![
-                    "Kubernetes".to_string(),
-                    "Rust".to_string(),
-                    "eBPF".to_string(),
-                    "OpenTelemetry".to_string(),
-                ],
-                top_languages: vec!["Rust".to_string(), "Go".to_string()],
-                hallway_icebreaker: "Let's connect on modern cloud-native architectures!"
-                    .to_string(),
-                ideal_talk_query: "kubernetes eBPF rust opentelemetry".to_string(),
-                top_repos: vec![],
-                current_room_id: "ballroom-b".to_string(),
-                coordinates: crate::models::GeoPoint {
-                    lat: 40.76630,
-                    lon: -111.89670,
-                },
-                sensory_prefs: crate::models::SensoryPreferences::default(),
-                bookmarked_talk_ids: vec![],
-                bumped_from_talk_id: None,
-                pin_code: "1234".to_string(),
-                embedding: vec![],
-                updated_at: chrono::Utc::now(),
-            });
-
-        Ok(ScrapedGitHubData {
-            username: matched.username,
-            github_id: matched.github_id,
-            display_name: matched.display_name,
-            avatar_url: matched.avatar_url,
-            bio: matched.bio,
-            company: matched.company,
-            github_url: matched.github_url,
-            email: matched.email,
-            top_repos: matched.top_repos,
-            languages: matched.top_languages,
-        })
     }
 }

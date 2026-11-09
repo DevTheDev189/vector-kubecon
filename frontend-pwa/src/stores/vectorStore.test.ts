@@ -40,6 +40,15 @@ const respond = (body: unknown, status = 200) =>
 beforeEach(() => {
   setActivePinia(createPinia());
   vi.restoreAllMocks();
+  vi.stubGlobal(
+    "EventSource",
+    class {
+      onopen = null;
+      onerror = null;
+      onmessage = null;
+      close() {}
+    },
+  );
 });
 describe("live radar reconciliation", () => {
   it("scopes and deduplicates saved handshakes", async () => {
@@ -151,5 +160,73 @@ describe("live radar reconciliation", () => {
       });
     expect(store.sseEventLog).toHaveLength(25);
     expect(store.lastTraceId).toBe("29");
+  });
+});
+
+describe("session lifecycle", () => {
+  it("clears private attendee state on an expired cookie", async () => {
+    const fetch = vi
+      .fn()
+      .mockResolvedValueOnce(respond(state()))
+      .mockResolvedValueOnce(
+        respond({ error: { message: "Sign in required" } }, 401),
+      );
+    vi.stubGlobal("fetch", fetch);
+    const store = useVectorStore();
+    await store.hydrate();
+    store.isVaultOpen = true;
+    store.isQrModalOpen = true;
+    expect(store.authenticated).toBe(true);
+    await store.refresh();
+    expect(store.authenticated).toBe(false);
+    expect(store.profile).toBeNull();
+    expect(store.rooms).toEqual([]);
+    expect(store.handshakes).toEqual([]);
+    expect(store.isVaultOpen).toBe(false);
+    expect(store.isQrModalOpen).toBe(false);
+    expect(store.sseConnected).toBe(false);
+  });
+  it("rejects a hydration response that arrives after sign-out", async () => {
+    let finish!: (response: Response) => void;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockReturnValue(
+        new Promise<Response>((resolve) => {
+          finish = resolve;
+        }),
+      ),
+    );
+    const store = useVectorStore();
+    const pending = store.hydrate();
+    store.clearSession();
+    finish(respond(state()));
+    await pending;
+    expect(store.authenticated).toBe(false);
+    expect(store.profile).toBeNull();
+  });
+});
+
+describe("quiet space discovery", () => {
+  it("adds newly quiet rooms and removes them when live noise increases", () => {
+    const store = useVectorStore();
+    const quietRoom = {
+      ...room,
+      room_id: "quiet-test",
+      active_talk_id: null,
+      occupancy_ratio: 0.05,
+      decibel_level: 38,
+    };
+    const update = (db: number): SseEvent => ({
+      event_type: "room_telemetry_update",
+      data: {
+        room: { ...quietRoom, decibel_level: db },
+        trace_id: "quiet",
+        timestamp_utc: "2026-11-12T20:00:00Z",
+      },
+    });
+    store.handleEvent(update(38));
+    expect(store.sensoryHavens.map((r) => r.room_id)).toContain("quiet-test");
+    store.handleEvent(update(61));
+    expect(store.sensoryHavens).toEqual([]);
   });
 });

@@ -52,7 +52,16 @@ async fn main() -> Result<(), SimError> {
     if !matches!(url.scheme(), "http" | "https") {
         return Err("Target must use HTTP or HTTPS".into());
     }
-    let client = Client::builder().timeout(Duration::from_secs(30)).build()?;
+    let session_cookie = std::env::var("VECTOR_SESSION_COOKIE")
+        .map_err(|_| "Set VECTOR_SESSION_COOKIE to a signed-in administrator's vector_sid cookie before running the simulator")?;
+    let mut headers = reqwest::header::HeaderMap::new();
+    let mut cookie = reqwest::header::HeaderValue::from_str(&session_cookie)?;
+    cookie.set_sensitive(true);
+    headers.insert(reqwest::header::COOKIE, cookie);
+    let client = Client::builder()
+        .default_headers(headers)
+        .timeout(Duration::from_secs(30))
+        .build()?;
     let started = Instant::now();
     if matches!(args.mode, Mode::Reset) {
         let result = post(&client, target, "/api/surge/reset", json!({})).await?;

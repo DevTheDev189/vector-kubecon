@@ -1,0 +1,1034 @@
+[
+  {
+    "username": "demo-aria-chen",
+    "github_id": 0,
+    "display_name": "Aria Chen \u00b7 Demo",
+    "avatar_url": "/avatars/demo-aria-chen.svg",
+    "bio": "Fictional attendee for the VECTOR demonstration dataset.",
+    "company": "VECTOR demo community",
+    "github_url": "",
+    "linkedin_url": null,
+    "email": null,
+    "persona_title": "Platform Engineer",
+    "dna_tags": [
+      "Kubernetes",
+      "Rust",
+      "Platform Engineering",
+      "GitOps"
+    ],
+    "top_languages": [
+      "Rust",
+      "Go"
+    ],
+    "hallway_icebreaker": "What has your team learned about kubernetes in production?",
+    "ideal_talk_query": "Kubernetes Rust Platform Engineering GitOps",
+    "top_repos": [],
+    "current_room_id": "ballroom-b",
+    "coordinates": {
+      "lat": 40.7663,
+      "lon": -111.8967
+    },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.9,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": [],
+    "bumped_from_talk_id": null,
+    "pin_code": "6100",
+    "updated_at": "2026-11-12T20:00:00Z",
+    "embedding": []
+  },
+  {
+    "username": "demo-mateo-rivera",
+    "github_id": 0,
+    "display_name": "Mateo Rivera \u00b7 Demo",
+    "avatar_url": "/avatars/demo-mateo-rivera.svg",
+    "bio": "Fictional attendee for the VECTOR demonstration dataset.",
+    "company": "VECTOR demo community",
+    "github_url": "",
+    "linkedin_url": null,
+    "email": null,
+    "persona_title": "Observability Engineer",
+    "dna_tags": [
+      "OpenTelemetry",
+      "Tracing",
+      "Rust",
+      "Dash0"
+    ],
+    "top_languages": [
+      "Rust",
+      "Go"
+    ],
+    "hallway_icebreaker": "What has your team learned about opentelemetry in production?",
+    "ideal_talk_query": "OpenTelemetry Tracing Rust Dash0",
+    "top_repos": [],
+    "current_room_id": "ballroom-b",
+    "coordinates": {
+      "lat": 40.7663,
+      "lon": -111.8967
+    },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.9,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": [],
+    "bumped_from_talk_id": null,
+    "pin_code": "6101",
+    "updated_at": "2026-11-12T20:00:00Z",
+    "embedding": []
+  },
+  {
+    "username": "demo-priya-shah",
+    "github_id": 0,
+    "display_name": "Priya Shah \u00b7 Demo",
+    "avatar_url": "/avatars/demo-priya-shah.svg",
+    "bio": "Fictional attendee for the VECTOR demonstration dataset.",
+    "company": "VECTOR demo community",
+    "github_url": "",
+    "linkedin_url": null,
+    "email": null,
+    "persona_title": "Cloud Security Engineer",
+    "dna_tags": [
+      "Security",
+      "Sigstore",
+      "Supply Chain",
+      "Kubernetes"
+    ],
+    "top_languages": [
+      "Go",
+      "Python"
+    ],
+    "hallway_icebreaker": "What has your team learned about security in production?",
+    "ideal_talk_query": "Security Sigstore Supply Chain Kubernetes",
+    "top_repos": [],
+    "current_room_id": "ballroom-b",
+    "coordinates": {
+      "lat": 40.7663,
+      "lon": -111.8967
+    },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.9,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": [],
+    "bumped_from_talk_id": null,
+    "pin_code": "6102",
+    "updated_at": "2026-11-12T20:00:00Z",
+    "embedding": []
+  },
+  {
+    "username": "demo-noah-bennett",
+    "github_id": 0,
+    "display_name": "Noah Bennett \u00b7 Demo",
+    "avatar_url": "/avatars/demo-noah-bennett.svg",
+    "bio": "Fictional attendee for the VECTOR demonstration dataset.",
+    "company": "VECTOR demo community",
+    "github_url": "",
+    "linkedin_url": null,
+    "email": null,
+    "persona_title": "Network Engineer",
+    "dna_tags": [
+      "eBPF",
+      "Cilium",
+      "Networking",
+      "Rust"
+    ],
+    "top_languages": [
+      "Rust",
+      "Go"
+    ],
+    "hallway_icebreaker": "What has your team learned about ebpf in production?",
+    "ideal_talk_query": "eBPF Cilium Networking Rust",
+    "top_repos": [],
+    "current_room_id": "ballroom-b",
+    "coordinates": {
+      "lat": 40.7663,
+      "lon": -111.8967
+    },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.9,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": [],
+    "bumped_from_talk_id": null,
+    "pin_code": "6103",
+    "updated_at": "2026-11-12T20:00:00Z",
+    "embedding": []
+  },
+  {
+    "username": "demo-amara-okafor",
+    "github_id": 0,
+    "display_name": "Amara Okafor \u00b7 Demo",
+    "avatar_url": "/avatars/demo-amara-okafor.svg",
+    "bio": "Fictional attendee for the VECTOR demonstration dataset.",
+    "company": "VECTOR demo community",
+    "github_url": "",
+    "linkedin_url": null,
+    "email": null,
+    "persona_title": "Data Platform Engineer",
+    "dna_tags": [
+      "Elasticsearch",
+      "Vector Search",
+      "Databases",
+      "Rust"
+    ],
+    "top_languages": [
+      "Rust",
+      "Go"
+    ],
+    "hallway_icebreaker": "What has your team learned about elasticsearch in production?",
+    "ideal_talk_query": "Elasticsearch Vector Search Databases Rust",
+    "top_repos": [],
+    "current_room_id": "ballroom-b",
+    "coordinates": {
+      "lat": 40.7663,
+      "lon": -111.8967
+    },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.9,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": [],
+    "bumped_from_talk_id": null,
+    "pin_code": "6104",
+    "updated_at": "2026-11-12T20:00:00Z",
+    "embedding": []
+  },
+  {
+    "username": "demo-lena-fischer",
+    "github_id": 0,
+    "display_name": "Lena Fischer \u00b7 Demo",
+    "avatar_url": "/avatars/demo-lena-fischer.svg",
+    "bio": "Fictional attendee for the VECTOR demonstration dataset.",
+    "company": "VECTOR demo community",
+    "github_url": "",
+    "linkedin_url": null,
+    "email": null,
+    "persona_title": "Developer Experience Engineer",
+    "dna_tags": [
+      "Developer Experience",
+      "Operators",
+      "Go",
+      "Kubernetes"
+    ],
+    "top_languages": [
+      "Go",
+      "Python"
+    ],
+    "hallway_icebreaker": "What has your team learned about developer experience in production?",
+    "ideal_talk_query": "Developer Experience Operators Go Kubernetes",
+    "top_repos": [],
+    "current_room_id": "ballroom-b",
+    "coordinates": {
+      "lat": 40.7663,
+      "lon": -111.8967
+    },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.9,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": [],
+    "bumped_from_talk_id": null,
+    "pin_code": "6105",
+    "updated_at": "2026-11-12T20:00:00Z",
+    "embedding": []
+  },
+  {
+    "username": "demo-kenji-sato",
+    "github_id": 0,
+    "display_name": "Kenji Sato \u00b7 Demo",
+    "avatar_url": "/avatars/demo-kenji-sato.svg",
+    "bio": "Fictional attendee for the VECTOR demonstration dataset.",
+    "company": "VECTOR demo community",
+    "github_url": "",
+    "linkedin_url": null,
+    "email": null,
+    "persona_title": "AI Infrastructure Engineer",
+    "dna_tags": [
+      "AI",
+      "vLLM",
+      "GPU",
+      "Kubernetes"
+    ],
+    "top_languages": [
+      "Go",
+      "Python"
+    ],
+    "hallway_icebreaker": "What has your team learned about ai in production?",
+    "ideal_talk_query": "AI vLLM GPU Kubernetes",
+    "top_repos": [],
+    "current_room_id": "ballroom-b",
+    "coordinates": {
+      "lat": 40.7663,
+      "lon": -111.8967
+    },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.9,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": [],
+    "bumped_from_talk_id": null,
+    "pin_code": "6106",
+    "updated_at": "2026-11-12T20:00:00Z",
+    "embedding": []
+  },
+  {
+    "username": "demo-sofia-alvarez",
+    "github_id": 0,
+    "display_name": "Sofia Alvarez \u00b7 Demo",
+    "avatar_url": "/avatars/demo-sofia-alvarez.svg",
+    "bio": "Fictional attendee for the VECTOR demonstration dataset.",
+    "company": "VECTOR demo community",
+    "github_url": "",
+    "linkedin_url": null,
+    "email": null,
+    "persona_title": "Accessibility Engineer",
+    "dna_tags": [
+      "Accessibility",
+      "Inclusive Design",
+      "UX",
+      "Cloud-Native"
+    ],
+    "top_languages": [
+      "Go",
+      "Python"
+    ],
+    "hallway_icebreaker": "What has your team learned about accessibility in production?",
+    "ideal_talk_query": "Accessibility Inclusive Design UX Cloud-Native",
+    "top_repos": [],
+    "current_room_id": "ballroom-b",
+    "coordinates": {
+      "lat": 40.7663,
+      "lon": -111.8967
+    },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.9,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": [],
+    "bumped_from_talk_id": null,
+    "pin_code": "6107",
+    "updated_at": "2026-11-12T20:00:00Z",
+    "embedding": []
+  },
+  {
+    "username": "demo-eli-brooks",
+    "github_id": 0,
+    "display_name": "Eli Brooks \u00b7 Demo",
+    "avatar_url": "/avatars/demo-eli-brooks.svg",
+    "bio": "Fictional attendee for the VECTOR demonstration dataset.",
+    "company": "VECTOR demo community",
+    "github_url": "",
+    "linkedin_url": null,
+    "email": null,
+    "persona_title": "Site Reliability Engineer",
+    "dna_tags": [
+      "SRE",
+      "OpenTelemetry",
+      "Metrics",
+      "Kubernetes"
+    ],
+    "top_languages": [
+      "Go",
+      "Python"
+    ],
+    "hallway_icebreaker": "What has your team learned about sre in production?",
+    "ideal_talk_query": "SRE OpenTelemetry Metrics Kubernetes",
+    "top_repos": [],
+    "current_room_id": "room-250b",
+    "coordinates": {
+      "lat": 40.7664,
+      "lon": -111.8962
+    },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.9,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": [],
+    "bumped_from_talk_id": null,
+    "pin_code": "6108",
+    "updated_at": "2026-11-12T20:00:00Z",
+    "embedding": []
+  },
+  {
+    "username": "demo-zara-ali",
+    "github_id": 0,
+    "display_name": "Zara Ali \u00b7 Demo",
+    "avatar_url": "/avatars/demo-zara-ali.svg",
+    "bio": "Fictional attendee for the VECTOR demonstration dataset.",
+    "company": "VECTOR demo community",
+    "github_url": "",
+    "linkedin_url": null,
+    "email": null,
+    "persona_title": "Open Source Maintainer",
+    "dna_tags": [
+      "Community",
+      "CNCF",
+      "GitOps",
+      "Go"
+    ],
+    "top_languages": [
+      "Go",
+      "Python"
+    ],
+    "hallway_icebreaker": "What has your team learned about community in production?",
+    "ideal_talk_query": "Community CNCF GitOps Go",
+    "top_repos": [],
+    "current_room_id": "room-251a",
+    "coordinates": {
+      "lat": 40.766405,
+      "lon": -111.89619699999999
+    },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.9,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": [],
+    "bumped_from_talk_id": null,
+    "pin_code": "6109",
+    "updated_at": "2026-11-12T20:00:00Z",
+    "embedding": []
+  },
+  {
+    "username": "demo-theo-martin",
+    "github_id": 0,
+    "display_name": "Theo Martin \u00b7 Demo",
+    "avatar_url": "/avatars/demo-theo-martin.svg",
+    "bio": "Fictional attendee for the VECTOR demonstration dataset.",
+    "company": "VECTOR demo community",
+    "github_url": "",
+    "linkedin_url": null,
+    "email": null,
+    "persona_title": "Runtime Engineer",
+    "dna_tags": [
+      "WebAssembly",
+      "Wasmtime",
+      "Rust",
+      "Edge"
+    ],
+    "top_languages": [
+      "Rust",
+      "Go"
+    ],
+    "hallway_icebreaker": "What has your team learned about webassembly in production?",
+    "ideal_talk_query": "WebAssembly Wasmtime Rust Edge",
+    "top_repos": [],
+    "current_room_id": "room-203a-quiet",
+    "coordinates": {
+      "lat": 40.76641,
+      "lon": -111.896194
+    },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.9,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": [],
+    "bumped_from_talk_id": null,
+    "pin_code": "6110",
+    "updated_at": "2026-11-12T20:00:00Z",
+    "embedding": []
+  },
+  {
+    "username": "demo-anika-rao",
+    "github_id": 0,
+    "display_name": "Anika Rao \u00b7 Demo",
+    "avatar_url": "/avatars/demo-anika-rao.svg",
+    "bio": "Fictional attendee for the VECTOR demonstration dataset.",
+    "company": "VECTOR demo community",
+    "github_url": "",
+    "linkedin_url": null,
+    "email": null,
+    "persona_title": "Distributed Systems Engineer",
+    "dna_tags": [
+      "Rust",
+      "Async",
+      "Architecture",
+      "Cloud-Native"
+    ],
+    "top_languages": [
+      "Rust",
+      "Go"
+    ],
+    "hallway_icebreaker": "What has your team learned about rust in production?",
+    "ideal_talk_query": "Rust Async Architecture Cloud-Native",
+    "top_repos": [],
+    "current_room_id": "room-203b",
+    "coordinates": {
+      "lat": 40.766414999999995,
+      "lon": -111.89619099999999
+    },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.9,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": [],
+    "bumped_from_talk_id": null,
+    "pin_code": "6111",
+    "updated_at": "2026-11-12T20:00:00Z",
+    "embedding": []
+  },
+  {
+    "username": "demo-owen-park",
+    "github_id": 0,
+    "display_name": "Owen Park \u00b7 Demo",
+    "avatar_url": "/avatars/demo-owen-park.svg",
+    "bio": "Fictional attendee for the VECTOR demonstration dataset.",
+    "company": "VECTOR demo community",
+    "github_url": "",
+    "linkedin_url": null,
+    "email": null,
+    "persona_title": "Platform Architect",
+    "dna_tags": [
+      "Kubernetes",
+      "Architecture",
+      "eBPF",
+      "Go"
+    ],
+    "top_languages": [
+      "Go",
+      "Python"
+    ],
+    "hallway_icebreaker": "What has your team learned about kubernetes in production?",
+    "ideal_talk_query": "Kubernetes Architecture eBPF Go",
+    "top_repos": [],
+    "current_room_id": "room-204a",
+    "coordinates": {
+      "lat": 40.76642,
+      "lon": -111.896188
+    },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.9,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": [],
+    "bumped_from_talk_id": null,
+    "pin_code": "6112",
+    "updated_at": "2026-11-12T20:00:00Z",
+    "embedding": []
+  },
+  {
+    "username": "demo-imani-reed",
+    "github_id": 0,
+    "display_name": "Imani Reed \u00b7 Demo",
+    "avatar_url": "/avatars/demo-imani-reed.svg",
+    "bio": "Fictional attendee for the VECTOR demonstration dataset.",
+    "company": "VECTOR demo community",
+    "github_url": "",
+    "linkedin_url": null,
+    "email": null,
+    "persona_title": "Telemetry Maintainer",
+    "dna_tags": [
+      "OpenTelemetry",
+      "Rust",
+      "Metrics",
+      "Tracing"
+    ],
+    "top_languages": [
+      "Rust",
+      "Go"
+    ],
+    "hallway_icebreaker": "What has your team learned about opentelemetry in production?",
+    "ideal_talk_query": "OpenTelemetry Rust Metrics Tracing",
+    "top_repos": [],
+    "current_room_id": "room-255a",
+    "coordinates": {
+      "lat": 40.766425,
+      "lon": -111.89618499999999
+    },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.9,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": [],
+    "bumped_from_talk_id": null,
+    "pin_code": "6113",
+    "updated_at": "2026-11-12T20:00:00Z",
+    "embedding": []
+  },
+  {
+    "username": "demo-lucas-silva",
+    "github_id": 0,
+    "display_name": "Lucas Silva \u00b7 Demo",
+    "avatar_url": "/avatars/demo-lucas-silva.svg",
+    "bio": "Fictional attendee for the VECTOR demonstration dataset.",
+    "company": "VECTOR demo community",
+    "github_url": "",
+    "linkedin_url": null,
+    "email": null,
+    "persona_title": "GitOps Engineer",
+    "dna_tags": [
+      "GitOps",
+      "CNCF",
+      "Kubernetes",
+      "Controllers"
+    ],
+    "top_languages": [
+      "Go",
+      "Python"
+    ],
+    "hallway_icebreaker": "What has your team learned about gitops in production?",
+    "ideal_talk_query": "GitOps CNCF Kubernetes Controllers",
+    "top_repos": [],
+    "current_room_id": "room-255b",
+    "coordinates": {
+      "lat": 40.76643,
+      "lon": -111.896182
+    },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.9,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": [],
+    "bumped_from_talk_id": null,
+    "pin_code": "6114",
+    "updated_at": "2026-11-12T20:00:00Z",
+    "embedding": []
+  },
+  {
+    "username": "demo-mila-petrov",
+    "github_id": 0,
+    "display_name": "Mila Petrov \u00b7 Demo",
+    "avatar_url": "/avatars/demo-mila-petrov.svg",
+    "bio": "Fictional attendee for the VECTOR demonstration dataset.",
+    "company": "VECTOR demo community",
+    "github_url": "",
+    "linkedin_url": null,
+    "email": null,
+    "persona_title": "Container Engineer",
+    "dna_tags": [
+      "containerd",
+      "Linux",
+      "OCI",
+      "Runtimes"
+    ],
+    "top_languages": [
+      "Go",
+      "Python"
+    ],
+    "hallway_icebreaker": "What has your team learned about containerd in production?",
+    "ideal_talk_query": "containerd Linux OCI Runtimes",
+    "top_repos": [],
+    "current_room_id": "room-255c",
+    "coordinates": {
+      "lat": 40.766434999999994,
+      "lon": -111.89617899999999
+    },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.9,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": [],
+    "bumped_from_talk_id": null,
+    "pin_code": "6115",
+    "updated_at": "2026-11-12T20:00:00Z",
+    "embedding": []
+  },
+  {
+    "username": "demo-samira-hassan",
+    "github_id": 0,
+    "display_name": "Samira Hassan \u00b7 Demo",
+    "avatar_url": "/avatars/demo-samira-hassan.svg",
+    "bio": "Fictional attendee for the VECTOR demonstration dataset.",
+    "company": "VECTOR demo community",
+    "github_url": "",
+    "linkedin_url": null,
+    "email": null,
+    "persona_title": "Search Engineer",
+    "dna_tags": [
+      "Elasticsearch",
+      "RRF",
+      "Dense Retrieval",
+      "Rust"
+    ],
+    "top_languages": [
+      "Rust",
+      "Go"
+    ],
+    "hallway_icebreaker": "What has your team learned about elasticsearch in production?",
+    "ideal_talk_query": "Elasticsearch RRF Dense Retrieval Rust",
+    "top_repos": [],
+    "current_room_id": "room-355a-quiet",
+    "coordinates": {
+      "lat": 40.766439999999996,
+      "lon": -111.896176
+    },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.9,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": [],
+    "bumped_from_talk_id": null,
+    "pin_code": "6116",
+    "updated_at": "2026-11-12T20:00:00Z",
+    "embedding": []
+  },
+  {
+    "username": "demo-felix-weber",
+    "github_id": 0,
+    "display_name": "Felix Weber \u00b7 Demo",
+    "avatar_url": "/avatars/demo-felix-weber.svg",
+    "bio": "Fictional attendee for the VECTOR demonstration dataset.",
+    "company": "VECTOR demo community",
+    "github_url": "",
+    "linkedin_url": null,
+    "email": null,
+    "persona_title": "Supply Chain Engineer",
+    "dna_tags": [
+      "Sigstore",
+      "SLSA",
+      "Cosign",
+      "Security"
+    ],
+    "top_languages": [
+      "Go",
+      "Python"
+    ],
+    "hallway_icebreaker": "What has your team learned about sigstore in production?",
+    "ideal_talk_query": "Sigstore SLSA Cosign Security",
+    "top_repos": [],
+    "current_room_id": "room-355b",
+    "coordinates": {
+      "lat": 40.766445,
+      "lon": -111.89617299999999
+    },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.9,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": [],
+    "bumped_from_talk_id": null,
+    "pin_code": "6117",
+    "updated_at": "2026-11-12T20:00:00Z",
+    "embedding": []
+  },
+  {
+    "username": "demo-nora-kim",
+    "github_id": 0,
+    "display_name": "Nora Kim \u00b7 Demo",
+    "avatar_url": "/avatars/demo-nora-kim.svg",
+    "bio": "Fictional attendee for the VECTOR demonstration dataset.",
+    "company": "VECTOR demo community",
+    "github_url": "",
+    "linkedin_url": null,
+    "email": null,
+    "persona_title": "Cloud Developer",
+    "dna_tags": [
+      "Rust",
+      "Vue",
+      "Axum",
+      "Kubernetes"
+    ],
+    "top_languages": [
+      "Rust",
+      "Go"
+    ],
+    "hallway_icebreaker": "What has your team learned about rust in production?",
+    "ideal_talk_query": "Rust Vue Axum Kubernetes",
+    "top_repos": [],
+    "current_room_id": "room-355c",
+    "coordinates": {
+      "lat": 40.76645,
+      "lon": -111.89617
+    },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.9,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": [],
+    "bumped_from_talk_id": null,
+    "pin_code": "6118",
+    "updated_at": "2026-11-12T20:00:00Z",
+    "embedding": []
+  },
+  {
+    "username": "demo-diego-santos",
+    "github_id": 0,
+    "display_name": "Diego Santos \u00b7 Demo",
+    "avatar_url": "/avatars/demo-diego-santos.svg",
+    "bio": "Fictional attendee for the VECTOR demonstration dataset.",
+    "company": "VECTOR demo community",
+    "github_url": "",
+    "linkedin_url": null,
+    "email": null,
+    "persona_title": "Edge Platform Engineer",
+    "dna_tags": [
+      "WebAssembly",
+      "Edge",
+      "Microservices",
+      "Rust"
+    ],
+    "top_languages": [
+      "Rust",
+      "Go"
+    ],
+    "hallway_icebreaker": "What has your team learned about webassembly in production?",
+    "ideal_talk_query": "WebAssembly Edge Microservices Rust",
+    "top_repos": [],
+    "current_room_id": "room-355d",
+    "coordinates": {
+      "lat": 40.766455,
+      "lon": -111.89616699999999
+    },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.9,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": [],
+    "bumped_from_talk_id": null,
+    "pin_code": "6119",
+    "updated_at": "2026-11-12T20:00:00Z",
+    "embedding": []
+  },
+  {
+    "username": "demo-asha-patel",
+    "github_id": 0,
+    "display_name": "Asha Patel \u00b7 Demo",
+    "avatar_url": "/avatars/demo-asha-patel.svg",
+    "bio": "Fictional attendee for the VECTOR demonstration dataset.",
+    "company": "VECTOR demo community",
+    "github_url": "",
+    "linkedin_url": null,
+    "email": null,
+    "persona_title": "Reliability Engineer",
+    "dna_tags": [
+      "SRE",
+      "Kubernetes",
+      "Tracing",
+      "Go"
+    ],
+    "top_languages": [
+      "Go",
+      "Python"
+    ],
+    "hallway_icebreaker": "What has your team learned about sre in production?",
+    "ideal_talk_query": "SRE Kubernetes Tracing Go",
+    "top_repos": [],
+    "current_room_id": "room-250b",
+    "coordinates": {
+      "lat": 40.7664,
+      "lon": -111.8962
+    },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.9,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": [],
+    "bumped_from_talk_id": null,
+    "pin_code": "6120",
+    "updated_at": "2026-11-12T20:00:00Z",
+    "embedding": []
+  },
+  {
+    "username": "demo-leo-nguyen",
+    "github_id": 0,
+    "display_name": "Leo Nguyen \u00b7 Demo",
+    "avatar_url": "/avatars/demo-leo-nguyen.svg",
+    "bio": "Fictional attendee for the VECTOR demonstration dataset.",
+    "company": "VECTOR demo community",
+    "github_url": "",
+    "linkedin_url": null,
+    "email": null,
+    "persona_title": "Infrastructure Maintainer",
+    "dna_tags": [
+      "Cloud-Native",
+      "Kubernetes",
+      "Community",
+      "Go"
+    ],
+    "top_languages": [
+      "Go",
+      "Python"
+    ],
+    "hallway_icebreaker": "What has your team learned about cloud-native in production?",
+    "ideal_talk_query": "Cloud-Native Kubernetes Community Go",
+    "top_repos": [],
+    "current_room_id": "room-251a",
+    "coordinates": {
+      "lat": 40.766405,
+      "lon": -111.89619699999999
+    },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.9,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": [],
+    "bumped_from_talk_id": null,
+    "pin_code": "6121",
+    "updated_at": "2026-11-12T20:00:00Z",
+    "embedding": []
+  },
+  {
+    "username": "demo-ines-costa",
+    "github_id": 0,
+    "display_name": "Ines Costa \u00b7 Demo",
+    "avatar_url": "/avatars/demo-ines-costa.svg",
+    "bio": "Fictional attendee for the VECTOR demonstration dataset.",
+    "company": "VECTOR demo community",
+    "github_url": "",
+    "linkedin_url": null,
+    "email": null,
+    "persona_title": "Data Engineer",
+    "dna_tags": [
+      "Databases",
+      "Elasticsearch",
+      "Vector Search",
+      "Python"
+    ],
+    "top_languages": [
+      "Go",
+      "Python"
+    ],
+    "hallway_icebreaker": "What has your team learned about databases in production?",
+    "ideal_talk_query": "Databases Elasticsearch Vector Search Python",
+    "top_repos": [],
+    "current_room_id": "room-203a-quiet",
+    "coordinates": {
+      "lat": 40.76641,
+      "lon": -111.896194
+    },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.9,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": [],
+    "bumped_from_talk_id": null,
+    "pin_code": "6122",
+    "updated_at": "2026-11-12T20:00:00Z",
+    "embedding": []
+  },
+  {
+    "username": "demo-ravi-menon",
+    "github_id": 0,
+    "display_name": "Ravi Menon \u00b7 Demo",
+    "avatar_url": "/avatars/demo-ravi-menon.svg",
+    "bio": "Fictional attendee for the VECTOR demonstration dataset.",
+    "company": "VECTOR demo community",
+    "github_url": "",
+    "linkedin_url": null,
+    "email": null,
+    "persona_title": "Systems Engineer",
+    "dna_tags": [
+      "Linux",
+      "eBPF",
+      "Kernel",
+      "Rust"
+    ],
+    "top_languages": [
+      "Rust",
+      "Go"
+    ],
+    "hallway_icebreaker": "What has your team learned about linux in production?",
+    "ideal_talk_query": "Linux eBPF Kernel Rust",
+    "top_repos": [],
+    "current_room_id": "room-203b",
+    "coordinates": {
+      "lat": 40.766414999999995,
+      "lon": -111.89619099999999
+    },
+    "sensory_prefs": {
+      "sensory_mode_enabled": false,
+      "max_crowd_ratio": 0.9,
+      "max_decibels": 75.0,
+      "require_wheelchair_access": false,
+      "require_live_captions": false,
+      "prefer_quiet_zones": false
+    },
+    "bookmarked_talk_ids": [],
+    "bumped_from_talk_id": null,
+    "pin_code": "6123",
+    "updated_at": "2026-11-12T20:00:00Z",
+    "embedding": []
+  }
+]

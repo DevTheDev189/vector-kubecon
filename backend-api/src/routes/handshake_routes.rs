@@ -6,7 +6,7 @@ use serde_json::json;
 use sha2::Sha256;
 
 use crate::{
-    auth::OptionalAuthUser,
+    auth::RequireAuthUser,
     error::ApiError,
     models::{BuilderProfile, HandshakeRecord, QrHandshakeToken, SseEvent},
     state::AppState,
@@ -26,12 +26,9 @@ pub struct ConnectRequest {
 #[tracing::instrument(skip_all, fields(http.route = "/api/handshake/badge"))]
 pub async fn get_badge_token_handler(
     State(state): State<AppState>,
-    user_opt: OptionalAuthUser,
+    user: RequireAuthUser,
 ) -> Result<impl IntoResponse, ApiError> {
-    let username = match user_opt.0 {
-        Some(token) => token.username,
-        None => "zircon-dev".to_string(),
-    };
+    let username = user.0.username;
 
     let doc_url = format!("{}/builders/_doc/{}", state.elastic().base_url, username);
     let resp = state.http().get(&doc_url).send().await?;
@@ -81,13 +78,10 @@ pub async fn get_badge_token_handler(
 #[tracing::instrument(skip_all, fields(http.route = "/api/handshake/connect"))]
 pub async fn connect_handshake_handler(
     State(state): State<AppState>,
-    user_opt: OptionalAuthUser,
+    user: RequireAuthUser,
     Json(payload): Json<ConnectRequest>,
 ) -> Result<impl IntoResponse, ApiError> {
-    let initiator_username = match user_opt.0 {
-        Some(token) => token.username,
-        None => "zircon-dev".to_string(),
-    };
+    let initiator_username = user.0.username;
 
     let peer_username = payload.peer_username.trim().to_string();
 

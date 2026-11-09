@@ -1,3 +1,4 @@
+mod common;
 use axum::{
     body::Body,
     http::{header, Request, StatusCode},
@@ -8,7 +9,6 @@ use tower::ServiceExt;
 use backend_api::{
     app_router,
     auth::{sign_session_cookie, verify_session_cookie, SessionToken, COOKIE_NAME},
-    config::AppConfig,
     state::AppState,
 };
 
@@ -33,7 +33,7 @@ async fn test_hmac_session_cookie_signing_and_verification() {
 
 #[tokio::test]
 async fn test_full_api_auth_and_routes_flow() {
-    let mut config = AppConfig::from_env();
+    let mut config = common::config();
     config.port = 8091;
     let state = AppState::new(config.clone());
 
@@ -55,31 +55,8 @@ async fn test_full_api_auth_and_routes_flow() {
         .unwrap();
     assert_eq!(resp.status(), StatusCode::OK);
 
-    // 2. POST /api/auth/impersonate (Kelsey Hightower)
-    let imp_resp = app
-        .clone()
-        .oneshot(
-            Request::builder()
-                .method("POST")
-                .uri("/api/auth/impersonate")
-                .header(header::CONTENT_TYPE, "application/json")
-                .body(Body::from(
-                    json!({ "username": "kelseyhightower" }).to_string(),
-                ))
-                .unwrap(),
-        )
-        .await
-        .unwrap();
-    assert_eq!(imp_resp.status(), StatusCode::OK);
-
-    let set_cookie = imp_resp
-        .headers()
-        .get(header::SET_COOKIE)
-        .and_then(|h| h.to_str().ok())
-        .expect("Must set session cookie");
-    assert!(set_cookie.contains(COOKIE_NAME));
-
-    let cookie_header_val = set_cookie.split(';').next().unwrap().to_string();
+    // Authenticated fixture; production sessions are issued only by OAuth.
+    let cookie_header_val = common::cookie(&config, "kelseyhightower", 110292);
 
     // 3. GET /api/state with cookie
     let state_resp = app

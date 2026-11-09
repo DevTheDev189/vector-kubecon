@@ -1,4 +1,4 @@
-const CACHE = "vector-shell-v3";
+const CACHE = "vector-shell-v4";
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE).then(async (cache) => {
@@ -11,6 +11,14 @@ self.addEventListener("install", (event) => {
       await cache.addAll([
         ...new Set([...assets, "/icon.svg", "/manifest.webmanifest"]),
       ]);
+      // Include self-hosted fonts referenced by the built stylesheet.
+      for (const asset of assets.filter((url) => url.endsWith(".css"))) {
+        const css = await (await cache.match(asset)).text();
+        const fonts = [
+          ...css.matchAll(/url\(["']?(\/assets\/[^)"']+)["']?\)/g),
+        ].map((match) => match[1]);
+        await cache.addAll([...new Set(fonts)]);
+      }
       await cache.put("/", response);
     }),
   );
