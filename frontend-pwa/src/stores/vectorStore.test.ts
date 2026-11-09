@@ -205,3 +205,28 @@ describe("session lifecycle", () => {
     expect(store.profile).toBeNull();
   });
 });
+
+describe("quiet space discovery", () => {
+  it("adds newly quiet rooms and removes them when live noise increases", () => {
+    const store = useVectorStore();
+    const quietRoom = {
+      ...room,
+      room_id: "quiet-test",
+      active_talk_id: null,
+      occupancy_ratio: 0.05,
+      decibel_level: 38,
+    };
+    const update = (db: number): SseEvent => ({
+      event_type: "room_telemetry_update",
+      data: {
+        room: { ...quietRoom, decibel_level: db },
+        trace_id: "quiet",
+        timestamp_utc: "2026-11-12T20:00:00Z",
+      },
+    });
+    store.handleEvent(update(38));
+    expect(store.sensoryHavens.map((r) => r.room_id)).toContain("quiet-test");
+    store.handleEvent(update(61));
+    expect(store.sensoryHavens).toEqual([]);
+  });
+});

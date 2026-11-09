@@ -52,4 +52,6 @@ The tests expect Elasticsearch at `http://127.0.0.1:9200` (override `ELASTICSEAR
 
 On this WSL host, `.cargo/config.toml` limits builds to one job. The host also uses `RUSTC_WRAPPER=/tmp/vector-rustc-low-memory`, which forwards compiler arguments and appends `-C link-arg=-Wl,--threads=1`. Keep these limits despite the added swap. Do not restart WSL or Tailscale during remote work.
 
-The rebuilt map follows the supplied historical Salt Palace diagram. It is an architectural schematic with approximate demo-room placements, not surveyed pedestrian or accessibility navigation. A native room picker provides usable phone targets for small meeting-room shapes. Recommendations depend on the attendee's verified GitHub profile and available seats.
+The rebuilt map follows the supplied historical Salt Palace diagram. It is an architectural schematic with approximate demo-room placements, not surveyed pedestrian or accessibility navigation. A prominent cross-floor text search and quiet-space discovery list provide usable phone targets for small meeting-room shapes. Recommendations depend on the attendee's verified GitHub profile and available seats.
+
+Additional demo fixtures are backfilled into existing databases without overwriting records. See [seed data](../seed/README.md).

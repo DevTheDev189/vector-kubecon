@@ -115,6 +115,30 @@ test("desktop and mobile attendee demo", async ({ page, context }) => {
     ).toBeVisible();
     await page.locator('.map-room[data-room-id="room-250a"]').click();
     await expect(page.locator(".map-selection")).toContainText("Room 250A");
+    const search = page.getByRole("searchbox", { name: "Find your room" });
+    await search.fill("355a");
+    await page
+      .locator(".room-search-results")
+      .getByRole("button", { name: /Room 355A/ })
+      .click();
+    await expect(page.locator(".map-selection")).toContainText("Room 355A");
+    await expect(
+      page.locator('.map-room[data-room-id="room-355a-quiet"]'),
+    ).toBeVisible();
+    await expect(page.locator(".quiet-map-pin")).toHaveCount(1);
+    await page.getByRole("button", { name: /Find a quiet space/ }).click();
+    await expect(page.locator(".room-search-results button")).toHaveCount(5);
+    await page
+      .locator(".room-search-results")
+      .getByRole("button", { name: /Room 204B/ })
+      .click();
+    await expect(page.locator(".map-selection")).toContainText("Room 204B");
+    await expect(page.locator(".avatar").first()).toHaveCSS("filter", "none");
+    await search.fill("250a");
+    await page
+      .locator(".room-search-results")
+      .getByRole("button", { name: /Room 250A/ })
+      .click();
     const noise = await request.post("/api/rooms/checkin", {
       data: { room_id: "room-250a", delta: 0, decibel_reading: 61.5 },
     });
@@ -144,7 +168,7 @@ test("desktop and mobile attendee demo", async ({ page, context }) => {
     await expect(page.locator(".talk-card")).toContainText(
       alert.recommended_alternative.title,
     );
-    await expect(page.locator(".reroute-path")).toHaveCount(1);
+    await expect(page.locator(".reroute-path")).toHaveCount(0);
     await page
       .getByRole("button", { name: "Try quiet mode", exact: true })
       .click();
@@ -186,6 +210,18 @@ test("desktop and mobile attendee demo", async ({ page, context }) => {
     ).toBe(true);
     await expect(page.locator(".judge-dock")).toBeHidden();
     await expect(page.locator(".spatial-map")).toBeVisible();
+    await search.fill("203a");
+    await expect(page.locator(".room-search-results")).toBeVisible();
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+    await page
+      .locator(".room-search-results")
+      .getByRole("button", { name: /Room 203A/ })
+      .click();
+    await expect(page.locator(".map-selection")).toContainText("Room 203A");
     const mobileControls = page.locator(".mobile-demo-controls");
     await mobileControls.locator("summary").click();
     await mobileControls

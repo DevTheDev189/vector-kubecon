@@ -48,7 +48,7 @@ pub async fn get_state_handler(
     };
 
     // 2. Fetch Rooms
-    let rooms_url = format!("{}/rooms_state/_search?size=20", state.elastic().base_url);
+    let rooms_url = format!("{}/rooms_state/_search?size=100", state.elastic().base_url);
     let rooms_resp = state.http().get(&rooms_url).send().await?;
     let mut rooms: Vec<RoomState> = Vec::new();
     if rooms_resp.status().is_success() {

@@ -1,0 +1,362 @@
+[
+  {
+    "room_id": "room-250b",
+    "room_name": "Room 250B (Developer Experience)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.7664,
+      "lon": -111.8962
+    },
+    "map_point": {
+      "x": 580.0,
+      "y": 100.0
+    },
+    "capacity_max": 70,
+    "capacity_current": 28,
+    "occupancy_ratio": 0.4,
+    "decibel_level": 51.2,
+    "active_talk_id": null,
+    "active_talk_title": null,
+    "next_talk_start": null,
+    "is_sensory_haven": false,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "updated_at": "2026-11-12T20:00:00Z"
+  },
+  {
+    "room_id": "room-251a",
+    "room_name": "Room 251A (Platform Workshop)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.766405,
+      "lon": -111.89619699999999
+    },
+    "map_point": {
+      "x": 605.0,
+      "y": 100.0
+    },
+    "capacity_max": 85,
+    "capacity_current": 46,
+    "occupancy_ratio": 0.5412,
+    "decibel_level": 56.0,
+    "active_talk_id": null,
+    "active_talk_title": null,
+    "next_talk_start": null,
+    "is_sensory_haven": false,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "updated_at": "2026-11-12T20:00:00Z"
+  },
+  {
+    "room_id": "room-203a-quiet",
+    "room_name": "Room 203A (Quiet Reading Room)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.76641,
+      "lon": -111.896194
+    },
+    "map_point": {
+      "x": 630.0,
+      "y": 100.0
+    },
+    "capacity_max": 40,
+    "capacity_current": 3,
+    "occupancy_ratio": 0.075,
+    "decibel_level": 41.0,
+    "active_talk_id": null,
+    "active_talk_title": null,
+    "next_talk_start": null,
+    "is_sensory_haven": true,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "low",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "updated_at": "2026-11-12T20:00:00Z"
+  },
+  {
+    "room_id": "room-203b",
+    "room_name": "Room 203B (Observability Lab)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.766414999999995,
+      "lon": -111.89619099999999
+    },
+    "map_point": {
+      "x": 580.0,
+      "y": 195.0
+    },
+    "capacity_max": 65,
+    "capacity_current": 32,
+    "occupancy_ratio": 0.4923,
+    "decibel_level": 53.5,
+    "active_talk_id": "demo-talk-03",
+    "active_talk_title": "Securing the Container Build Pipeline",
+    "next_talk_start": null,
+    "is_sensory_haven": false,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "updated_at": "2026-11-12T20:00:00Z"
+  },
+  {
+    "room_id": "room-204a",
+    "room_name": "Room 204A (Open Source Studio)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.76642,
+      "lon": -111.896188
+    },
+    "map_point": {
+      "x": 605.0,
+      "y": 195.0
+    },
+    "capacity_max": 60,
+    "capacity_current": 21,
+    "occupancy_ratio": 0.35,
+    "decibel_level": 49.8,
+    "active_talk_id": "demo-talk-14",
+    "active_talk_title": "Tracing Async Services End to End \u2014 Workshop",
+    "next_talk_start": null,
+    "is_sensory_haven": false,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "updated_at": "2026-11-12T20:00:00Z"
+  },
+  {
+    "room_id": "room-255a",
+    "room_name": "Room 255A (Cloud Security)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.766425,
+      "lon": -111.89618499999999
+    },
+    "map_point": {
+      "x": 630.0,
+      "y": 195.0
+    },
+    "capacity_max": 80,
+    "capacity_current": 57,
+    "occupancy_ratio": 0.7125,
+    "decibel_level": 59.4,
+    "active_talk_id": null,
+    "active_talk_title": null,
+    "next_talk_start": null,
+    "is_sensory_haven": false,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "updated_at": "2026-11-12T20:00:00Z"
+  },
+  {
+    "room_id": "room-255b",
+    "room_name": "Room 255B (Data Platforms)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.76643,
+      "lon": -111.896182
+    },
+    "map_point": {
+      "x": 580.0,
+      "y": 290.0
+    },
+    "capacity_max": 75,
+    "capacity_current": 34,
+    "occupancy_ratio": 0.4533,
+    "decibel_level": 52.5,
+    "active_talk_id": null,
+    "active_talk_title": null,
+    "next_talk_start": null,
+    "is_sensory_haven": false,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "updated_at": "2026-11-12T20:00:00Z"
+  },
+  {
+    "room_id": "room-255c",
+    "room_name": "Room 255C (AI Infrastructure)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.766434999999994,
+      "lon": -111.89617899999999
+    },
+    "map_point": {
+      "x": 605.0,
+      "y": 290.0
+    },
+    "capacity_max": 90,
+    "capacity_current": 64,
+    "occupancy_ratio": 0.7111,
+    "decibel_level": 60.2,
+    "active_talk_id": null,
+    "active_talk_title": null,
+    "next_talk_start": null,
+    "is_sensory_haven": false,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "updated_at": "2026-11-12T20:00:00Z"
+  },
+  {
+    "room_id": "room-355a-quiet",
+    "room_name": "Room 355A (Quiet Recharge Room)",
+    "floor": 3,
+    "zone": "mezzanine",
+    "coordinates": {
+      "lat": 40.766439999999996,
+      "lon": -111.896176
+    },
+    "map_point": {
+      "x": 630.0,
+      "y": 290.0
+    },
+    "capacity_max": 35,
+    "capacity_current": 2,
+    "occupancy_ratio": 0.0571,
+    "decibel_level": 40.0,
+    "active_talk_id": null,
+    "active_talk_title": null,
+    "next_talk_start": null,
+    "is_sensory_haven": true,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "low",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "updated_at": "2026-11-12T20:00:00Z"
+  },
+  {
+    "room_id": "room-355b",
+    "room_name": "Room 355B (Network Engineering)",
+    "floor": 3,
+    "zone": "mezzanine",
+    "coordinates": {
+      "lat": 40.766445,
+      "lon": -111.89617299999999
+    },
+    "map_point": {
+      "x": 580.0,
+      "y": 385.0
+    },
+    "capacity_max": 60,
+    "capacity_current": 24,
+    "occupancy_ratio": 0.4,
+    "decibel_level": 51.7,
+    "active_talk_id": null,
+    "active_talk_title": null,
+    "next_talk_start": null,
+    "is_sensory_haven": false,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "updated_at": "2026-11-12T20:00:00Z"
+  },
+  {
+    "room_id": "room-355c",
+    "room_name": "Room 355C (Reliability Workshop)",
+    "floor": 3,
+    "zone": "mezzanine",
+    "coordinates": {
+      "lat": 40.76645,
+      "lon": -111.89617
+    },
+    "map_point": {
+      "x": 605.0,
+      "y": 385.0
+    },
+    "capacity_max": 70,
+    "capacity_current": 31,
+    "occupancy_ratio": 0.4429,
+    "decibel_level": 52.1,
+    "active_talk_id": "demo-talk-09",
+    "active_talk_title": "An SRE Field Guide to Useful Metrics",
+    "next_talk_start": null,
+    "is_sensory_haven": false,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "updated_at": "2026-11-12T20:00:00Z"
+  },
+  {
+    "room_id": "room-355d",
+    "room_name": "Room 355D (Community Lab)",
+    "floor": 3,
+    "zone": "mezzanine",
+    "coordinates": {
+      "lat": 40.766455,
+      "lon": -111.89616699999999
+    },
+    "map_point": {
+      "x": 630.0,
+      "y": 385.0
+    },
+    "capacity_max": 55,
+    "capacity_current": 18,
+    "occupancy_ratio": 0.3273,
+    "decibel_level": 48.5,
+    "active_talk_id": "demo-talk-20",
+    "active_talk_title": "Designing Inclusive Cloud-Native Experiences \u2014 Workshop",
+    "next_talk_start": null,
+    "is_sensory_haven": false,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "updated_at": "2026-11-12T20:00:00Z"
+  }
+]

@@ -42,7 +42,7 @@ async fn checkins_surge_and_reset_preserve_live_state() {
     assert_eq!(status, StatusCode::OK, "{reset}");
     let (status, rooms) = call(&app, "GET", "/api/rooms", json!({})).await;
     assert_eq!(status, StatusCode::OK);
-    assert_eq!(rooms["rooms"].as_array().unwrap().len(), 12);
+    assert_eq!(rooms["rooms"].as_array().unwrap().len(), 24);
     for payload in [
         json!({"room_id":"../bad", "delta":1}),
         json!({"room_id":"ballroom-b", "delta":1, "decibel_reading":-1}),

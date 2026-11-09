@@ -481,9 +481,6 @@ label {
 .map-selection span {
   color: var(--muted);
 }
-.reroute-path {
-  animation: route 1s linear infinite;
-}
 .live-sheet {
   padding: 10px 20px 0;
   background: linear-gradient(#171717, #111111);
@@ -1208,11 +1205,6 @@ label {
   opacity: 0;
   transform: translateY(-8px);
 }
-@keyframes route {
-  to {
-    stroke-dashoffset: -24;
-  }
-}
 @keyframes breathe {
   50% {
     opacity: 0.5;
@@ -1297,9 +1289,6 @@ label {
 .workspace.quiet {
   --accent: #ededed;
   background: none;
-}
-.avatar {
-  filter: grayscale(1);
 }
 .status-dot {
   box-shadow: none;
@@ -1690,25 +1679,6 @@ label {
   letter-spacing: 2px;
   fill: #aaa;
 }
-.map-room-picker {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 16px 0;
-  font-size: 11px;
-  color: var(--muted);
-}
-.map-room-picker select {
-  flex: 1;
-  min-width: 0;
-  min-height: 44px;
-  padding: 8px;
-  color: #eee;
-  font: inherit;
-  border: 1px solid var(--border);
-  background: #191919;
-  border-radius: 8px;
-}
 .mobile-demo-controls {
   display: none;
   padding: 0 16px;
@@ -1971,4 +1941,179 @@ label {
   color: #b9e7e9;
   background: #22d3ee06;
   border-color: #22d3ee1c;
+}
+/* Prominent, phone-friendly room discovery and quiet-space callouts. */
+.room-discovery {
+  margin: 0 16px 16px;
+  padding: 16px;
+  border: 1px solid #22d3ee50;
+  border-radius: 14px;
+  background: linear-gradient(130deg, #22d3ee0f, #141719 65%);
+}
+.room-search-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #d5f9ff;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.room-search-label > svg {
+  color: #67e8f9;
+}
+.room-search-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  border: 1px solid #67e8f94d;
+  background: #0c1316;
+  border-radius: 10px;
+}
+.room-search-field:focus-within {
+  outline: 2px solid #67e8f9;
+  outline-offset: 2px;
+}
+.room-search-field > svg {
+  color: #67e8f9;
+}
+.room-search-field input {
+  border: 0;
+  background: transparent;
+  margin: 0;
+  padding: 14px 0;
+  min-width: 0;
+  min-height: 48px;
+  font-size: 16px;
+  outline: none;
+}
+.room-search-field input::placeholder {
+  color: #9aafb5;
+  font-size: 13px;
+}
+.room-search-field button {
+  border: 0;
+  padding: 6px;
+  min-height: 40px;
+  min-width: 32px;
+}
+.quiet-discovery-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 60px;
+  text-align: left;
+  padding: 12px;
+  margin-top: 12px;
+  border-color: #67e8f93b;
+  background: #22d3ee0b;
+  color: #b7f7ff;
+}
+.quiet-discovery-button > span:first-of-type {
+  flex: 1;
+}
+.quiet-discovery-button strong,
+.quiet-discovery-button small {
+  display: block;
+}
+.quiet-discovery-button strong {
+  font-size: 13px;
+  font-weight: 600;
+}
+.quiet-discovery-button small {
+  font-size: 11px;
+  margin-top: 4px;
+  color: #a5c8ce;
+}
+.quiet-discovery-button[aria-pressed="true"] {
+  border-color: #67e8f9;
+  background: #22d3ee19;
+}
+.quiet-count {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  background: #67e8f9;
+  border-radius: 8px;
+  color: #062b32;
+  font-family: "Geist Mono Variable", monospace;
+}
+.room-search-results {
+  margin-top: 12px;
+  max-height: 300px;
+  overflow: auto;
+  border-top: 1px solid #ffffff14;
+}
+.room-search-results > button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 10px;
+  min-height: 60px;
+  text-align: left;
+  border: 0;
+  border-radius: 0;
+  border-bottom: 1px solid #ffffff0c;
+  padding: 12px 4px;
+}
+.room-search-results > button > span {
+  flex: 1;
+  min-width: 0;
+}
+.room-search-results strong,
+.room-search-results small {
+  display: block;
+}
+.room-search-results strong {
+  font-size: 12px;
+}
+.room-search-results small {
+  font-size: 10px;
+  color: #9bbdc4;
+  margin-top: 5px;
+}
+.room-search-results svg {
+  color: #67e8f9;
+}
+.room-search-results > p {
+  padding: 14px 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.floor-quiet-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #67e8f9;
+  box-shadow: 0 0 7px #67e8f9a0;
+}
+.architectural-map .map-room.quiet .room-shape {
+  fill: #13505b;
+  stroke: #8bf4ff;
+  stroke-width: 3;
+  stroke-dasharray: none;
+  filter: drop-shadow(0 0 5px #22d3ee66);
+}
+.architectural-map .map-room.quiet .space-label,
+.architectural-map .map-room.quiet .space-reading {
+  fill: #d9fcff;
+  font-weight: 600;
+}
+.quiet-map-pin rect {
+  fill: #8bf4ff;
+  stroke: #0b2e36;
+  stroke-width: 2;
+}
+.quiet-map-pin text {
+  fill: #062e36;
+  font:
+    600 12px "Geist Mono Variable",
+    monospace;
+}
+.quiet-map-pin path {
+  fill: #8bf4ff;
 }

@@ -172,7 +172,7 @@ async fn full_demo_flow_over_http() {
     };
     let hydrated = json_response(get("/api/state").send().await.unwrap()).await;
     assert_eq!(hydrated["profile"]["username"], "kelseyhightower");
-    assert_eq!(hydrated["rooms"].as_array().unwrap().len(), 12);
+    assert_eq!(hydrated["rooms"].as_array().unwrap().len(), 24);
     assert!(!hydrated["profile"]["dna_tags"]
         .as_array()
         .unwrap()

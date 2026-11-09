@@ -110,11 +110,21 @@ export const spaces: MapSpace[] = [
   },
   rect("250a", "250A", 2, "meeting", 695, 700, 68, 58, "room-250a"),
   rect("251c", "251C", 2, "meeting", 765, 760, 68, 58, "room-251c"),
-  rect("250b", "250B", 2, "meeting", 765, 700, 68, 58),
-  rect("251a", "251A", 2, "meeting", 695, 760, 68, 58),
+  rect("250b", "250B", 2, "meeting", 765, 700, 68, 58, "room-250b"),
+  rect("251a", "251A", 2, "meeting", 695, 760, 68, 58, "room-251a"),
   rect("204b", "204B", 2, "meeting", 810, 420, 70, 48, "room-204b-quiet"),
   ...["203A", "203B", "204A"].map((name, i) =>
-    rect(name, name, 2, "meeting", 810, 260 + i * 52, 70, 48),
+    rect(
+      name,
+      name,
+      2,
+      "meeting",
+      810,
+      260 + i * 52,
+      70,
+      48,
+      ["room-203a-quiet", "room-203b", "room-204a"][i],
+    ),
   ),
   ...["255A", "255B", "255C", "255D", "255E", "255F"].map((name, i) =>
     rect(
@@ -126,6 +136,7 @@ export const spaces: MapSpace[] = [
       488 + Math.floor(i / 3) * 48,
       27,
       47,
+      ["room-255a", "room-255b", "room-255c"][i],
     ),
   ),
   {
@@ -166,7 +177,9 @@ export const spaces: MapSpace[] = [
       260 + Math.floor(i / 3) * 48,
       27,
       47,
-      name === "355E" ? "room-355e" : undefined,
+      ["room-355a-quiet", "room-355b", "room-355c", "room-355d", "room-355e"][
+        i
+      ],
     ),
   ),
 ];

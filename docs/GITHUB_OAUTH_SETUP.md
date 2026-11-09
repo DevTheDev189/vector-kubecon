@@ -99,7 +99,7 @@ GitHub's [OAuth flow documentation](https://docs.github.com/en/apps/oauth-apps/b
 
 1. Sign in on your phone with a handle listed in `VECTOR_ADMIN_USERS`.
 2. Keep portrait orientation. The attendee app uses one column; the desktop telemetry dock is hidden.
-3. Use floor buttons or **Find a room** to explore. The room picker provides a full-size touch target for small meeting-room shapes. Zoom buttons and drag let you inspect the SVG.
+3. Use floor buttons or **Find your room** to explore. Search results provide full-size touch targets for small meeting-room shapes; **Find a quiet space** lists available quiet rooms across floors. Zoom buttons and drag let you inspect the SVG.
 4. Open **Demo controls**, then **Trigger surge**. The panel collapses so the map and new recommendation remain visible. Reopen it to **Reset surge** for another take.
 5. Toggle **Quiet** to show the sensory haven, then open the QR badge or saved connections as needed.
 

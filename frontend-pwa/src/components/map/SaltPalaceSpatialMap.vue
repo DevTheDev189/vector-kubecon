@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 import {
   Maximize2,
   Minimize2,
@@ -8,7 +8,11 @@ import {
   RotateCcw,
   MoveUpRight,
   Layers,
+  Search,
+  Leaf,
+  X,
 } from "lucide-vue-next";
+import type { RoomState } from "../../types/vector";
 import { useVectorStore } from "../../stores/vectorStore";
 import {
   floorNames,
@@ -21,6 +25,48 @@ const store = useVectorStore();
 const floor = ref<Floor>(1),
   zoom = ref(1),
   offset = ref({ x: 0, y: 0 });
+const searchQuery = ref(""),
+  quietOnly = ref(false);
+const isQuiet = (room: RoomState) =>
+  !room.active_talk_id && room.decibel_level < 45 && room.occupancy_ratio < 0.2;
+const quietRooms = computed(() =>
+  store.rooms.filter(isQuiet).sort((a, b) => a.decibel_level - b.decibel_level),
+);
+const quietOnFloor = (level: Floor) =>
+  quietRooms.value.filter((room) => roomSpace(room.room_id)?.floor === level);
+const searchResults = computed(() => {
+  const query = searchQuery.value.trim().toLowerCase();
+  const pool = quietOnly.value ? quietRooms.value : store.rooms;
+  return pool
+    .filter((room) => {
+      const space = roomSpace(room.room_id);
+      return (
+        space &&
+        `${room.room_name} ${room.room_id} ${room.active_talk_title || ""} ${floorNames[space.floor]}`
+          .toLowerCase()
+          .includes(query)
+      );
+    })
+    .sort((a, b) => a.room_name.localeCompare(b.room_name))
+    .slice(0, 8);
+});
+function focusRoom(roomId: string) {
+  const space = roomSpace(roomId);
+  if (!space) return;
+  store.selectedRoomId = roomId;
+  floor.value = space.floor;
+  resetView();
+  searchQuery.value = "";
+  quietOnly.value = false;
+  void nextTick(() =>
+    svg.value?.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "auto"
+        : "smooth",
+      block: "center",
+    }),
+  );
+}
 const svg = ref<SVGSVGElement>();
 let drag: { x: number; y: number; ox: number; oy: number } | null = null;
 const destination = computed(() =>
@@ -122,19 +168,6 @@ function pointerMove(event: PointerEvent) {
 const visibleOrigin = computed(() =>
   origin.value?.floor === floor.value ? origin.value : null,
 );
-const visibleDestination = computed(() =>
-  destination.value?.floor === floor.value ? destination.value : null,
-);
-// Intent line only: no assertion of a verified pedestrian or accessible route.
-const routeLine = computed(() => {
-  const a = visibleOrigin.value,
-    b = visibleDestination.value;
-  if (!a && !b) return "";
-  const start = a || { x: 675, y: 670 },
-    end = b || { x: 675, y: 670 };
-  if (start.x === end.x && start.y === end.y) return "";
-  return `M${start.x} ${start.y}Q675 670 ${end.x} ${end.y}`;
-});
 </script>
 <template>
   <section
@@ -158,6 +191,72 @@ const routeLine = computed(() => {
         />
       </button>
     </div>
+    <div class="room-discovery">
+      <label class="room-search-label" for="room-search"
+        ><Search :size="17" /> Find your room</label
+      >
+      <div class="room-search-field">
+        <Search :size="18" /><input
+          id="room-search"
+          v-model="searchQuery"
+          type="search"
+          placeholder="Room number, hall, or session…"
+          autocomplete="off"
+          :aria-expanded="!!searchQuery.trim() || quietOnly"
+          aria-controls="room-search-results"
+        /><button
+          v-if="searchQuery"
+          aria-label="Clear room search"
+          @click="searchQuery = ''"
+        >
+          <X :size="16" />
+        </button>
+      </div>
+      <button
+        class="quiet-discovery-button"
+        :aria-pressed="quietOnly"
+        @click="quietOnly = !quietOnly"
+      >
+        <Leaf :size="18" /><span
+          ><strong>Find a quiet space</strong
+          ><small>{{
+            store.authenticated
+              ? `${quietRooms.length} available across all floors`
+              : "Sign in for live availability"
+          }}</small></span
+        ><span class="quiet-count">{{
+          store.authenticated ? quietRooms.length : "—"
+        }}</span>
+      </button>
+      <div
+        v-if="searchQuery.trim() || quietOnly"
+        id="room-search-results"
+        class="room-search-results"
+        aria-label="Room search results"
+      >
+        <button
+          v-for="result in searchResults"
+          :key="result.room_id"
+          @click="focusRoom(result.room_id)"
+        >
+          <Leaf v-if="isQuiet(result)" :size="16" /><Search
+            v-else
+            :size="16"
+          /><span
+            ><strong>{{ result.room_name }}</strong
+            ><small
+              >{{ floorNames[roomSpace(result.room_id)!.floor] }} ·
+              {{ result.decibel_level.toFixed(1) }} dB{{
+                isQuiet(result) ? " · Quiet space" : ""
+              }}</small
+            ></span
+          ><MoveUpRight :size="16" />
+        </button>
+        <p v-if="!searchResults.length" role="status">
+          No rooms match. Try a room number or another keyword.
+        </p>
+      </div>
+    </div>
     <div class="floor-switcher" aria-label="Map floor">
       <button
         v-for="level in [1, 2, 3] as Floor[]"
@@ -168,7 +267,13 @@ const routeLine = computed(() => {
           resetView();
         "
       >
-        <span class="mono">0{{ level }}</span> {{ floorNames[level] }}
+        <span class="mono">0{{ level }}</span> {{ floorNames[level]
+        }}<i
+          v-if="quietOnFloor(level).length"
+          class="floor-quiet-dot"
+          aria-hidden="true"
+          :title="`${quietOnFloor(level).length} quiet spaces`"
+        />
       </button>
     </div>
     <div class="map-viewport">
@@ -185,17 +290,6 @@ const routeLine = computed(() => {
         @lostpointercapture="drag = null"
       >
         <defs>
-          <linearGradient
-            id="map-route-gradient"
-            x1="0%"
-            y1="0%"
-            x2="100%"
-            y2="100%"
-          >
-            <stop offset="0%" stop-color="#22d3ee" />
-            <stop offset="55%" stop-color="#f7df69" />
-            <stop offset="100%" stop-color="#ef5da8" />
-          </linearGradient>
           <pattern
             id="map-dots"
             width="18"
@@ -310,16 +404,22 @@ const routeLine = computed(() => {
             }}
           </text>
         </g>
-        <path
-          v-if="routeLine"
-          :d="routeLine"
-          class="reroute-path schematic-route"
-          fill="none"
-          stroke="url(#map-route-gradient)"
-          stroke-width="3"
-          stroke-dasharray="7 7"
+        <g
+          v-for="space in displayed.filter(
+            (space) => room(space) && isQuiet(room(space)!),
+          )"
+          :key="'quiet-' + space.id"
+          class="quiet-map-pin"
+          :transform="`translate(${space.x},${space.y - 35})`"
+          aria-hidden="true"
           pointer-events="none"
-        />
+        >
+          <rect x="-63" y="-22" width="126" height="36" rx="9" />
+          <text text-anchor="middle" y="1">
+            ♧ QUIET · {{ room(space)!.decibel_level.toFixed(0) }} dB
+          </text>
+          <path d="M-5 14L0 21L5 14" />
+        </g>
         <g
           v-if="visibleOrigin"
           :transform="`translate(${visibleOrigin.x},${visibleOrigin.y - 34})`"
@@ -359,25 +459,6 @@ const routeLine = computed(() => {
         </button>
       </div>
     </div>
-    <label class="map-room-picker"
-      >Find a room
-      <select
-        aria-label="Find a room on this floor"
-        :value="store.selectedRoomId"
-        @change="
-          store.selectedRoomId = ($event.target as HTMLSelectElement).value
-        "
-      >
-        <option value="">Follow my session</option>
-        <option
-          v-for="space in displayed.filter((space) => room(space))"
-          :key="space.id"
-          :value="space.roomId"
-        >
-          {{ room(space)?.room_name }}
-        </option>
-      </select>
-    </label>
     <div class="map-legend">
       <span><i class="legend-dot open" /> Available</span
       ><span><i class="legend-dot full" /> Full</span
@@ -425,8 +506,7 @@ const routeLine = computed(() => {
       </button>
     </div>
     <p class="map-caption">
-      Architectural schematic · demo room placements are approximate.<br />Dashed
-      line shows destination intent, not verified walking directions.
+      Architectural schematic · demo room placements are approximate.
     </p>
   </section>
 </template>

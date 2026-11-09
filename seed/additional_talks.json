@@ -1,0 +1,986 @@
+[
+  {
+    "talk_id": "demo-talk-01",
+    "title": "Practical Platform APIs with Kubernetes and Rust",
+    "abstract_text": "Demo session: practical techniques, examples, and discussion about Kubernetes, Rust, Platform Engineering, Operators. This session is part of VECTOR's fictional conference dataset.",
+    "speaker": "Aria Chen \u00b7 Demo",
+    "speaker_github": "demo-aria-chen",
+    "company": "VECTOR demo community",
+    "track": "Kubernetes",
+    "tags": [
+      "Kubernetes",
+      "Rust",
+      "Platform Engineering",
+      "Operators"
+    ],
+    "room_id": "room-250b",
+    "room_name": "Room 250B (Developer Experience)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.7664,
+      "lon": -111.8962
+    },
+    "map_point": {
+      "x": 580.0,
+      "y": 100.0
+    },
+    "start_time": "2026-11-12T17:00:00Z",
+    "end_time": "2026-11-12T17:45:00Z",
+    "capacity_max": 70,
+    "capacity_current": 28,
+    "occupancy_ratio": 0.4,
+    "decibel_level": 51.2,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "embedding": []
+  },
+  {
+    "talk_id": "demo-talk-02",
+    "title": "Tracing Async Services End to End",
+    "abstract_text": "Demo session: practical techniques, examples, and discussion about OpenTelemetry, Tracing, Rust, SRE. This session is part of VECTOR's fictional conference dataset.",
+    "speaker": "Mateo Rivera \u00b7 Demo",
+    "speaker_github": "demo-mateo-rivera",
+    "company": "VECTOR demo community",
+    "track": "OpenTelemetry",
+    "tags": [
+      "OpenTelemetry",
+      "Tracing",
+      "Rust",
+      "SRE"
+    ],
+    "room_id": "room-251a",
+    "room_name": "Room 251A (Platform Workshop)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.766405,
+      "lon": -111.89619699999999
+    },
+    "map_point": {
+      "x": 605.0,
+      "y": 100.0
+    },
+    "start_time": "2026-11-12T19:00:00Z",
+    "end_time": "2026-11-12T19:45:00Z",
+    "capacity_max": 85,
+    "capacity_current": 46,
+    "occupancy_ratio": 0.5412,
+    "decibel_level": 56.0,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "embedding": []
+  },
+  {
+    "talk_id": "demo-talk-03",
+    "title": "Securing the Container Build Pipeline",
+    "abstract_text": "Demo session: practical techniques, examples, and discussion about Security, Sigstore, SLSA, Supply Chain. This session is part of VECTOR's fictional conference dataset.",
+    "speaker": "Priya Shah \u00b7 Demo",
+    "speaker_github": "demo-priya-shah",
+    "company": "VECTOR demo community",
+    "track": "Security",
+    "tags": [
+      "Security",
+      "Sigstore",
+      "SLSA",
+      "Supply Chain"
+    ],
+    "room_id": "room-203b",
+    "room_name": "Room 203B (Observability Lab)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.766414999999995,
+      "lon": -111.89619099999999
+    },
+    "map_point": {
+      "x": 580.0,
+      "y": 195.0
+    },
+    "start_time": "2026-11-12T20:00:00Z",
+    "end_time": "2026-11-12T20:45:00Z",
+    "capacity_max": 65,
+    "capacity_current": 32,
+    "occupancy_ratio": 0.4923,
+    "decibel_level": 53.5,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "embedding": []
+  },
+  {
+    "talk_id": "demo-talk-04",
+    "title": "Understanding eBPF Network Policies",
+    "abstract_text": "Demo session: practical techniques, examples, and discussion about eBPF, Cilium, Networking, Linux. This session is part of VECTOR's fictional conference dataset.",
+    "speaker": "Noah Bennett \u00b7 Demo",
+    "speaker_github": "demo-noah-bennett",
+    "company": "VECTOR demo community",
+    "track": "eBPF",
+    "tags": [
+      "eBPF",
+      "Cilium",
+      "Networking",
+      "Linux"
+    ],
+    "room_id": "room-204a",
+    "room_name": "Room 204A (Open Source Studio)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.76642,
+      "lon": -111.896188
+    },
+    "map_point": {
+      "x": 605.0,
+      "y": 195.0
+    },
+    "start_time": "2026-11-12T21:15:00Z",
+    "end_time": "2026-11-12T22:00:00Z",
+    "capacity_max": 60,
+    "capacity_current": 21,
+    "occupancy_ratio": 0.35,
+    "decibel_level": 49.8,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "embedding": []
+  },
+  {
+    "talk_id": "demo-talk-05",
+    "title": "Hybrid Retrieval for Internal Developer Portals",
+    "abstract_text": "Demo session: practical techniques, examples, and discussion about Elasticsearch, Vector Search, RRF, Developer Experience. This session is part of VECTOR's fictional conference dataset.",
+    "speaker": "Amara Okafor \u00b7 Demo",
+    "speaker_github": "demo-amara-okafor",
+    "company": "VECTOR demo community",
+    "track": "Elasticsearch",
+    "tags": [
+      "Elasticsearch",
+      "Vector Search",
+      "RRF",
+      "Developer Experience"
+    ],
+    "room_id": "room-255a",
+    "room_name": "Room 255A (Cloud Security)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.766425,
+      "lon": -111.89618499999999
+    },
+    "map_point": {
+      "x": 630.0,
+      "y": 195.0
+    },
+    "start_time": "2026-11-12T22:30:00Z",
+    "end_time": "2026-11-12T23:15:00Z",
+    "capacity_max": 80,
+    "capacity_current": 57,
+    "occupancy_ratio": 0.7125,
+    "decibel_level": 59.4,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "embedding": []
+  },
+  {
+    "talk_id": "demo-talk-06",
+    "title": "GitOps Patterns for Multi-Team Platforms",
+    "abstract_text": "Demo session: practical techniques, examples, and discussion about GitOps, Kubernetes, CNCF, Platform Engineering. This session is part of VECTOR's fictional conference dataset.",
+    "speaker": "Lena Fischer \u00b7 Demo",
+    "speaker_github": "demo-lena-fischer",
+    "company": "VECTOR demo community",
+    "track": "GitOps",
+    "tags": [
+      "GitOps",
+      "Kubernetes",
+      "CNCF",
+      "Platform Engineering"
+    ],
+    "room_id": "room-255b",
+    "room_name": "Room 255B (Data Platforms)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.76643,
+      "lon": -111.896182
+    },
+    "map_point": {
+      "x": 580.0,
+      "y": 290.0
+    },
+    "start_time": "2026-11-12T23:30:00Z",
+    "end_time": "2026-11-13T00:30:00Z",
+    "capacity_max": 75,
+    "capacity_current": 34,
+    "occupancy_ratio": 0.4533,
+    "decibel_level": 52.5,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "embedding": []
+  },
+  {
+    "talk_id": "demo-talk-07",
+    "title": "Running Efficient GPU Workloads on Kubernetes",
+    "abstract_text": "Demo session: practical techniques, examples, and discussion about AI, GPU, vLLM, Kubernetes. This session is part of VECTOR's fictional conference dataset.",
+    "speaker": "Kenji Sato \u00b7 Demo",
+    "speaker_github": "demo-kenji-sato",
+    "company": "VECTOR demo community",
+    "track": "AI",
+    "tags": [
+      "AI",
+      "GPU",
+      "vLLM",
+      "Kubernetes"
+    ],
+    "room_id": "room-255c",
+    "room_name": "Room 255C (AI Infrastructure)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.766434999999994,
+      "lon": -111.89617899999999
+    },
+    "map_point": {
+      "x": 605.0,
+      "y": 290.0
+    },
+    "start_time": "2026-11-12T17:00:00Z",
+    "end_time": "2026-11-12T17:45:00Z",
+    "capacity_max": 90,
+    "capacity_current": 64,
+    "occupancy_ratio": 0.7111,
+    "decibel_level": 60.2,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "embedding": []
+  },
+  {
+    "talk_id": "demo-talk-08",
+    "title": "Designing Inclusive Cloud-Native Experiences",
+    "abstract_text": "Demo session: practical techniques, examples, and discussion about Accessibility, UX, Inclusive Design, Cloud-Native. This session is part of VECTOR's fictional conference dataset.",
+    "speaker": "Sofia Alvarez \u00b7 Demo",
+    "speaker_github": "demo-sofia-alvarez",
+    "company": "VECTOR demo community",
+    "track": "Accessibility",
+    "tags": [
+      "Accessibility",
+      "UX",
+      "Inclusive Design",
+      "Cloud-Native"
+    ],
+    "room_id": "room-355b",
+    "room_name": "Room 355B (Network Engineering)",
+    "floor": 3,
+    "zone": "mezzanine",
+    "coordinates": {
+      "lat": 40.766445,
+      "lon": -111.89617299999999
+    },
+    "map_point": {
+      "x": 580.0,
+      "y": 385.0
+    },
+    "start_time": "2026-11-12T19:00:00Z",
+    "end_time": "2026-11-12T19:45:00Z",
+    "capacity_max": 60,
+    "capacity_current": 24,
+    "occupancy_ratio": 0.4,
+    "decibel_level": 51.7,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "embedding": []
+  },
+  {
+    "talk_id": "demo-talk-09",
+    "title": "An SRE Field Guide to Useful Metrics",
+    "abstract_text": "Demo session: practical techniques, examples, and discussion about SRE, Metrics, OpenTelemetry, Kubernetes. This session is part of VECTOR's fictional conference dataset.",
+    "speaker": "Eli Brooks \u00b7 Demo",
+    "speaker_github": "demo-eli-brooks",
+    "company": "VECTOR demo community",
+    "track": "SRE",
+    "tags": [
+      "SRE",
+      "Metrics",
+      "OpenTelemetry",
+      "Kubernetes"
+    ],
+    "room_id": "room-355c",
+    "room_name": "Room 355C (Reliability Workshop)",
+    "floor": 3,
+    "zone": "mezzanine",
+    "coordinates": {
+      "lat": 40.76645,
+      "lon": -111.89617
+    },
+    "map_point": {
+      "x": 605.0,
+      "y": 385.0
+    },
+    "start_time": "2026-11-12T20:00:00Z",
+    "end_time": "2026-11-12T20:45:00Z",
+    "capacity_max": 70,
+    "capacity_current": 31,
+    "occupancy_ratio": 0.4429,
+    "decibel_level": 52.1,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "embedding": []
+  },
+  {
+    "talk_id": "demo-talk-10",
+    "title": "Sustainable Open Source Maintenance",
+    "abstract_text": "Demo session: practical techniques, examples, and discussion about Community, CNCF, Go, Cloud-Native. This session is part of VECTOR's fictional conference dataset.",
+    "speaker": "Zara Ali \u00b7 Demo",
+    "speaker_github": "demo-zara-ali",
+    "company": "VECTOR demo community",
+    "track": "Community",
+    "tags": [
+      "Community",
+      "CNCF",
+      "Go",
+      "Cloud-Native"
+    ],
+    "room_id": "room-355d",
+    "room_name": "Room 355D (Community Lab)",
+    "floor": 3,
+    "zone": "mezzanine",
+    "coordinates": {
+      "lat": 40.766455,
+      "lon": -111.89616699999999
+    },
+    "map_point": {
+      "x": 630.0,
+      "y": 385.0
+    },
+    "start_time": "2026-11-12T21:15:00Z",
+    "end_time": "2026-11-12T22:00:00Z",
+    "capacity_max": 55,
+    "capacity_current": 18,
+    "occupancy_ratio": 0.3273,
+    "decibel_level": 48.5,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "embedding": []
+  },
+  {
+    "talk_id": "demo-talk-11",
+    "title": "Portable WebAssembly Services at the Edge",
+    "abstract_text": "Demo session: practical techniques, examples, and discussion about WebAssembly, Wasmtime, Rust, Edge. This session is part of VECTOR's fictional conference dataset.",
+    "speaker": "Theo Martin \u00b7 Demo",
+    "speaker_github": "demo-theo-martin",
+    "company": "VECTOR demo community",
+    "track": "WebAssembly",
+    "tags": [
+      "WebAssembly",
+      "Wasmtime",
+      "Rust",
+      "Edge"
+    ],
+    "room_id": "room-250b",
+    "room_name": "Room 250B (Developer Experience)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.7664,
+      "lon": -111.8962
+    },
+    "map_point": {
+      "x": 580.0,
+      "y": 100.0
+    },
+    "start_time": "2026-11-12T23:30:00Z",
+    "end_time": "2026-11-13T00:30:00Z",
+    "capacity_max": 70,
+    "capacity_current": 28,
+    "occupancy_ratio": 0.4,
+    "decibel_level": 51.2,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "embedding": []
+  },
+  {
+    "talk_id": "demo-talk-12",
+    "title": "Rust Concurrency for Distributed Controllers",
+    "abstract_text": "Demo session: practical techniques, examples, and discussion about Rust, Async, Controllers, Kubernetes. This session is part of VECTOR's fictional conference dataset.",
+    "speaker": "Anika Rao \u00b7 Demo",
+    "speaker_github": "demo-anika-rao",
+    "company": "VECTOR demo community",
+    "track": "Rust",
+    "tags": [
+      "Rust",
+      "Async",
+      "Controllers",
+      "Kubernetes"
+    ],
+    "room_id": "room-251a",
+    "room_name": "Room 251A (Platform Workshop)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.766405,
+      "lon": -111.89619699999999
+    },
+    "map_point": {
+      "x": 605.0,
+      "y": 100.0
+    },
+    "start_time": "2026-11-12T17:00:00Z",
+    "end_time": "2026-11-12T17:45:00Z",
+    "capacity_max": 85,
+    "capacity_current": 46,
+    "occupancy_ratio": 0.5412,
+    "decibel_level": 56.0,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "embedding": []
+  },
+  {
+    "talk_id": "demo-talk-13",
+    "title": "Practical Platform APIs with Kubernetes and Rust \u2014 Workshop",
+    "abstract_text": "Demo session: practical techniques, examples, and discussion about Kubernetes, Rust, Platform Engineering, Operators. This session is part of VECTOR's fictional conference dataset.",
+    "speaker": "Owen Park \u00b7 Demo",
+    "speaker_github": "demo-owen-park",
+    "company": "VECTOR demo community",
+    "track": "Kubernetes",
+    "tags": [
+      "Kubernetes",
+      "Rust",
+      "Platform Engineering",
+      "Operators"
+    ],
+    "room_id": "room-203b",
+    "room_name": "Room 203B (Observability Lab)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.766414999999995,
+      "lon": -111.89619099999999
+    },
+    "map_point": {
+      "x": 580.0,
+      "y": 195.0
+    },
+    "start_time": "2026-11-12T19:00:00Z",
+    "end_time": "2026-11-12T19:45:00Z",
+    "capacity_max": 65,
+    "capacity_current": 32,
+    "occupancy_ratio": 0.4923,
+    "decibel_level": 53.5,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "embedding": []
+  },
+  {
+    "talk_id": "demo-talk-14",
+    "title": "Tracing Async Services End to End \u2014 Workshop",
+    "abstract_text": "Demo session: practical techniques, examples, and discussion about OpenTelemetry, Tracing, Rust, SRE. This session is part of VECTOR's fictional conference dataset.",
+    "speaker": "Imani Reed \u00b7 Demo",
+    "speaker_github": "demo-imani-reed",
+    "company": "VECTOR demo community",
+    "track": "OpenTelemetry",
+    "tags": [
+      "OpenTelemetry",
+      "Tracing",
+      "Rust",
+      "SRE"
+    ],
+    "room_id": "room-204a",
+    "room_name": "Room 204A (Open Source Studio)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.76642,
+      "lon": -111.896188
+    },
+    "map_point": {
+      "x": 605.0,
+      "y": 195.0
+    },
+    "start_time": "2026-11-12T20:00:00Z",
+    "end_time": "2026-11-12T20:45:00Z",
+    "capacity_max": 60,
+    "capacity_current": 21,
+    "occupancy_ratio": 0.35,
+    "decibel_level": 49.8,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "embedding": []
+  },
+  {
+    "talk_id": "demo-talk-15",
+    "title": "Securing the Container Build Pipeline \u2014 Workshop",
+    "abstract_text": "Demo session: practical techniques, examples, and discussion about Security, Sigstore, SLSA, Supply Chain. This session is part of VECTOR's fictional conference dataset.",
+    "speaker": "Lucas Silva \u00b7 Demo",
+    "speaker_github": "demo-lucas-silva",
+    "company": "VECTOR demo community",
+    "track": "Security",
+    "tags": [
+      "Security",
+      "Sigstore",
+      "SLSA",
+      "Supply Chain"
+    ],
+    "room_id": "room-255a",
+    "room_name": "Room 255A (Cloud Security)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.766425,
+      "lon": -111.89618499999999
+    },
+    "map_point": {
+      "x": 630.0,
+      "y": 195.0
+    },
+    "start_time": "2026-11-12T21:15:00Z",
+    "end_time": "2026-11-12T22:00:00Z",
+    "capacity_max": 80,
+    "capacity_current": 57,
+    "occupancy_ratio": 0.7125,
+    "decibel_level": 59.4,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "embedding": []
+  },
+  {
+    "talk_id": "demo-talk-16",
+    "title": "Understanding eBPF Network Policies \u2014 Workshop",
+    "abstract_text": "Demo session: practical techniques, examples, and discussion about eBPF, Cilium, Networking, Linux. This session is part of VECTOR's fictional conference dataset.",
+    "speaker": "Mila Petrov \u00b7 Demo",
+    "speaker_github": "demo-mila-petrov",
+    "company": "VECTOR demo community",
+    "track": "eBPF",
+    "tags": [
+      "eBPF",
+      "Cilium",
+      "Networking",
+      "Linux"
+    ],
+    "room_id": "room-255b",
+    "room_name": "Room 255B (Data Platforms)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.76643,
+      "lon": -111.896182
+    },
+    "map_point": {
+      "x": 580.0,
+      "y": 290.0
+    },
+    "start_time": "2026-11-12T22:30:00Z",
+    "end_time": "2026-11-12T23:15:00Z",
+    "capacity_max": 75,
+    "capacity_current": 34,
+    "occupancy_ratio": 0.4533,
+    "decibel_level": 52.5,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "embedding": []
+  },
+  {
+    "talk_id": "demo-talk-17",
+    "title": "Hybrid Retrieval for Internal Developer Portals \u2014 Workshop",
+    "abstract_text": "Demo session: practical techniques, examples, and discussion about Elasticsearch, Vector Search, RRF, Developer Experience. This session is part of VECTOR's fictional conference dataset.",
+    "speaker": "Samira Hassan \u00b7 Demo",
+    "speaker_github": "demo-samira-hassan",
+    "company": "VECTOR demo community",
+    "track": "Elasticsearch",
+    "tags": [
+      "Elasticsearch",
+      "Vector Search",
+      "RRF",
+      "Developer Experience"
+    ],
+    "room_id": "room-255c",
+    "room_name": "Room 255C (AI Infrastructure)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.766434999999994,
+      "lon": -111.89617899999999
+    },
+    "map_point": {
+      "x": 605.0,
+      "y": 290.0
+    },
+    "start_time": "2026-11-12T23:30:00Z",
+    "end_time": "2026-11-13T00:30:00Z",
+    "capacity_max": 90,
+    "capacity_current": 64,
+    "occupancy_ratio": 0.7111,
+    "decibel_level": 60.2,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "embedding": []
+  },
+  {
+    "talk_id": "demo-talk-18",
+    "title": "GitOps Patterns for Multi-Team Platforms \u2014 Workshop",
+    "abstract_text": "Demo session: practical techniques, examples, and discussion about GitOps, Kubernetes, CNCF, Platform Engineering. This session is part of VECTOR's fictional conference dataset.",
+    "speaker": "Felix Weber \u00b7 Demo",
+    "speaker_github": "demo-felix-weber",
+    "company": "VECTOR demo community",
+    "track": "GitOps",
+    "tags": [
+      "GitOps",
+      "Kubernetes",
+      "CNCF",
+      "Platform Engineering"
+    ],
+    "room_id": "room-355b",
+    "room_name": "Room 355B (Network Engineering)",
+    "floor": 3,
+    "zone": "mezzanine",
+    "coordinates": {
+      "lat": 40.766445,
+      "lon": -111.89617299999999
+    },
+    "map_point": {
+      "x": 580.0,
+      "y": 385.0
+    },
+    "start_time": "2026-11-12T17:00:00Z",
+    "end_time": "2026-11-12T17:45:00Z",
+    "capacity_max": 60,
+    "capacity_current": 24,
+    "occupancy_ratio": 0.4,
+    "decibel_level": 51.7,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "embedding": []
+  },
+  {
+    "talk_id": "demo-talk-19",
+    "title": "Running Efficient GPU Workloads on Kubernetes \u2014 Workshop",
+    "abstract_text": "Demo session: practical techniques, examples, and discussion about AI, GPU, vLLM, Kubernetes. This session is part of VECTOR's fictional conference dataset.",
+    "speaker": "Nora Kim \u00b7 Demo",
+    "speaker_github": "demo-nora-kim",
+    "company": "VECTOR demo community",
+    "track": "AI",
+    "tags": [
+      "AI",
+      "GPU",
+      "vLLM",
+      "Kubernetes"
+    ],
+    "room_id": "room-355c",
+    "room_name": "Room 355C (Reliability Workshop)",
+    "floor": 3,
+    "zone": "mezzanine",
+    "coordinates": {
+      "lat": 40.76645,
+      "lon": -111.89617
+    },
+    "map_point": {
+      "x": 605.0,
+      "y": 385.0
+    },
+    "start_time": "2026-11-12T19:00:00Z",
+    "end_time": "2026-11-12T19:45:00Z",
+    "capacity_max": 70,
+    "capacity_current": 31,
+    "occupancy_ratio": 0.4429,
+    "decibel_level": 52.1,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "embedding": []
+  },
+  {
+    "talk_id": "demo-talk-20",
+    "title": "Designing Inclusive Cloud-Native Experiences \u2014 Workshop",
+    "abstract_text": "Demo session: practical techniques, examples, and discussion about Accessibility, UX, Inclusive Design, Cloud-Native. This session is part of VECTOR's fictional conference dataset.",
+    "speaker": "Diego Santos \u00b7 Demo",
+    "speaker_github": "demo-diego-santos",
+    "company": "VECTOR demo community",
+    "track": "Accessibility",
+    "tags": [
+      "Accessibility",
+      "UX",
+      "Inclusive Design",
+      "Cloud-Native"
+    ],
+    "room_id": "room-355d",
+    "room_name": "Room 355D (Community Lab)",
+    "floor": 3,
+    "zone": "mezzanine",
+    "coordinates": {
+      "lat": 40.766455,
+      "lon": -111.89616699999999
+    },
+    "map_point": {
+      "x": 630.0,
+      "y": 385.0
+    },
+    "start_time": "2026-11-12T20:00:00Z",
+    "end_time": "2026-11-12T20:45:00Z",
+    "capacity_max": 55,
+    "capacity_current": 18,
+    "occupancy_ratio": 0.3273,
+    "decibel_level": 48.5,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "embedding": []
+  },
+  {
+    "talk_id": "demo-talk-21",
+    "title": "An SRE Field Guide to Useful Metrics \u2014 Workshop",
+    "abstract_text": "Demo session: practical techniques, examples, and discussion about SRE, Metrics, OpenTelemetry, Kubernetes. This session is part of VECTOR's fictional conference dataset.",
+    "speaker": "Asha Patel \u00b7 Demo",
+    "speaker_github": "demo-asha-patel",
+    "company": "VECTOR demo community",
+    "track": "SRE",
+    "tags": [
+      "SRE",
+      "Metrics",
+      "OpenTelemetry",
+      "Kubernetes"
+    ],
+    "room_id": "room-250b",
+    "room_name": "Room 250B (Developer Experience)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.7664,
+      "lon": -111.8962
+    },
+    "map_point": {
+      "x": 580.0,
+      "y": 100.0
+    },
+    "start_time": "2026-11-12T22:30:00Z",
+    "end_time": "2026-11-12T23:15:00Z",
+    "capacity_max": 70,
+    "capacity_current": 28,
+    "occupancy_ratio": 0.4,
+    "decibel_level": 51.2,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "embedding": []
+  },
+  {
+    "talk_id": "demo-talk-22",
+    "title": "Sustainable Open Source Maintenance \u2014 Workshop",
+    "abstract_text": "Demo session: practical techniques, examples, and discussion about Community, CNCF, Go, Cloud-Native. This session is part of VECTOR's fictional conference dataset.",
+    "speaker": "Leo Nguyen \u00b7 Demo",
+    "speaker_github": "demo-leo-nguyen",
+    "company": "VECTOR demo community",
+    "track": "Community",
+    "tags": [
+      "Community",
+      "CNCF",
+      "Go",
+      "Cloud-Native"
+    ],
+    "room_id": "room-251a",
+    "room_name": "Room 251A (Platform Workshop)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.766405,
+      "lon": -111.89619699999999
+    },
+    "map_point": {
+      "x": 605.0,
+      "y": 100.0
+    },
+    "start_time": "2026-11-12T23:30:00Z",
+    "end_time": "2026-11-13T00:30:00Z",
+    "capacity_max": 85,
+    "capacity_current": 46,
+    "occupancy_ratio": 0.5412,
+    "decibel_level": 56.0,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "embedding": []
+  },
+  {
+    "talk_id": "demo-talk-23",
+    "title": "Portable WebAssembly Services at the Edge \u2014 Workshop",
+    "abstract_text": "Demo session: practical techniques, examples, and discussion about WebAssembly, Wasmtime, Rust, Edge. This session is part of VECTOR's fictional conference dataset.",
+    "speaker": "Ines Costa \u00b7 Demo",
+    "speaker_github": "demo-ines-costa",
+    "company": "VECTOR demo community",
+    "track": "WebAssembly",
+    "tags": [
+      "WebAssembly",
+      "Wasmtime",
+      "Rust",
+      "Edge"
+    ],
+    "room_id": "room-203b",
+    "room_name": "Room 203B (Observability Lab)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.766414999999995,
+      "lon": -111.89619099999999
+    },
+    "map_point": {
+      "x": 580.0,
+      "y": 195.0
+    },
+    "start_time": "2026-11-12T17:00:00Z",
+    "end_time": "2026-11-12T17:45:00Z",
+    "capacity_max": 65,
+    "capacity_current": 32,
+    "occupancy_ratio": 0.4923,
+    "decibel_level": 53.5,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "embedding": []
+  },
+  {
+    "talk_id": "demo-talk-24",
+    "title": "Rust Concurrency for Distributed Controllers \u2014 Workshop",
+    "abstract_text": "Demo session: practical techniques, examples, and discussion about Rust, Async, Controllers, Kubernetes. This session is part of VECTOR's fictional conference dataset.",
+    "speaker": "Ravi Menon \u00b7 Demo",
+    "speaker_github": "demo-ravi-menon",
+    "company": "VECTOR demo community",
+    "track": "Rust",
+    "tags": [
+      "Rust",
+      "Async",
+      "Controllers",
+      "Kubernetes"
+    ],
+    "room_id": "room-204a",
+    "room_name": "Room 204A (Open Source Studio)",
+    "floor": 2,
+    "zone": "north_wing",
+    "coordinates": {
+      "lat": 40.76642,
+      "lon": -111.896188
+    },
+    "map_point": {
+      "x": 605.0,
+      "y": 195.0
+    },
+    "start_time": "2026-11-12T19:00:00Z",
+    "end_time": "2026-11-12T19:45:00Z",
+    "capacity_max": 60,
+    "capacity_current": 21,
+    "occupancy_ratio": 0.35,
+    "decibel_level": 49.8,
+    "accessibility": {
+      "wheelchair_accessible": true,
+      "asl_interpreter": false,
+      "live_captioning": true,
+      "sensory_load": "medium",
+      "quiet_zone_nearby": "Room 203A / Room 355A"
+    },
+    "embedding": []
+  }
+]

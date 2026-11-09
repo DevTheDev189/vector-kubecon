@@ -1,3 +1,16 @@
+> **Room discovery/data update (2026-11-09):** Full-color avatars restored;
+> map route line removed. Prominent cross-floor room search and a quiet-space
+> discovery button now sit above the map; quiet rooms have cyan labels/fills.
+> Supplemental seeds add 12 rooms, 24 demo sessions, and 24 clearly labeled
+> fictional attendees with colorful local avatars. Live DB verified: 24 rooms,
+> 49 sessions, 37 profiles (including the existing OAuth account), five quiet
+> spaces. Startup uses create-only bulk backfill and preserves existing records.
+> See `seed/README.md`. Eleven Rust tests, ten frontend state/geometry tests,
+> Clippy/build, and three desktop/mobile browser tests pass.
+> GitHub OAuth credentials are now configured in the ignored host `.env`; the
+> public API has been switched to the authentication-required build. Never
+> print credential values or reintroduce bypass login.
+>
 > **Map/auth redesign update (2026-11-09):** Work continues on
 > `feat/architectural-map-and-github-auth`. The SVG follows the user's Salt Palace
 > reference with floors, zoom/pan, room picker, live details, and schematic routes.

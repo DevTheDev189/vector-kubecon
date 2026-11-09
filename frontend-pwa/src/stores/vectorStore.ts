@@ -114,6 +114,14 @@ export const useVectorStore = defineStore("vector", () => {
       )
       .map((r) => (r.room_id === room.room_id ? room : r));
     if (
+      !room.active_talk_id &&
+      room.decibel_level < 45 &&
+      room.occupancy_ratio < 0.2 &&
+      !sensoryHavens.value.some((haven) => haven.room_id === room.room_id)
+    ) {
+      sensoryHavens.value.push(room);
+    }
+    if (
       activeSurgeAlert.value?.jammed_room_id === room.room_id &&
       room.occupancy_ratio < 0.98
     )
