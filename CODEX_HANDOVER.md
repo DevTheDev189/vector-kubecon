@@ -1,3 +1,16 @@
+> **Continuation update (2026-11-09):** Phase 3 was already merged as PR #3.
+> Phase 4 implementation is complete on `feat/phase-4-crowd-surge-and-sre-trap`
+> in PR #4. All six workspace tests, Clippy, and the live simulator smoke tests
+> pass. The measured audit comparison is in `docs/SRE_INCIDENT_REPORT.md`.
+> Confirm PR #4's merge status before starting Phase 5; the older steps below
+> describe the original handoff and are superseded by this update.
+>
+> **Remote-access constraint:** Do not restart WSL or Tailscale. Windows has
+> `.wslconfig` capped at 3 GB; no host configuration was changed. Use one Cargo
+> build job and one linker thread. The local verification used a temporary
+> `RUSTC_WRAPPER=/tmp/vector-rustc-low-memory` script that invokes the compiler
+> with its original arguments plus `-C link-arg=-Wl,--threads=1`.
+
 # VECTOR — Codex Continuation & Handover Guide
 
 > **Project:** VECTOR (`vector.winslow.plus`) — KubeCon + CloudNativeCon Salt Lake City 2026 AI Attendee Orchestrator & Hallway Matcher  

@@ -216,7 +216,7 @@ You are an autonomous principal engineer executing this specification from top t
 **Goal:** Build `/api/rooms/*` and `/api/surge`, build the standalone `crowd-simulator` CLI load generator, and execute the **Mandatory Two-Step Sponsor Rubric Trap** so Sonar Gitar, Dash0 Agent0, and Radar AI SRE all catch and verify a real bug fix in our Git commit history!
 
 ### 4.1 Room Telemetry & Crowd Surge Engine (`backend-api/src/routes/room_routes.rs`)
-- [ ] **Create `backend-api/src/routes/room_routes.rs` (~260 LOC)**
+- [x] **Create `backend-api/src/routes/room_routes.rs` (~260 LOC)**
   - `GET /api/rooms`: Returns all 12 Salt Palace rooms with live occupancy ratios, decibel readings, and active talk metadata.
   - `POST /api/rooms/checkin`: Accepts `{ "room_id": "...", "delta": 5, "decibel_reading": 74.2 }`, updates Elasticsearch `rooms_state` and `conference_talks`, records `metrics.room_occupancy_ratio` and `metrics.room_decibels` to Dash0, and broadcasts `RoomTelemetryUpdate` via SSE.
   - `POST /api/surge`: Accepts `{ "room_id": "ballroom-b" }` (defaulting to `ballroom-b`):
@@ -228,21 +228,21 @@ You are an autonomous principal engineer executing this specification from top t
   - `POST /api/surge/reset`: Resets `ballroom-b` back to `142/150 (94.6%)` and `68.0 dB` so the live demo can be re-triggered infinitely on stage!
 
 ### 4.2 Standalone Crowd Simulator CLI (`crowd-simulator/src/main.rs`)
-- [ ] **Implement `crowd-simulator/src/main.rs` (~240 LOC)**
+- [x] **Implement `crowd-simulator/src/main.rs` (~240 LOC)**
   - CLI flags: `--target http://127.0.0.1:8080`, `--mode <wave|surge|reset>`, `--concurrency 25`.
   - In `wave` mode: Spawns concurrent tokio tasks simulating attendees checking into rooms, querying `/api/search/talks`, and emitting realistic telemetry to Dash0 and Radar.
   - In `surge` mode: Fires a burst of check-ins to `ballroom-b` culminating in `POST /api/surge`, printing the Dash0 `trace_id` and rerouted talk to the terminal.
 
 ### 4.3 THE MANDATORY TWO-COMMIT SPONSOR RUBRIC TRAP (Do Not Skip!)
 *Why this exists: The judging rubrics for Sonar Gitar ($4k), Dash0 ($4k), and Radar ($4k) explicitly award top points for showing a real issue caught and fixed during development.*
-- [ ] **Step 4.3A (Commit 1 on `feat/phase-4-crowd-surge-and-sre-trap` — The Deliberate Bottleneck):**
+- [x] **Step 4.3A (Commit 1 on `feat/phase-4-crowd-surge-and-sre-trap` — The Deliberate Bottleneck):**
   - Add a diagnostic endpoint `POST /api/rooms/audit-unbatched` that intentionally performs an unbatched N+1 sequential Elasticsearch HTTP loop (15 sequential requests inside a loop) AND omits `#[tracing::instrument]`, then push Commit 1 to `feat/phase-4-crowd-surge-and-sre-trap` and open **PR #4**.
-- [ ] **Step 4.3B (Commit 2 on `feat/phase-4-crowd-surge-and-sre-trap` — The Verified Fix):**
+- [x] **Step 4.3B (Commit 2 on `feat/phase-4-crowd-surge-and-sre-trap` — The Verified Fix):**
   - Immediately replace the N+1 sequential loop in `POST /api/rooms/audit-unbatched` with a single batched Elasticsearch `_mget` / single query, add `#[tracing::instrument(skip_all)]` and UTC timestamps per `.gitar/rules.md`, and document the before/after latency (`~185ms -> ~8ms`) in `docs/SRE_INCIDENT_REPORT.md` so the user can show the exact commit diff and incident report to the Dash0, Radar, and Sonar judges!
 
 ### 4.4 Phase 4 Verification Gate & PR #4
-- [ ] Run `cargo test --workspace` and test `POST /api/surge` followed by `POST /api/surge/reset`.
-- [ ] Push Commit 2 to **PR #4**, verify CI passes cleanly, and merge to `main`.
+- [x] Run `cargo test --workspace` and test `POST /api/surge` followed by `POST /api/surge/reset`.
+- [x] Push Commit 2 to **PR #4**, verify CI passes cleanly, and merge to `main`.
 
 ---
 

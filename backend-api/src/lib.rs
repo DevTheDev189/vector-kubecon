@@ -61,6 +61,12 @@ pub fn app_router(state: AppState) -> Router {
         // Handshake & Networking
         .route("/api/handshake/badge", get(get_badge_token_handler))
         .route("/api/handshake/connect", post(connect_handshake_handler))
+        // Live room telemetry and crowd rerouting
+        .route("/api/rooms", get(get_rooms_handler))
+        .route("/api/rooms/audit-unbatched", post(audit_rooms_handler))
+        .route("/api/rooms/checkin", post(checkin_handler))
+        .route("/api/surge", post(surge_handler))
+        .route("/api/surge/reset", post(reset_surge_handler))
         // Server-Sent Events (SSE)
         .route("/api/events/stream", get(sse_events_stream_handler))
         .layer(cors)

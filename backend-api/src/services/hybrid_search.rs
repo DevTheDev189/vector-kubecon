@@ -211,20 +211,26 @@ impl ElasticClient {
             }));
         }
 
+        let context_filter = if let Some(talk_id) = bumped_talk_id {
+            json!({"term": {"bumped_from_talk_id": talk_id}})
+        } else if should_clauses.is_empty() {
+            json!({"match_all": {}})
+        } else {
+            json!({"bool": {"should": should_clauses, "minimum_should_match": 1}})
+        };
+        let candidate_filter = json!({"bool": {
+            "filter": [context_filter], "must_not": must_not_clauses
+        }});
         let query_dsl = json!({
             "size": 10,
-            "query": {
-                "bool": {
-                    "should": should_clauses,
-                    "must_not": must_not_clauses
-                }
-            },
+            "query": candidate_filter,
             "knn": {
                 "field": "embedding",
                 "query_vector": embedding_to_use,
                 "k": 10,
                 "num_candidates": 30,
-                "boost": 0.8
+                "boost": 0.8,
+                "filter": candidate_filter
             }
         });
 
@@ -260,6 +266,9 @@ impl ElasticClient {
                 continue;
             }
 
+            if bumped_talk_id.is_some_and(|id| peer.bumped_from_talk_id.as_deref() != Some(id)) {
+                continue;
+            }
             let mut shared_tags = Vec::new();
             for tag in &profile.dna_tags {
                 if peer.dna_tags.iter().any(|t| t.eq_ignore_ascii_case(tag)) {
