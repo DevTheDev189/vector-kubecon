@@ -7,6 +7,7 @@ pub struct AppConfig {
     pub session_secret: Vec<u8>,
     pub github_client_id: Option<String>,
     pub github_client_secret: Option<String>,
+    pub openai_base_url: String,
     pub openai_api_key: Option<String>,
     pub openai_model: String,
     pub openai_embedding_model: String,
@@ -44,9 +45,12 @@ impl AppConfig {
             .ok()
             .filter(|s| !s.trim().is_empty());
 
+        let openai_base_url = env::var("OPENAI_BASE_URL")
+            .unwrap_or_else(|_| "https://openrouter.ai/api/v1".to_string());
+
         let openai_api_key = env::var("OPENAI_API_KEY")
             .ok()
-            .filter(|s| !s.trim().is_empty());
+            .filter(|s| !s.trim().is_empty() && s != "your_openrouter_api_key_here");
 
         let openai_model = env::var("OPENAI_MODEL").unwrap_or_else(|_| "gpt-6.1-sol".to_string());
 
@@ -78,6 +82,7 @@ impl AppConfig {
             session_secret,
             github_client_id,
             github_client_secret,
+            openai_base_url,
             openai_api_key,
             openai_model,
             openai_embedding_model,

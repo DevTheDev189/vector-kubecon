@@ -3,7 +3,8 @@ use std::sync::Arc;
 use tokio::sync::broadcast;
 
 use crate::config::AppConfig;
-use crate::services::ElasticClient;
+use crate::models::SseEvent;
+use crate::services::{ElasticClient, GitHubScraper, OpenAiEngine};
 use crate::telemetry::TelemetryMetrics;
 
 #[derive(Clone)]
@@ -15,8 +16,10 @@ pub struct InnerState {
     pub config: AppConfig,
     pub http: Client,
     pub elastic: ElasticClient,
+    pub openai: OpenAiEngine,
+    pub github: GitHubScraper,
     pub metrics: TelemetryMetrics,
-    pub sse_tx: broadcast::Sender<String>,
+    pub sse_tx: broadcast::Sender<SseEvent>,
 }
 
 impl AppState {
@@ -27,6 +30,8 @@ impl AppState {
             .unwrap_or_default();
 
         let elastic = ElasticClient::new(&config.elasticsearch_url, http.clone());
+        let openai = OpenAiEngine::new(config.clone(), http.clone());
+        let github = GitHubScraper::new(http.clone());
         let metrics = TelemetryMetrics::new();
         let (sse_tx, _) = broadcast::channel(1024);
 
@@ -34,6 +39,8 @@ impl AppState {
             config,
             http,
             elastic,
+            openai,
+            github,
             metrics,
             sse_tx,
         };
@@ -55,15 +62,23 @@ impl AppState {
         &self.inner.elastic
     }
 
+    pub fn openai(&self) -> &OpenAiEngine {
+        &self.inner.openai
+    }
+
+    pub fn github(&self) -> &GitHubScraper {
+        &self.inner.github
+    }
+
     pub fn metrics(&self) -> &TelemetryMetrics {
         &self.inner.metrics
     }
 
-    pub fn sse_sender(&self) -> &broadcast::Sender<String> {
+    pub fn sse_sender(&self) -> &broadcast::Sender<SseEvent> {
         &self.inner.sse_tx
     }
 
-    pub fn broadcast_sse_raw(&self, payload: String) {
-        let _ = self.inner.sse_tx.send(payload);
+    pub fn broadcast_sse(&self, event: SseEvent) {
+        let _ = self.inner.sse_tx.send(event);
     }
 }
