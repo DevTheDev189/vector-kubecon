@@ -50,7 +50,7 @@ The mobile interface uses large touch targets, keyboard-operable controls, reada
 
 ## Gitar — only if verified usage is supplied
 
-Implemented review conventions in .gitar/rules.md covering route instrumentation, RFC3339 UTC timestamps, error handling, signed-cookie protections, and preservation of accessibility/noise metadata. Features landed incrementally through PRs #1–#7 and automated CI; the final UX work uses another feature PR. No actual Gitar review, CI diagnosis, or auto-apply finding has been verified. Do not describe GitHub Actions checks as Gitar reviews.
+Implemented review conventions in .gitar/review/vector-conventions.md (with the original conventions also in .gitar/rules.md) covering route instrumentation, RFC3339 UTC timestamps, error handling, signed-cookie protections, and preservation of accessibility/noise metadata. Features landed incrementally through PRs #1–#7 and automated CI; the final UX work is PR #8. No actual Gitar review, CI diagnosis, or auto-apply finding has been verified. Do not describe GitHub Actions checks as Gitar reviews.
 
 Useful PR links: https://github.com/DevTheDev189/vector-kubecon/pull/2, https://github.com/DevTheDev189/vector-kubecon/pull/4, https://github.com/DevTheDev189/vector-kubecon/pull/7
 
