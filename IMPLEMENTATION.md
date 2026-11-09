@@ -158,23 +158,23 @@ You are an autonomous principal engineer executing this specification from top t
 **Goal:** Implement HMAC-SHA256 signed `HttpOnly` session cookies, real GitHub OAuth2 + 1-click Judge Impersonation, concurrent GitHub repository scraping, OpenAI GPT-6.1 Sol Structured Outputs + Embeddings, and all REST + SSE endpoints instrumented with Dash0 OpenTelemetry spans.
 
 ### 3.1 Security, Signed Cookies & GitHub OAuth (`backend-api/src/auth/`)
-- [ ] **Create `backend-api/src/auth/cookies.rs` (~180 LOC)**
+- [x] **Create `backend-api/src/auth/cookies.rs` (~180 LOC)**
   - Implement `SessionToken`: `{ username: String, github_id: u64, iat: i64, exp: i64 }`.
   - Implement `sign_session_cookie(&SessionToken, secret: &[u8]) -> Cookie<'static>` producing `vector_sid=<base64url_payload>.<base64url_hmac_sha256>` with `HttpOnly`, `SameSite::Lax`, `Path=/`, `Max-Age=86400`, and `Secure` (enabled automatically when `PUBLIC_BASE_URL` starts with `https://`).
   - Implement `verify_session_cookie(jar: &CookieJar, secret: &[u8]) -> Option<SessionToken>` using constant-time HMAC comparison.
-- [ ] **Create `backend-api/src/auth/middleware.rs` (~100 LOC)**
+- [x] **Create `backend-api/src/auth/middleware.rs` (~100 LOC)**
   - Implement `OptionalAuthUser` and `RequireAuthUser` Axum `FromRequestParts` extractors that verify `vector_sid` (or fallback header `X-Vector-User` for CLI/testing) and attach `enduser.id` to the active OpenTelemetry span.
-- [ ] **Create `backend-api/src/auth/github_oauth.rs` (~190 LOC)**
+- [x] **Create `backend-api/src/auth/github_oauth.rs` (~190 LOC)**
   - Implement `build_github_authorize_url(&AppConfig) -> (String, Cookie<'static>)` with CSRF `state` cookie `vector_oauth_state`.
   - Implement `exchange_code_for_token(&AppConfig, code: &str) -> Result<String, ApiError>`.
 
 ### 3.2 Live GitHub Scraper & OpenAI GPT-6.1 Sol Engine (`backend-api/src/services/`)
-- [ ] **Create `backend-api/src/services/github_scraper.rs` (~220 LOC)**
+- [x] **Create `backend-api/src/services/github_scraper.rs` (~220 LOC)**
   - Implement `scrape_github_user(&self, username: &str, oauth_token: Option<&str>) -> Result<ScrapedGitHubData, ApiError>`:
     - Uses `tokio::join!` to concurrently fetch `/users/{username}` and `/users/{username}/repos?sort=pushed&per_page=8`.
     - Fetches the first 1,200 characters of `README.md` for the top 2 starred repositories.
     - Includes automatic fallback to `seed/judge_profiles.json` if GitHub unauthenticated rate limits (`403/429`) are hit on conference Wi-Fi!
-- [ ] **Create `backend-api/src/services/openai_engine.rs` (~280 LOC)**
+- [x] **Create `backend-api/src/services/openai_engine.rs` (~280 LOC)**
   - Implement `extract_builder_dna(&self, scraped: &ScrapedGitHubData) -> Result<ExtractedDna, ApiError>`:
     - Calls `https://api.openai.com/v1/chat/completions` using `config.openai_model` (`gpt-6.1-sol`, with automatic fallback to `gpt-4o-mini` if model alias differs) and Structured Outputs (`response_format: { type: "json_schema" }`) to extract `persona_title`, `dna_tags` (5–7 sharp technical tags), `hallway_icebreaker` (referencing their real repos!), and `ideal_talk_query`.
     - Records `gen_ai.request.model` and token usage on the active Dash0 OpenTelemetry span and increments `metrics.openai_tokens_total`.
@@ -185,29 +185,29 @@ You are an autonomous principal engineer executing this specification from top t
 
 ### 3.3 Instrumented Axum Route Handlers (`backend-api/src/routes/`)
 *Every route handler MUST include `#[tracing::instrument(skip_all, ...)]` and `chrono::Utc::now()` per `.gitar/rules.md`!*
-- [ ] **Create `backend-api/src/routes/auth_routes.rs` (~200 LOC)**
+- [x] **Create `backend-api/src/routes/auth_routes.rs` (~200 LOC)**
   - `GET /api/auth/github`: Redirects to GitHub OAuth authorize URL with `vector_oauth_state` cookie (or if `GITHUB_CLIENT_ID` is not configured, redirects smoothly to `/api/auth/impersonate-default`).
   - `GET /api/auth/github/callback`: Exchanges OAuth code, triggers live GitHub + OpenAI DNA sync, indexes builder into Elasticsearch, sets signed `vector_sid` cookie, and redirects to `/`.
   - `POST /api/auth/impersonate`: Accepts `{ "username": "kelseyhightower" }`, runs the live GitHub scraper + OpenAI DNA extraction + Elasticsearch indexing pipeline (emitting real-time `DnaSyncProgress` SSE events at 20%, 50%, 80%, 100%), sets the `vector_sid` cookie, and returns the full `BuilderProfile`.
   - `POST /api/auth/logout`: Clears `vector_sid` cookie.
-- [ ] **Create `backend-api/src/routes/profile_routes.rs` (~160 LOC)**
+- [x] **Create `backend-api/src/routes/profile_routes.rs` (~160 LOC)**
   - `GET /api/me`: Returns current authenticated `BuilderProfile` from cookie (or defaults to `zircon-dev` demo profile if unauthenticated so the landing experience is never broken) + active `trace_id`.
   - `POST /api/sync-github`: Accepts `{ "username": "...", "linkedin_url": "..." }`, runs full live scrape + OpenAI + Elasticsearch re-indexing, sets `vector_sid` cookie, and returns updated profile + schedule.
   - `PATCH /api/sensory`: Toggles `sensory_mode_enabled` and accessibility filters in Elasticsearch, broadcasts `SensoryHavenUpdate` via SSE, and returns updated schedule + quiet room haven.
-- [ ] **Create `backend-api/src/routes/schedule_routes.rs` & `search_routes.rs` (~220 LOC)**
+- [x] **Create `backend-api/src/routes/schedule_routes.rs` & `search_routes.rs` (~220 LOC)**
   - `GET /api/state`: Single consolidated hydration endpoint returning `{ profile, schedule, scored_talks, rooms, sensory_havens, hallway_matches, handshakes, last_elastic_query_dsl, trace_id }`.
   - `POST /api/search/talks`: Executes live 3-Way Hybrid RRF search with custom query text or tag overrides and returns ranked talks + raw Elasticsearch DSL JSON.
   - `POST /api/schedule/bookmark`: Toggles a talk bookmark in Elasticsearch and recalculates conflict-free DAG schedule.
-- [ ] **Create `backend-api/src/routes/handshake_routes.rs` (~180 LOC)**
+- [x] **Create `backend-api/src/routes/handshake_routes.rs` (~180 LOC)**
   - `GET /api/handshake/badge`: Returns signed `QrHandshakeToken` + 4-digit PIN for the current user.
   - `POST /api/handshake/connect`: Accepts `{ "peer_username": "...", "pin_code": "...", "room_id": "..." }`, calls `openai_engine.draft_handshake_followup`, indexes `HandshakeRecord` into Elasticsearch `handshakes`, broadcasts `HandshakeCompleted` over SSE, and returns the record.
-- [ ] **Create `backend-api/src/routes/sse_routes.rs` (~110 LOC)**
+- [x] **Create `backend-api/src/routes/sse_routes.rs` (~110 LOC)**
   - `GET /api/events/stream`: Subscribes to `state.sse_tx`, increments/decrements `metrics.active_sse_clients`, and streams JSON SSE events with 15-second keep-alive heartbeats.
 
 ### 3.4 Phase 3 Verification Gate & PR #3
-- [ ] Write integration test `backend-api/tests/auth_and_routes_test.rs` verifying HMAC cookie signing/verification, `GET /api/state`, `POST /api/auth/impersonate` (for `kelseyhightower`), `PATCH /api/sensory`, and `POST /api/handshake/connect`.
-- [ ] Run `cargo clippy --all-targets -- -D warnings` and `cargo test --workspace` — must pass 100%.
-- [ ] Commit on `feat/phase-3-auth-openai-and-routes`, push to GitHub, open **PR #3**, verify Gitar review, and merge to `main`.
+- [x] Write integration test `backend-api/tests/auth_and_routes_test.rs` verifying HMAC cookie signing/verification, `GET /api/state`, `POST /api/auth/impersonate` (for `kelseyhightower`), `PATCH /api/sensory`, and `POST /api/handshake/connect`.
+- [x] Run `cargo clippy --all-targets -- -D warnings` and `cargo test --workspace` — must pass 100%.
+- [x] Commit on `feat/phase-3-auth-openai-and-routes`, push to GitHub, open **PR #3**, verify Gitar review, and merge to `main`.
 
 ---
 
