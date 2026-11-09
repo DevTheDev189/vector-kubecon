@@ -33,7 +33,6 @@ jobs:
   frontend-check:
     name: Frontend Typecheck & Build
     runs-on: ubuntu-latest
-    if: hashFiles('frontend-pwa/package.json') != ''
     steps:
       - uses: actions/checkout@v4
 

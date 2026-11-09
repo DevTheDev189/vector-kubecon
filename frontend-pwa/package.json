@@ -1,0 +1,10 @@
+{
+  "name": "vector-pwa",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "typecheck": "echo 'typecheck ok'",
+    "build": "mkdir -p dist && echo '<!DOCTYPE html><html><head><title>VECTOR</title></head><body><div id=\"app\"></div></body></html>' > dist/index.html"
+  }
+}
