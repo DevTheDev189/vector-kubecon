@@ -1,3 +1,18 @@
+> **Phase 6 update (2026-11-09):** Phase 5 PR #5 is merged with both CI checks
+> green. Phase 6 integrates SPA serving, startup seeding and room gauges, HTTP
+> tracing/compression, JSON API 404s, and one-job build defaults. Eight Rust tests,
+> Clippy, five frontend state tests, and two committed Playwright tests pass.
+> Browser tests cover the complete desktop/mobile demo and first-install offline
+> reload without caching personal API data. Fixed CORS `Vary: Origin` cache misses.
+> Updated Vitest/vue-tsc: npm audit reports zero known vulnerabilities.
+> Both localhost:8080 and https://vector.winslow.plus return the built SPA (200).
+> The running host API is a foreground development process, not a durable
+> systemd/Kubernetes deployment. See docs/LOCAL_DEVELOPMENT.md for repeatable checks.
+> Phase 6 implementation is in PR #6:
+> https://github.com/DevTheDev189/vector-kubecon/pull/6
+> Both GitHub CI jobs passed, including the integrated browser tests.
+> Consult that PR for the final merge record. All six implementation phases are complete.
+>
 > **Recovery update (2026-11-09):** Phase 4 PR #4 is merged. Phase 5 frontend
 > recovered and verified: production build, five Pinia state tests, and a live
 > desktop/mobile browser flow (profile sync, 12-room map, surge reroute, quiet mode,
@@ -83,9 +98,9 @@ OPENAI_MODEL="gpt-4o-mini" # or "gpt-6.1-sol" if available in your tier
 *(Note: If the key is omitted or invalid, the backend automatically falls back to deterministic seed vectors and heuristic extraction without throwing errors, preserving demo resilience.)*
 
 ### Low-Memory VM Constraints (CRITICAL)
-- The development VM has **2.9 GB RAM** and **2.0 GB swap**.
+- The development VM has **2.9 GB RAM**, **2.0 GB original swap**, and **16 GB `/swapfile_fast` swap**.
 - Default `cargo` parallel compilation threads will cause swap thrashing or memory exhaustion (OOM).
-- `.cargo/config.toml` is configured to limit jobs to `2`.
+- `.cargo/config.toml` is configured to limit jobs to `1`.
 - **Always** run cargo test or clippy commands with `CARGO_BUILD_JOBS=1`:
   ```bash
   CARGO_BUILD_JOBS=1 cargo clippy --workspace --all-targets -- -D warnings

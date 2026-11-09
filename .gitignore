@@ -4,3 +4,6 @@
 .env
 *.log
 .DS_Store
+
+/frontend-pwa/test-results
+/frontend-pwa/playwright-report

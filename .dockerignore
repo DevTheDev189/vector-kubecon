@@ -1,0 +1,10 @@
+.git
+.env
+.env.*
+!.env.example
+target
+frontend-pwa/node_modules
+frontend-pwa/dist
+frontend-pwa/test-results
+frontend-pwa/playwright-report
+*.log
