@@ -9,6 +9,7 @@ RUN npm run build
 # Stage 2: Build Rust Binaries
 FROM rust:bookworm AS rust-builder
 WORKDIR /app
+ENV CARGO_BUILD_JOBS=1
 COPY Cargo.toml Cargo.lock ./
 COPY backend-api/Cargo.toml backend-api/
 COPY crowd-simulator/Cargo.toml crowd-simulator/

@@ -73,8 +73,13 @@ impl AppConfig {
         let rust_log =
             env::var("RUST_LOG").unwrap_or_else(|_| "info,backend_api=debug".to_string());
 
-        let static_dir =
-            env::var("STATIC_DIR").unwrap_or_else(|_| "../frontend-pwa/dist".to_string());
+        let static_dir = env::var("STATIC_DIR").unwrap_or_else(|_| {
+            if std::path::Path::new("frontend-pwa/dist").is_dir() {
+                "frontend-pwa/dist".to_string()
+            } else {
+                "../frontend-pwa/dist".to_string()
+            }
+        });
 
         Self {
             port,

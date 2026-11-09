@@ -46,6 +46,46 @@ jobs:
           ELASTICSEARCH_URL: http://127.0.0.1:9200
         run: cargo test --workspace
 
+      - name: Setup Node.js for browser verification
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build PWA and install browser
+        working-directory: frontend-pwa
+        run: |
+          npm ci
+          npm run build
+          npx playwright install --with-deps chromium
+
+      - name: Verify integrated attendee demo and offline shell
+        env:
+          ELASTICSEARCH_URL: http://127.0.0.1:9200
+          PUBLIC_BASE_URL: http://127.0.0.1:8080
+          OPENAI_API_KEY: ''
+        run: |
+          cargo run -p backend-api > /tmp/vector-e2e-api.log 2>&1 &
+          vector_api_pid=$!
+          trap 'kill "$vector_api_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent http://127.0.0.1:8080/api/health > /dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          if ! npm --prefix frontend-pwa run test:e2e; then
+            cat /tmp/vector-e2e-api.log
+            exit 1
+          fi
+
+      - name: Upload browser failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-test-results
+          path: frontend-pwa/test-results
+          if-no-files-found: ignore
+
   frontend-check:
     name: Frontend Typecheck & Build
     runs-on: ubuntu-latest

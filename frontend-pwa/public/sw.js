@@ -1,4 +1,4 @@
-const CACHE = "vector-shell-v2";
+const CACHE = "vector-shell-v3";
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE).then(async (cache) => {
@@ -55,7 +55,9 @@ self.addEventListener("fetch", (event) => {
     );
   } else if (url.pathname.startsWith("/assets/")) {
     event.respondWith(
-      caches.match(event.request).then(
+      // These same-origin hashed files are public. The server's CORS Vary:
+      // Origin header must not distinguish precache requests from module loads.
+      caches.match(event.request, { ignoreVary: true }).then(
         (cached) =>
           cached ||
           fetch(event.request).then((response) => {

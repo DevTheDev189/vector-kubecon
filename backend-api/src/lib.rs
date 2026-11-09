@@ -14,12 +14,17 @@ pub use state::AppState;
 use axum::{
     extract::State,
     response::IntoResponse,
-    routing::{get, patch, post},
+    routing::{any, get, patch, post},
     Json, Router,
 };
 use chrono::Utc;
 use serde_json::json;
 use tower_http::cors::{Any, CorsLayer};
+use tower_http::{
+    compression::CompressionLayer,
+    services::{ServeDir, ServeFile},
+    trace::TraceLayer,
+};
 
 use crate::routes::*;
 
@@ -36,7 +41,13 @@ pub async fn health_handler(State(_state): State<AppState>) -> impl IntoResponse
     }))
 }
 
+#[tracing::instrument(skip_all, fields(http.route = "/api/*path"))]
+async fn api_not_found() -> ApiError {
+    ApiError::NotFound("API route not found".into())
+}
+
 pub fn app_router(state: AppState) -> Router {
+    let static_dir = std::path::PathBuf::from(&state.config().static_dir);
     let cors = CorsLayer::new()
         .allow_origin(Any)
         .allow_methods(Any)
@@ -69,6 +80,16 @@ pub fn app_router(state: AppState) -> Router {
         .route("/api/surge/reset", post(reset_surge_handler))
         // Server-Sent Events (SSE)
         .route("/api/events/stream", get(sse_events_stream_handler))
+        // Unknown API routes must remain JSON errors rather than SPA HTML.
+        .route("/api", any(api_not_found))
+        .route("/api/*path", any(api_not_found))
+        // Missing hashed assets must return 404, never index.html.
+        .nest_service("/assets", ServeDir::new(static_dir.join("assets")))
+        .fallback_service(
+            ServeDir::new(&static_dir).fallback(ServeFile::new(static_dir.join("index.html"))),
+        )
+        .layer(CompressionLayer::new())
+        .layer(TraceLayer::new_for_http())
         .layer(cors)
         .with_state(state)
 }
