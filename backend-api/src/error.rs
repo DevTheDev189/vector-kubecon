@@ -13,6 +13,8 @@ use tracing_opentelemetry::OpenTelemetrySpanExt;
 pub enum ApiError {
     BadRequest(String),
     Unauthorized(String),
+    Forbidden(String),
+    ServiceUnavailable(String),
     NotFound(String),
     ElasticError(String),
     OpenAiError(String),
@@ -27,6 +29,8 @@ impl fmt::Display for ApiError {
         match self {
             Self::BadRequest(msg) => write!(f, "Bad Request: {}", msg),
             Self::Unauthorized(msg) => write!(f, "Unauthorized: {}", msg),
+            Self::Forbidden(msg) => write!(f, "Forbidden: {}", msg),
+            Self::ServiceUnavailable(msg) => write!(f, "Unavailable: {}", msg),
             Self::NotFound(msg) => write!(f, "Not Found: {}", msg),
             Self::ElasticError(msg) => write!(f, "Elasticsearch Error: {}", msg),
             Self::OpenAiError(msg) => write!(f, "OpenAI Error: {}", msg),
@@ -54,6 +58,8 @@ impl ApiError {
         match self {
             Self::BadRequest(_) => StatusCode::BAD_REQUEST,
             Self::Unauthorized(_) => StatusCode::UNAUTHORIZED,
+            Self::Forbidden(_) => StatusCode::FORBIDDEN,
+            Self::ServiceUnavailable(_) => StatusCode::SERVICE_UNAVAILABLE,
             Self::NotFound(_) => StatusCode::NOT_FOUND,
             Self::ElasticError(_) => StatusCode::BAD_GATEWAY,
             Self::OpenAiError(_) => StatusCode::BAD_GATEWAY,
@@ -66,6 +72,8 @@ impl ApiError {
         match self {
             Self::BadRequest(_) => "BAD_REQUEST",
             Self::Unauthorized(_) => "UNAUTHORIZED",
+            Self::Forbidden(_) => "FORBIDDEN",
+            Self::ServiceUnavailable(_) => "UNAVAILABLE",
             Self::NotFound(_) => "NOT_FOUND",
             Self::ElasticError(_) => "ELASTICSEARCH_ERROR",
             Self::OpenAiError(_) => "OPENAI_ERROR",
@@ -78,6 +86,8 @@ impl ApiError {
         match self {
             Self::BadRequest(msg)
             | Self::Unauthorized(msg)
+            | Self::Forbidden(msg)
+            | Self::ServiceUnavailable(msg)
             | Self::NotFound(msg)
             | Self::ElasticError(msg)
             | Self::OpenAiError(msg)

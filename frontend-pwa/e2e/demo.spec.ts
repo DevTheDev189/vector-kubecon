@@ -1,13 +1,73 @@
 import { expect, test } from "@playwright/test";
 
-test.beforeEach(async ({ context }) => {
-  await context.route("https://fonts.googleapis.com/**", (route) =>
-    route.abort(),
-  );
-  await context.route("https://fonts.gstatic.com/**", (route) => route.abort());
+import { createHmac } from "node:crypto";
+
+async function signInFixture(
+  context: import("@playwright/test").BrowserContext,
+) {
+  const secret = process.env.VECTOR_TEST_SESSION_SECRET;
+  if (!secret || secret.length < 32)
+    throw new Error(
+      "Start a dedicated test server with SESSION_SECRET and VECTOR_TEST_SESSION_SECRET set to the same test-only value",
+    );
+  const now = Math.floor(Date.now() / 1000);
+  const payload = Buffer.from(
+    JSON.stringify({
+      username: "kelseyhightower",
+      github_id: 110292,
+      iat: now,
+      exp: now + 3600,
+      auth_version: 1,
+    }),
+  ).toString("base64url");
+  const signature = createHmac("sha256", secret)
+    .update(payload)
+    .digest("base64url");
+  await context.addCookies([
+    {
+      name: "vector_sid",
+      value: `${payload}.${signature}`,
+      url: process.env.VECTOR_BASE_URL || "http://127.0.0.1:8080",
+      httpOnly: true,
+      sameSite: "Lax",
+    },
+  ]);
+}
+
+test("anonymous visitors see the map preview and real GitHub sign-in", async ({
+  page,
+  request,
+}) => {
+  await page.goto("/");
+  await expect(
+    page.getByRole("heading", { name: "Find your place. Meet your people." }),
+  ).toBeVisible();
+  await expect(
+    page.locator(".signin-preview .architectural-map"),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Sign in with GitHub" }),
+  ).toHaveAttribute("href", "/api/auth/github");
+  await expect(page.locator(".talk-card")).toHaveCount(0);
+  expect((await request.get("/api/state")).status()).toBe(401);
+  expect(
+    (
+      await request.post("/api/auth/impersonate", {
+        data: { username: "kelseyhightower" },
+      })
+    ).status(),
+  ).toBe(404);
+  await page.setViewportSize({ width: 390, height: 844 });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
 });
 
-test("desktop and mobile attendee demo", async ({ page, context, request }) => {
+test("desktop and mobile attendee demo", async ({ page, context }) => {
+  await signInFixture(context);
+  const request = context.request;
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   const elastic = process.env.ELASTICSEARCH_URL || "http://127.0.0.1:9200";
@@ -16,19 +76,59 @@ test("desktop and mobile attendee demo", async ({ page, context, request }) => {
   );
   expect(originalResponse.ok()).toBe(true);
   const original = await originalResponse.json();
+  await request.put(`${elastic}/builders/_doc/kelseyhightower?refresh=true`, {
+    data: {
+      ...original._source,
+      sensory_prefs: {
+        ...original._source.sensory_prefs,
+        sensory_mode_enabled: false,
+      },
+    },
+  });
+  const initialRooms = await (await request.get("/api/rooms")).json();
+  const originalNoise = initialRooms.rooms.find(
+    (room: { room_id: string }) => room.room_id === "room-250a",
+  ).decibel_level;
   let handshakeId = "";
   try {
     await page.goto("/");
     await expect(page.locator(".talk-card")).toBeVisible();
-    await expect(page.locator(".map-room")).toHaveCount(12);
     await page
-      .locator(".judge-presets")
-      .getByRole("button", { name: "@kelseyhightower", exact: true })
+      .getByRole("button", { name: "01 First floor", exact: true })
       .click();
-    await expect(page.locator(".identity-button")).toContainText(
+    await expect(
+      page.locator('.map-room[data-room-id="ballroom-b"]'),
+    ).toBeVisible();
+    await expect(page.locator(".signed-in-account")).toContainText(
       "@kelseyhightower",
-      { timeout: 90_000 },
     );
+    await page.getByRole("button", { name: "Zoom in", exact: true }).click();
+    await expect(page.locator(".map-tools")).toContainText("150%");
+    await page
+      .getByRole("button", { name: "Reset map view", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: "02 Second floor", exact: true })
+      .click();
+    await expect(
+      page.locator('.map-room[data-room-id="room-250a"]'),
+    ).toBeVisible();
+    await page.locator('.map-room[data-room-id="room-250a"]').click();
+    await expect(page.locator(".map-selection")).toContainText("Room 250A");
+    const noise = await request.post("/api/rooms/checkin", {
+      data: { room_id: "room-250a", delta: 0, decibel_reading: 61.5 },
+    });
+    expect(noise.ok()).toBe(true);
+    await expect(page.locator(".map-selection")).toContainText("61.5 dB");
+    await page
+      .getByRole("button", { name: "03 Third floor", exact: true })
+      .click();
+    await expect(
+      page.locator('.map-room[data-room-id="room-355e"]'),
+    ).toBeVisible();
+    await page
+      .getByRole("button", { name: "01 First floor", exact: true })
+      .click();
     const trigger = page.getByRole("button", { name: "Trigger crowd surge" });
     await expect(trigger).toBeEnabled({ timeout: 90_000 });
     const surgeResponse = page.waitForResponse(
@@ -86,6 +186,17 @@ test("desktop and mobile attendee demo", async ({ page, context, request }) => {
     ).toBe(true);
     await expect(page.locator(".judge-dock")).toBeHidden();
     await expect(page.locator(".spatial-map")).toBeVisible();
+    const mobileControls = page.locator(".mobile-demo-controls");
+    await mobileControls.locator("summary").click();
+    await mobileControls
+      .getByRole("button", { name: "Trigger surge", exact: true })
+      .click();
+    await expect(page.locator(".surge-banner")).toBeVisible();
+    await mobileControls.locator("summary").click();
+    await mobileControls
+      .getByRole("button", { name: "Reset surge", exact: true })
+      .click();
+    await expect(page.locator(".surge-banner")).toHaveCount(0);
     await page.goto("/?peer=zircon-dev&pin=4829");
     await expect(page.getByLabel("Their GitHub handle")).toHaveValue(
       "zircon-dev",
@@ -94,12 +205,18 @@ test("desktop and mobile attendee demo", async ({ page, context, request }) => {
     await page.keyboard.press("Escape");
     await expect(page.locator("dialog")).toHaveCount(0);
     expect(errors).toEqual([]);
+    await request.post("/api/rooms/checkin", {
+      data: { room_id: "room-250a", delta: 0, decibel_reading: originalNoise },
+    });
+    await page.getByRole("button", { name: "Sign out", exact: true }).click();
+    await expect(page.locator(".signin-copy")).toBeVisible();
+    await expect(page.locator(".talk-card")).toHaveCount(0);
   } finally {
     if (handshakeId)
       await request.delete(
         `${elastic}/handshakes/_doc/${handshakeId}?refresh=true`,
       );
-    await request.post("/api/surge/reset", { data: {} });
+
     await request.put(`${elastic}/builders/_doc/kelseyhightower?refresh=true`, {
       data: original._source,
     });
@@ -110,6 +227,7 @@ test("installed shell reloads offline without caching API responses", async ({
   page,
   context,
 }) => {
+  await signInFixture(context);
   await page.goto("/");
   await expect(page.locator(".talk-card")).toBeVisible();
   await page.evaluate(async () => {
@@ -132,8 +250,7 @@ test("installed shell reloads offline without caching API responses", async ({
   await context.setOffline(true);
   await page.reload({ waitUntil: "domcontentloaded" });
   await expect(page.locator(".wordmark")).toContainText("VECTOR");
-  await expect(
-    page.getByRole("button", { name: "Reconnect", exact: true }),
-  ).toBeVisible();
+  await expect(page.locator(".signin-copy")).toBeVisible();
+  await expect(page.locator(".talk-card")).toHaveCount(0);
   await context.setOffline(false);
 });

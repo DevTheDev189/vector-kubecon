@@ -19,7 +19,7 @@ use axum::{
 };
 use chrono::Utc;
 use serde_json::json;
-use tower_http::cors::{Any, CorsLayer};
+
 use tower_http::{
     compression::CompressionLayer,
     services::{ServeDir, ServeFile},
@@ -48,19 +48,16 @@ async fn api_not_found() -> ApiError {
 
 pub fn app_router(state: AppState) -> Router {
     let static_dir = std::path::PathBuf::from(&state.config().static_dir);
-    let cors = CorsLayer::new()
-        .allow_origin(Any)
-        .allow_methods(Any)
-        .allow_headers(Any);
-
-    Router::new()
-        // Health
-        .route("/api/health", get(health_handler))
-        // Auth
-        .route("/api/auth/github", get(github_login_handler))
-        .route("/api/auth/github/callback", get(github_callback_handler))
-        .route("/api/auth/impersonate", post(impersonate_handler))
-        .route("/api/auth/logout", post(logout_handler))
+    let admin_routes = Router::new()
+        .route("/api/rooms/audit-unbatched", post(audit_rooms_handler))
+        .route("/api/rooms/checkin", post(checkin_handler))
+        .route("/api/surge", post(surge_handler))
+        .route("/api/surge/reset", post(reset_surge_handler))
+        .route_layer(axum::middleware::from_fn_with_state(
+            state.clone(),
+            auth::require_admin,
+        ));
+    let protected = Router::new()
         // Profile & Sensory
         .route("/api/me", get(get_me_handler))
         .route("/api/sync-github", post(sync_github_handler))
@@ -74,12 +71,21 @@ pub fn app_router(state: AppState) -> Router {
         .route("/api/handshake/connect", post(connect_handshake_handler))
         // Live room telemetry and crowd rerouting
         .route("/api/rooms", get(get_rooms_handler))
-        .route("/api/rooms/audit-unbatched", post(audit_rooms_handler))
-        .route("/api/rooms/checkin", post(checkin_handler))
-        .route("/api/surge", post(surge_handler))
-        .route("/api/surge/reset", post(reset_surge_handler))
+        .merge(admin_routes)
+        .route("/api/auth/logout", post(logout_handler))
         // Server-Sent Events (SSE)
         .route("/api/events/stream", get(sse_events_stream_handler))
+        .route_layer(axum::middleware::from_fn_with_state(
+            state.clone(),
+            auth::require_session,
+        ));
+
+    Router::new()
+        .route("/api/health", get(health_handler))
+        .route("/api/auth/status", get(auth_status_handler))
+        .route("/api/auth/github", get(github_login_handler))
+        .route("/api/auth/github/callback", get(github_callback_handler))
+        .merge(protected)
         // Unknown API routes must remain JSON errors rather than SPA HTML.
         .route("/api", any(api_not_found))
         .route("/api/*path", any(api_not_found))
@@ -90,6 +96,5 @@ pub fn app_router(state: AppState) -> Router {
         )
         .layer(CompressionLayer::new())
         .layer(TraceLayer::new_for_http())
-        .layer(cors)
         .with_state(state)
 }

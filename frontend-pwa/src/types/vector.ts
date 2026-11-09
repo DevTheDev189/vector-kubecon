@@ -226,6 +226,7 @@ export type SseEvent =
       };
     };
 export interface StateResponse {
+  can_control_demo: boolean;
   profile: BuilderProfile;
   schedule: CustomSchedule;
   scored_talks: ScoredTalk[];

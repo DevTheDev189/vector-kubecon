@@ -40,6 +40,15 @@ const respond = (body: unknown, status = 200) =>
 beforeEach(() => {
   setActivePinia(createPinia());
   vi.restoreAllMocks();
+  vi.stubGlobal(
+    "EventSource",
+    class {
+      onopen = null;
+      onerror = null;
+      onmessage = null;
+      close() {}
+    },
+  );
 });
 describe("live radar reconciliation", () => {
   it("scopes and deduplicates saved handshakes", async () => {
@@ -151,5 +160,48 @@ describe("live radar reconciliation", () => {
       });
     expect(store.sseEventLog).toHaveLength(25);
     expect(store.lastTraceId).toBe("29");
+  });
+});
+
+describe("session lifecycle", () => {
+  it("clears private attendee state on an expired cookie", async () => {
+    const fetch = vi
+      .fn()
+      .mockResolvedValueOnce(respond(state()))
+      .mockResolvedValueOnce(
+        respond({ error: { message: "Sign in required" } }, 401),
+      );
+    vi.stubGlobal("fetch", fetch);
+    const store = useVectorStore();
+    await store.hydrate();
+    store.isVaultOpen = true;
+    store.isQrModalOpen = true;
+    expect(store.authenticated).toBe(true);
+    await store.refresh();
+    expect(store.authenticated).toBe(false);
+    expect(store.profile).toBeNull();
+    expect(store.rooms).toEqual([]);
+    expect(store.handshakes).toEqual([]);
+    expect(store.isVaultOpen).toBe(false);
+    expect(store.isQrModalOpen).toBe(false);
+    expect(store.sseConnected).toBe(false);
+  });
+  it("rejects a hydration response that arrives after sign-out", async () => {
+    let finish!: (response: Response) => void;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockReturnValue(
+        new Promise<Response>((resolve) => {
+          finish = resolve;
+        }),
+      ),
+    );
+    const store = useVectorStore();
+    const pending = store.hydrate();
+    store.clearSession();
+    finish(respond(state()));
+    await pending;
+    expect(store.authenticated).toBe(false);
+    expect(store.profile).toBeNull();
   });
 });

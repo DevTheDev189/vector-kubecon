@@ -17,6 +17,9 @@ pub struct AppConfig {
     pub dash0_dataset: String,
     pub rust_log: String,
     pub static_dir: String,
+    pub admin_users: Vec<String>,
+    pub github_api_base_url: String,
+    pub github_token_url: String,
 }
 
 impl AppConfig {
@@ -32,9 +35,7 @@ impl AppConfig {
         let public_base_url =
             env::var("PUBLIC_BASE_URL").unwrap_or_else(|_| format!("http://127.0.0.1:{}", port));
 
-        let secret_raw = env::var("SESSION_SECRET").unwrap_or_else(|_| {
-            "vector-production-grade-hmac-sha256-secret-seed-key-32b".to_string()
-        });
+        let secret_raw = env::var("SESSION_SECRET").unwrap_or_default();
         let session_secret = secret_raw.into_bytes();
 
         let github_client_id = env::var("GITHUB_CLIENT_ID")
@@ -97,7 +98,27 @@ impl AppConfig {
             dash0_dataset,
             rust_log,
             static_dir,
+            admin_users: env::var("VECTOR_ADMIN_USERS")
+                .unwrap_or_default()
+                .split(',')
+                .map(|s| s.trim().to_ascii_lowercase())
+                .filter(|s| !s.is_empty())
+                .collect(),
+            github_api_base_url: "https://api.github.com".into(),
+            github_token_url: "https://github.com/login/oauth/access_token".into(),
         }
+    }
+
+    pub fn oauth_configured(&self) -> bool {
+        self.github_client_id.is_some()
+            && self.github_client_secret.is_some()
+            && self.session_secret.len() >= 32
+    }
+
+    pub fn is_admin(&self, username: &str) -> bool {
+        self.admin_users
+            .iter()
+            .any(|u| u.eq_ignore_ascii_case(username))
     }
 
     pub fn is_secure(&self) -> bool {

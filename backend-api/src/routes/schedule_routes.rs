@@ -4,7 +4,7 @@ use serde::Deserialize;
 use serde_json::json;
 
 use crate::{
-    auth::OptionalAuthUser,
+    auth::RequireAuthUser,
     error::ApiError,
     models::{BuilderProfile, HandshakeRecord, RoomState, RoomZone},
     services::ScheduleSolver,
@@ -28,12 +28,9 @@ pub struct BookmarkRequest {
 #[tracing::instrument(skip_all, fields(http.route = "/api/state"))]
 pub async fn get_state_handler(
     State(state): State<AppState>,
-    user_opt: OptionalAuthUser,
+    user: RequireAuthUser,
 ) -> Result<impl IntoResponse, ApiError> {
-    let username = match user_opt.0 {
-        Some(token) => token.username,
-        None => "zircon-dev".to_string(),
-    };
+    let username = user.0.username;
 
     // 1. Fetch Builder Profile
     let profile_url = format!("{}/builders/_doc/{}", state.elastic().base_url, username);
@@ -97,9 +94,9 @@ pub async fn get_state_handler(
         .unwrap_or_default();
 
     // 7. Handshakes
-    let handshakes_url = format!("{}/handshakes/_search?size=25", state.elastic().base_url);
+    let handshakes_url = format!("{}/handshakes/_search", state.elastic().base_url);
     let mut handshakes: Vec<HandshakeRecord> = Vec::new();
-    if let Ok(h_resp) = state.http().get(&handshakes_url).send().await {
+    if let Ok(h_resp) = state.http().post(&handshakes_url).json(&json!({"size": 25, "sort": [{"created_at": "desc"}], "query": {"term": {"initiator_username": username}}})).send().await {
         if h_resp.status().is_success() {
             if let Ok(body) = h_resp.json::<serde_json::Value>().await {
                 if let Some(hits) = body["hits"]["hits"].as_array() {
@@ -118,6 +115,7 @@ pub async fn get_state_handler(
     let trace_id = current_trace_id();
 
     Ok(Json(json!({
+        "can_control_demo": state.config().is_admin(&username),
         "profile": profile,
         "schedule": schedule,
         "scored_talks": scored_talks,
@@ -134,13 +132,10 @@ pub async fn get_state_handler(
 #[tracing::instrument(skip_all, fields(http.route = "/api/search/talks"))]
 pub async fn search_talks_handler(
     State(state): State<AppState>,
-    user_opt: OptionalAuthUser,
+    user: RequireAuthUser,
     Json(payload): Json<SearchTalksRequest>,
 ) -> Result<impl IntoResponse, ApiError> {
-    let username = match user_opt.0 {
-        Some(token) => token.username,
-        None => "zircon-dev".to_string(),
-    };
+    let username = user.0.username;
 
     let profile_url = format!("{}/builders/_doc/{}", state.elastic().base_url, username);
     let profile_resp = state.http().get(&profile_url).send().await?;
@@ -184,13 +179,10 @@ pub async fn search_talks_handler(
 #[tracing::instrument(skip_all, fields(http.route = "/api/schedule/bookmark"))]
 pub async fn toggle_bookmark_handler(
     State(state): State<AppState>,
-    user_opt: OptionalAuthUser,
+    user: RequireAuthUser,
     Json(payload): Json<BookmarkRequest>,
 ) -> Result<impl IntoResponse, ApiError> {
-    let username = match user_opt.0 {
-        Some(token) => token.username,
-        None => "zircon-dev".to_string(),
-    };
+    let username = user.0.username;
 
     let doc_url = format!("{}/builders/_doc/{}", state.elastic().base_url, username);
     let resp = state.http().get(&doc_url).send().await?;

@@ -63,6 +63,11 @@ jobs:
           ELASTICSEARCH_URL: http://127.0.0.1:9200
           PUBLIC_BASE_URL: http://127.0.0.1:8080
           OPENAI_API_KEY: ''
+          SESSION_SECRET: vector-browser-test-only-signing-secret-32bytes
+          VECTOR_TEST_SESSION_SECRET: vector-browser-test-only-signing-secret-32bytes
+          VECTOR_ADMIN_USERS: kelseyhightower
+          GITHUB_CLIENT_ID: test-ui-client
+          GITHUB_CLIENT_SECRET: test-ui-secret
         run: |
           cargo run -p backend-api > /tmp/vector-e2e-api.log 2>&1 &
           vector_api_pid=$!

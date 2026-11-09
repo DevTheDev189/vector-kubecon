@@ -14,7 +14,7 @@ use crate::{
         sign_session_cookie, SessionToken,
     },
     error::ApiError,
-    models::{BuilderProfile, GeoPoint, SensoryPreferences, SseEvent},
+    models::{BuilderProfile, GeoPoint, SensoryPreferences},
     state::AppState,
 };
 
@@ -24,16 +24,20 @@ pub struct OAuthCallbackQuery {
     pub state: Option<String>,
 }
 
-#[derive(Deserialize)]
-pub struct ImpersonateRequest {
-    pub username: String,
+#[tracing::instrument(skip_all, fields(http.route = "/api/auth/status"))]
+pub async fn auth_status_handler(State(state): State<AppState>) -> impl IntoResponse {
+    Json(
+        json!({ "oauth_configured": state.config().oauth_configured(), "timestamp_utc": Utc::now() }),
+    )
 }
 
 #[tracing::instrument(skip_all, fields(http.route = "/api/auth/github"))]
-pub async fn github_login_handler(State(state): State<AppState>) -> impl IntoResponse {
-    let (auth_url, state_cookie) = build_github_authorize_url(state.config());
-    let jar = CookieJar::new().add(state_cookie);
-    (jar, Redirect::temporary(&auth_url))
+pub async fn github_login_handler(State(state): State<AppState>) -> Result<Response, ApiError> {
+    let (url, cookies) = build_github_authorize_url(state.config())?;
+    let jar = cookies
+        .into_iter()
+        .fold(CookieJar::new(), |jar, cookie| jar.add(cookie));
+    Ok((jar, Redirect::temporary(&url)).into_response())
 }
 
 #[tracing::instrument(skip_all, fields(http.route = "/api/auth/github/callback"))]
@@ -41,81 +45,62 @@ pub async fn github_callback_handler(
     State(state): State<AppState>,
     jar: CookieJar,
     Query(query): Query<OAuthCallbackQuery>,
-) -> Result<Response, ApiError> {
-    let code = query.code.ok_or_else(|| {
-        ApiError::BadRequest("Missing authorization code in GitHub OAuth callback".to_string())
-    })?;
-
-    let token = exchange_code_for_token(state.config(), state.http(), &code).await?;
-    let scraped = state
-        .github()
-        .scrape_github_user("me", Some(&token))
-        .await?;
-
-    let profile = sync_and_index_profile(&state, &scraped.username, None, Some(&token)).await?;
-
-    let session = SessionToken::new(profile.username.clone(), profile.github_id);
-    let session_cookie = sign_session_cookie(
-        &session,
-        &state.config().session_secret,
-        state.config().is_secure(),
-    );
-
-    let updated_jar = jar.add(session_cookie);
-    Ok((updated_jar, Redirect::temporary("/")).into_response())
-}
-
-#[tracing::instrument(skip_all, fields(http.route = "/api/auth/impersonate"))]
-pub async fn impersonate_handler(
-    State(state): State<AppState>,
-    jar: CookieJar,
-    Json(payload): Json<ImpersonateRequest>,
-) -> Result<(CookieJar, Json<BuilderProfile>), ApiError> {
-    let username = payload.username.trim().to_string();
-
-    state.broadcast_sse(SseEvent::DnaSyncProgress {
-        username: username.clone(),
-        step: "Fetching GitHub Repositories".to_string(),
-        progress_pct: 20,
-        detail: format!("Connecting to GitHub API for @{}...", username),
-        timestamp_utc: Utc::now(),
-    });
-
-    state.broadcast_sse(SseEvent::DnaSyncProgress {
-        username: username.clone(),
-        step: "Extracting Builder DNA via AI Engine".to_string(),
-        progress_pct: 50,
-        detail: "Analyzing tech stack, languages, and repo READMEs...".to_string(),
-        timestamp_utc: Utc::now(),
-    });
-
-    let profile = sync_and_index_profile(&state, &username, None, None).await?;
-
-    state.broadcast_sse(SseEvent::DnaSyncProgress {
-        username: username.clone(),
-        step: "Generating Dense 1536-dim Embedding".to_string(),
-        progress_pct: 80,
-        detail: "Indexing cosine vector into Elasticsearch 8.15...".to_string(),
-        timestamp_utc: Utc::now(),
-    });
-
-    state.broadcast_sse(SseEvent::DnaSyncProgress {
-        username: username.clone(),
-        step: "Hydration Complete".to_string(),
-        progress_pct: 100,
-        detail: format!("Ready! Logged in as {}", profile.display_name),
-        timestamp_utc: Utc::now(),
-    });
-
-    let session = SessionToken::new(profile.username.clone(), profile.github_id);
-    let session_cookie = sign_session_cookie(
-        &session,
-        &state.config().session_secret,
-        state.config().is_secure(),
-    );
-
-    let updated_jar = jar.add(session_cookie);
-    Ok((updated_jar, Json(profile)))
+) -> Response {
+    use crate::auth::{OAUTH_STATE_COOKIE, OAUTH_VERIFIER_COOKIE};
+    use subtle::ConstantTimeEq;
+    let result = async {
+        let expected = jar.get(OAUTH_STATE_COOKIE).ok_or_else(|| {
+            ApiError::Unauthorized("OAuth session expired. Please sign in again.".into())
+        })?;
+        let actual = query
+            .state
+            .as_deref()
+            .ok_or_else(|| ApiError::Unauthorized("Missing OAuth state".into()))?;
+        if actual.is_empty()
+            || expected
+                .value()
+                .as_bytes()
+                .ct_eq(actual.as_bytes())
+                .unwrap_u8()
+                != 1
+        {
+            return Err(ApiError::Unauthorized("OAuth state did not match".into()));
+        }
+        let verifier = jar
+            .get(OAUTH_VERIFIER_COOKIE)
+            .filter(|c| c.value().len() >= 43)
+            .ok_or_else(|| ApiError::Unauthorized("Missing OAuth verification cookie".into()))?;
+        let code = query
+            .code
+            .as_deref()
+            .filter(|c| !c.is_empty())
+            .ok_or_else(|| ApiError::BadRequest("GitHub authorization was not completed".into()))?;
+        let token =
+            exchange_code_for_token(state.config(), state.http(), code, verifier.value()).await?;
+        let (username, github_id) = state.github().authenticated_identity(&token).await?;
+        let profile = sync_and_index_profile(&state, &username, None, Some(&token)).await?;
+        if profile.github_id != github_id {
+            return Err(ApiError::Unauthorized(
+                "GitHub account identity changed during sign-in".into(),
+            ));
+        }
+        Ok(sign_session_cookie(
+            &SessionToken::new(username, github_id),
+            &state.config().session_secret,
+            state.config().is_secure(),
+        ))
+    }
+    .await;
+    let mut cleared = jar;
+    for name in [OAUTH_STATE_COOKIE, OAUTH_VERIFIER_COOKIE] {
+        let mut cookie = crate::auth::oauth_cookie(name, String::new(), state.config());
+        cookie.make_removal();
+        cleared = cleared.add(cookie);
+    }
+    match result {
+        Ok(cookie) => (cleared.add(cookie), Redirect::temporary("/")).into_response(),
+        Err(error) => (cleared, error).into_response(),
+    }
 }
 
 #[tracing::instrument(skip_all, fields(http.route = "/api/auth/logout"))]
@@ -185,8 +170,14 @@ pub async fn sync_and_index_profile(
         state.elastic().base_url,
         profile.username
     );
-    let _ = state.http().put(&doc_url).json(&profile).send().await;
-    let _ = state.elastic().refresh_index("builders").await;
+    state
+        .http()
+        .put(&doc_url)
+        .json(&profile)
+        .send()
+        .await?
+        .error_for_status()?;
+    state.elastic().refresh_index("builders").await?;
 
     Ok(profile)
 }

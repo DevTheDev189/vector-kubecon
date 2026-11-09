@@ -1,173 +1,432 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { Maximize2, Minimize2, Navigation } from "lucide-vue-next";
+import { computed, ref, watch } from "vue";
+import {
+  Maximize2,
+  Minimize2,
+  Plus,
+  Minus,
+  RotateCcw,
+  MoveUpRight,
+  Layers,
+} from "lucide-vue-next";
 import { useVectorStore } from "../../stores/vectorStore";
-import type { RoomState } from "../../types/vector";
+import {
+  floorNames,
+  roomSpace,
+  spaces,
+  type Floor,
+  type MapSpace,
+} from "../../map/saltPalace";
 const store = useVectorStore();
+const floor = ref<Floor>(1),
+  zoom = ref(1),
+  offset = ref({ x: 0, y: 0 });
+const svg = ref<SVGSVGElement>();
+let drag: { x: number; y: number; ox: number; oy: number } | null = null;
 const destination = computed(() =>
-  store.quietMode
-    ? store.haven
-    : store.rooms.find(
-        (r) =>
-          r.room_id ===
-          store.activeSurgeAlert?.recommended_alternative?.room_id,
-      ),
+  roomSpace(
+    store.quietMode
+      ? store.haven?.room_id
+      : store.activeSurgeAlert?.recommended_alternative?.room_id,
+  ),
 );
 const origin = computed(() =>
-  store.activeSurgeAlert
-    ? store.rooms.find(
-        (r) => r.room_id === store.activeSurgeAlert?.jammed_room_id,
-      )
-    : store.currentRoom,
+  roomSpace(
+    store.activeSurgeAlert?.jammed_room_id || store.currentRoom?.room_id,
+  ),
 );
-const path = computed(() => {
-  const a = origin.value?.map_point,
-    b = destination.value?.map_point;
-  return a && b && (a.x !== b.x || a.y !== b.y)
-    ? `M ${a.x} ${a.y} L ${a.x} 220 L ${b.x} 220 L ${b.x} ${b.y}`
-    : "";
+const focused = computed(() =>
+  roomSpace(
+    store.selectedRoomId ||
+      destination.value?.roomId ||
+      store.activeTalk?.room_id,
+  ),
+);
+watch(
+  () => focused.value?.floor,
+  (value) => {
+    if (value) {
+      floor.value = value;
+      resetView();
+    }
+  },
+);
+const displayed = computed(() =>
+  spaces.filter((space) => space.floor === floor.value),
+);
+const room = (space: MapSpace) =>
+  store.rooms.find((r) => r.room_id === space.roomId);
+const status = (space: MapSpace) => {
+  const live = room(space);
+  if (!live) return "untracked";
+  if (
+    !live.active_talk_id &&
+    live.decibel_level < 45 &&
+    live.occupancy_ratio < 0.2
+  )
+    return "quiet";
+  return live.occupancy_ratio >= 0.95
+    ? "full"
+    : live.occupancy_ratio >= 0.7
+      ? "busy"
+      : "open";
+};
+const label = (space: MapSpace) => {
+  const live = room(space);
+  return `${live?.room_name || space.label}${live ? `, ${Math.round(live.occupancy_ratio * 100)} percent occupied, ${live.decibel_level} decibels` : ", no live telemetry"}`;
+};
+function select(space: MapSpace) {
+  if (space.roomId) store.selectedRoomId = space.roomId;
+}
+function resetView() {
+  zoom.value = 1;
+  offset.value = { x: 0, y: 0 };
+}
+function changeZoom(delta: number) {
+  zoom.value = Math.max(1, Math.min(3, zoom.value + delta));
+  if (zoom.value === 1) offset.value = { x: 0, y: 0 };
+}
+const viewBox = computed(
+  () =>
+    `${500 - 500 / zoom.value + offset.value.x} ${440 - 440 / zoom.value + offset.value.y} ${1000 / zoom.value} ${880 / zoom.value}`,
+);
+function pointerDown(event: PointerEvent) {
+  if (zoom.value <= 1 || (event.target as Element).closest('[role="button"]'))
+    return;
+  drag = {
+    x: event.clientX,
+    y: event.clientY,
+    ox: offset.value.x,
+    oy: offset.value.y,
+  };
+  svg.value?.setPointerCapture(event.pointerId);
+}
+function pointerMove(event: PointerEvent) {
+  if (!drag || !svg.value) return;
+  const bounds = svg.value.getBoundingClientRect(),
+    scale = Math.min(
+      bounds.width / (1000 / zoom.value),
+      bounds.height / (880 / zoom.value),
+    );
+  offset.value = {
+    x: Math.max(
+      -450,
+      Math.min(450, drag.ox - (event.clientX - drag.x) / scale),
+    ),
+    y: Math.max(
+      -390,
+      Math.min(390, drag.oy - (event.clientY - drag.y) / scale),
+    ),
+  };
+}
+const visibleOrigin = computed(() =>
+  origin.value?.floor === floor.value ? origin.value : null,
+);
+const visibleDestination = computed(() =>
+  destination.value?.floor === floor.value ? destination.value : null,
+);
+// Intent line only: no assertion of a verified pedestrian or accessible route.
+const routeLine = computed(() => {
+  const a = visibleOrigin.value,
+    b = visibleDestination.value;
+  if (!a && !b) return "";
+  const start = a || { x: 675, y: 670 },
+    end = b || { x: 675, y: 670 };
+  if (start.x === end.x && start.y === end.y) return "";
+  return `M${start.x} ${start.y}Q675 670 ${end.x} ${end.y}`;
 });
-const isHaven = (r: RoomState) =>
-  store.sensoryHavens.some((h) => h.room_id === r.room_id) &&
-  !r.active_talk_id &&
-  r.occupancy_ratio < 0.2 &&
-  r.decibel_level < 45;
-const tone = (r: RoomState) =>
-  isHaven(r)
-    ? "haven"
-    : r.occupancy_ratio >= 0.95
-      ? "full"
-      : r.occupancy_ratio >= 0.7
-        ? "busy"
-        : "open";
-const short = (r: RoomState) =>
-  r.room_name
-    .replace("Grand ", "")
-    .replace(" (Alpine Room)", "")
-    .replace(" (Sensory Haven)", "")
-    .replace("Salt Palace ", "");
 </script>
 <template>
-  <section class="spatial-map" :class="{ expanded: store.isMapExpanded }">
+  <section
+    class="spatial-map architectural-map"
+    :class="{ expanded: store.isMapExpanded }"
+  >
     <div class="map-heading">
-      <span class="eyebrow"><Navigation :size="12" /> SALT PALACE / LIVE</span
-      ><button
-        class="text-button"
+      <div>
+        <span class="eyebrow"><Layers :size="13" /> SALT PALACE</span>
+        <p class="map-subtitle">A little perspective. Your next move.</p>
+      </div>
+      <button
+        class="icon-button"
         :aria-expanded="store.isMapExpanded"
+        :aria-label="store.isMapExpanded ? 'Collapse map' : 'Expand map'"
         @click="store.isMapExpanded = !store.isMapExpanded"
       >
-        <Minimize2 v-if="store.isMapExpanded" :size="12" /><Maximize2
+        <Minimize2 v-if="store.isMapExpanded" :size="16" /><Maximize2
           v-else
-          :size="12"
+          :size="16"
         />
-        {{ store.isMapExpanded ? "Collapse" : "Expand" }}
       </button>
     </div>
-    <svg
-      viewBox="0 0 800 540"
-      role="group"
-      aria-label="Salt Palace room occupancy map"
-    >
-      <defs>
-        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-          <circle cx="1" cy="1" r=".8" fill="#263443" />
-        </pattern>
-        <filter id="glow"><feGaussianBlur stdDeviation="4" /></filter>
-      </defs>
-      <rect width="800" height="540" fill="url(#grid)" />
-      <path
-        d="M30 35H770V505H30Z M30 220H770 M30 380H770 M220 35V505 M405 35V505 M575 35V505"
-        fill="none"
-        stroke="#263342"
-        stroke-width="2"
-      />
-      <text x="40" y="22" class="map-wing">NORTH WING</text>
-      <text x="40" y="535" class="map-wing">SOUTH CONCOURSE</text>
-      <text x="750" y="22" text-anchor="end" class="map-wing">N ↑</text>
-      <g
-        v-for="room in store.rooms"
-        :key="room.room_id"
-        :transform="`translate(${room.map_point.x},${room.map_point.y})`"
-        class="map-room"
-        :class="[
-          tone(room),
-          { selected: store.selectedRoom?.room_id === room.room_id },
-        ]"
-        role="button"
-        tabindex="0"
-        :aria-label="`${room.room_name}, ${Math.round(room.occupancy_ratio * 100)} percent occupied, ${room.decibel_level} decibels`"
-        @click="store.selectedRoomId = room.room_id"
-        @keydown.enter.prevent="store.selectedRoomId = room.room_id"
-        @keydown.space.prevent="store.selectedRoomId = room.room_id"
+    <div class="floor-switcher" aria-label="Map floor">
+      <button
+        v-for="level in [1, 2, 3] as Floor[]"
+        :key="level"
+        :aria-pressed="floor === level"
+        @click="
+          floor = level;
+          resetView();
+        "
       >
-        <rect x="-72" y="-54" width="144" height="108" rx="9" />
-        <text y="-15" text-anchor="middle" class="map-room-name">
-          {{ short(room).slice(0, 21) }}
-        </text>
-        <text y="13" text-anchor="middle" class="map-room-value">
-          {{
-            isHaven(room)
-              ? "QUIET"
-              : Math.round(room.occupancy_ratio * 100) + "%"
-          }}
-        </text>
-        <text y="35" text-anchor="middle" class="map-room-detail">
-          {{ room.capacity_current }}/{{ room.capacity_max }} ·
-          {{ room.decibel_level.toFixed(0) }} dB
-        </text>
-      </g>
-      <path
-        v-if="path"
-        :d="path"
-        fill="none"
-        :stroke="store.quietMode ? '#2dd4bf' : '#b7f769'"
-        stroke-width="10"
-        opacity=".3"
-        filter="url(#glow)"
-      />
-      <path
-        v-if="path"
-        :d="path"
-        class="reroute-path"
-        fill="none"
-        :stroke="store.quietMode ? '#2dd4bf' : '#b7f769'"
-        stroke-width="4"
-        stroke-dasharray="6,6"
-      />
-      <g
-        v-if="store.currentRoom"
-        :transform="`translate(${store.currentRoom.map_point.x - 65},${store.currentRoom.map_point.y - 50})`"
+        <span class="mono">0{{ level }}</span> {{ floorNames[level] }}
+      </button>
+    </div>
+    <div class="map-viewport">
+      <svg
+        ref="svg"
+        :viewBox="viewBox"
+        role="group"
+        :aria-label="`Salt Palace architectural map, ${floorNames[floor]}`"
+        :class="{ zoomed: zoom > 1 }"
+        @pointerdown="pointerDown"
+        @pointermove="pointerMove"
+        @pointerup="drag = null"
+        @pointercancel="drag = null"
+        @lostpointercapture="drag = null"
       >
-        <circle r="9" fill="#fff" stroke="#07090e" stroke-width="4" />
-      </g>
-    </svg>
+        <defs>
+          <linearGradient
+            id="map-route-gradient"
+            x1="0%"
+            y1="0%"
+            x2="100%"
+            y2="100%"
+          >
+            <stop offset="0%" stop-color="#22d3ee" />
+            <stop offset="55%" stop-color="#f7df69" />
+            <stop offset="100%" stop-color="#ef5da8" />
+          </linearGradient>
+          <pattern
+            id="map-dots"
+            width="18"
+            height="18"
+            patternUnits="userSpaceOnUse"
+          >
+            <circle cx="1" cy="1" r=".7" fill="#343434" />
+          </pattern>
+          <pattern
+            id="capacity-hatch"
+            width="8"
+            height="8"
+            patternUnits="userSpaceOnUse"
+          >
+            <path
+              d="M-2 2L2-2M0 8L8 0M6 10L10 6"
+              stroke="#888"
+              stroke-width="1"
+            />
+          </pattern>
+        </defs>
+        <rect width="1000" height="880" fill="url(#map-dots)" />
+        <g class="building-context" aria-hidden="true">
+          <path
+            class="building-outline"
+            d="M44 467H465V133H560V50H702V610H575L545 653H402V817H192V717H44Z"
+          />
+          <path
+            class="concourse"
+            d="M52 650H527L560 604H700V470H706M190 701H580Q685 701 675 798M707 650H858V162H892V62H858"
+          />
+          <path class="loading-zone" d="M60 428H468V184H447V428H60Z" />
+          <path
+            class="building-outline"
+            d="M800 150H893V477H998V600H893V833H680V688H800Z"
+          />
+          <path
+            class="stairs"
+            d="M650 621h22m-22 7h22m-22 7h22m-22 7h22m-22 7h22M864 480h22m-22 7h22m-22 7h22m-22 7h22"
+          />
+          <text x="55" y="410" class="architecture-note">
+            LOADING / SERVICE
+          </text>
+          <text x="300" y="675" class="architecture-note" text-anchor="middle">
+            LOWER CONCOURSE
+          </text>
+          <text
+            x="645"
+            y="732"
+            class="architecture-note"
+            transform="rotate(-90 645 732)"
+          >
+            UPPER CONCOURSE
+          </text>
+          <text x="288" y="842" class="architecture-note" text-anchor="middle">
+            BALLROOM
+          </text>
+          <text x="95" y="733" class="architecture-note">SOUTH</text>
+          <text x="95" y="754" class="architecture-note">ENTRANCE ↗</text>
+          <text x="578" y="38" class="architecture-note">WEST LOBBY</text>
+          <text x="818" y="125" class="architecture-note">MEETING ROOMS</text>
+        </g>
+        <g
+          v-for="space in displayed"
+          :key="space.id"
+          class="map-room"
+          :class="[
+            space.kind,
+            status(space),
+            { selected: focused?.id === space.id, tracked: !!room(space) },
+          ]"
+          :role="space.roomId ? 'button' : undefined"
+          :tabindex="space.roomId ? 0 : undefined"
+          :aria-label="label(space)"
+          :aria-pressed="space.roomId ? focused?.id === space.id : undefined"
+          :data-room-id="space.roomId"
+          @click="select(space)"
+          @keydown.enter.prevent="select(space)"
+          @keydown.space.prevent="select(space)"
+        >
+          <title>{{ label(space) }}</title>
+          <path class="room-shape" :d="space.d" />
+          <path
+            v-if="status(space) === 'full'"
+            class="room-hatch"
+            :d="space.d"
+            fill="url(#capacity-hatch)"
+          />
+          <text
+            :x="space.x"
+            :y="space.y - (room(space) ? 9 : 0)"
+            class="space-label"
+            text-anchor="middle"
+          >
+            <template v-if="/^HALL [A-E]$/.test(space.label)">
+              <tspan :x="space.x" dy="-12" class="hall-prefix">HALL</tspan>
+              <tspan :x="space.x" dy="28">{{ space.label.at(-1) }}</tspan>
+            </template>
+            <template v-else>{{ space.label }}</template>
+          </text>
+          <text
+            v-if="room(space)"
+            :x="space.x"
+            :y="space.y + 15"
+            class="space-reading"
+            text-anchor="middle"
+          >
+            {{
+              status(space) === "quiet"
+                ? "QUIET"
+                : Math.round(room(space)!.occupancy_ratio * 100) + "%"
+            }}
+          </text>
+        </g>
+        <path
+          v-if="routeLine"
+          :d="routeLine"
+          class="reroute-path schematic-route"
+          fill="none"
+          stroke="url(#map-route-gradient)"
+          stroke-width="3"
+          stroke-dasharray="7 7"
+          pointer-events="none"
+        />
+        <g
+          v-if="visibleOrigin"
+          :transform="`translate(${visibleOrigin.x},${visibleOrigin.y - 34})`"
+          class="you-marker"
+          pointer-events="none"
+        >
+          <circle r="7" fill="#fff" stroke="#111" stroke-width="3" />
+          <text y="-15" text-anchor="middle">YOU</text>
+        </g>
+        <g transform="translate(80 85)" class="north-arrow" aria-label="North">
+          <path d="M0 36V0m-7 10L0 0l7 10" />
+          <text x="0" y="-13" text-anchor="middle">N</text>
+        </g>
+      </svg>
+      <div class="map-tools">
+        <button
+          class="icon-button"
+          aria-label="Zoom out"
+          :disabled="zoom <= 1"
+          @click="changeZoom(-0.5)"
+        >
+          <Minus :size="15" /></button
+        ><span class="mono">{{ Math.round(zoom * 100) }}%</span
+        ><button
+          class="icon-button"
+          aria-label="Zoom in"
+          :disabled="zoom >= 3"
+          @click="changeZoom(0.5)"
+        >
+          <Plus :size="15" /></button
+        ><button
+          class="icon-button"
+          aria-label="Reset map view"
+          @click="resetView"
+        >
+          <RotateCcw :size="14" />
+        </button>
+      </div>
+    </div>
+    <label class="map-room-picker"
+      >Find a room
+      <select
+        aria-label="Find a room on this floor"
+        :value="store.selectedRoomId"
+        @change="
+          store.selectedRoomId = ($event.target as HTMLSelectElement).value
+        "
+      >
+        <option value="">Follow my session</option>
+        <option
+          v-for="space in displayed.filter((space) => room(space))"
+          :key="space.id"
+          :value="space.roomId"
+        >
+          {{ room(space)?.room_name }}
+        </option>
+      </select>
+    </label>
     <div class="map-legend">
-      <span><i class="legend-dot open" /> Open</span
-      ><span><i class="legend-dot busy" /> Filling</span
-      ><span><i class="legend-dot full" /> ≥95%</span
-      ><span><i class="legend-dot haven" /> Quiet haven</span>
+      <span><i class="legend-dot open" /> Available</span
+      ><span><i class="legend-dot full" /> Full</span
+      ><span><i class="legend-dot haven" /> Quiet</span
+      ><span class="muted">{{ floorNames[floor] }}</span>
     </div>
-    <div
-      v-if="store.selectedRoomId && store.selectedRoom"
-      class="map-selection"
-    >
-      <strong>{{ store.selectedRoom.room_name }}</strong
-      ><span>{{
-        store.selectedRoom.active_talk_title || "No active talk"
-      }}</span
-      ><button class="text-button" @click="store.selectedRoomId = ''">
-        Follow my route ↗
+    <div v-if="store.selectedRoom" class="map-selection" aria-live="polite">
+      <div>
+        <strong>{{ store.selectedRoom.room_name }}</strong
+        ><span>{{
+          store.selectedRoom.active_talk_title || "No active session"
+        }}</span>
+      </div>
+      <div class="selection-metrics">
+        <span
+          >{{ Math.round(store.selectedRoom.occupancy_ratio * 100) }}%
+          occupied</span
+        ><span>{{ store.selectedRoom.decibel_level.toFixed(1) }} dB</span>
+      </div>
+    </div>
+    <div v-if="destination" class="route-summary">
+      <MoveUpRight :size="17" />
+      <div>
+        <strong
+          >{{
+            store.quietMode ? "Your quiet space" : "Your open alternative"
+          }}
+          · {{ destination.label }}</strong
+        ><span
+          >{{ floorNames[destination.floor]
+          }}{{
+            origin?.floor !== destination.floor
+              ? " · change floors at the concourse"
+              : ""
+          }}</span
+        >
+      </div>
+      <button
+        @click="
+          floor = destination.floor;
+          resetView();
+        "
+      >
+        Show
       </button>
     </div>
-    <div class="map-caption">
-      <span class="status-dot" />
-      {{
-        store.quietMode
-          ? "Finding a little breathing room."
-          : store.activeSurgeAlert
-            ? "A better route. Already found."
-            : "Your next move, in real time."
-      }}
-    </div>
+    <p class="map-caption">
+      Architectural schematic · demo room placements are approximate.<br />Dashed
+      line shows destination intent, not verified walking directions.
+    </p>
   </section>
 </template>

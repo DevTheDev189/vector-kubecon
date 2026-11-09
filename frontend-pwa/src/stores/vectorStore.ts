@@ -1,6 +1,6 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
-import { apiFetch, requestTelemetry, send } from "../api/client";
+import { ApiError, apiFetch, requestTelemetry, send } from "../api/client";
 import type {
   BadgeResponse,
   BuilderProfile,
@@ -15,13 +15,6 @@ import type {
   SurgeAlert,
 } from "../types/vector";
 
-export const judgeHandles = [
-  "kelseyhightower",
-  "saiyampathak",
-  "estesp",
-  "wesnovack",
-  "zircon-dev",
-];
 export const localTime = (value: string) =>
   new Intl.DateTimeFormat("en-US", {
     timeZone: "America/Denver",
@@ -46,6 +39,9 @@ export const useVectorStore = defineStore("vector", () => {
   const sseConnected = ref(false),
     sseEventLog = ref<SseEvent[]>([]),
     dnaSyncSteps = ref<DnaProgress[]>([]);
+  const authenticated = ref(false),
+    oauthConfigured = ref<boolean | null>(null),
+    canControlDemo = ref(false);
   const busy = ref(false),
     loading = ref(true),
     error = ref(""),
@@ -174,6 +170,8 @@ export const useVectorStore = defineStore("vector", () => {
       revision = roomRevision;
     const data = await apiFetch<StateResponse>("/state");
     if (version !== hydrationVersion) return;
+    authenticated.value = true;
+    canControlDemo.value = data.can_control_demo ?? false;
     profile.value = data.profile;
     schedule.value = data.schedule;
     scoredTalks.value = data.scored_talks;
@@ -188,6 +186,7 @@ export const useVectorStore = defineStore("vector", () => {
     );
     newerRooms.forEach(mergeRoom);
     lastElasticDsl.value = data.last_elastic_query_dsl;
+    connectSseStream();
     selectedSlotIndex.value = Math.min(
       selectedSlotIndex.value,
       Math.max(0, slots.value.length - 1),
@@ -200,6 +199,10 @@ export const useVectorStore = defineStore("vector", () => {
     try {
       await action();
     } catch (cause) {
+      if (cause instanceof ApiError && cause.status === 401) {
+        clearSession();
+        return;
+      }
       error.value =
         cause instanceof Error
           ? cause.message
@@ -214,7 +217,7 @@ export const useVectorStore = defineStore("vector", () => {
     loading.value = false;
   }
   function connectSseStream() {
-    if (stream) return;
+    if (stream || !authenticated.value) return;
     stream = new EventSource("/api/events/stream");
     stream.onopen = () => {
       sseConnected.value = true;
@@ -223,6 +226,10 @@ export const useVectorStore = defineStore("vector", () => {
     };
     stream.onerror = () => {
       sseConnected.value = false;
+      // Re-check the cookie when a stream expires or the server rejects it.
+      void apiFetch("/me").catch((cause) => {
+        if (cause instanceof ApiError && cause.status === 401) clearSession();
+      });
     };
     stream.onmessage = (message) => {
       try {
@@ -237,23 +244,56 @@ export const useVectorStore = defineStore("vector", () => {
     stream = null;
     sseConnected.value = false;
   }
-  async function sync(username: string, linkedin?: string, preset = true) {
+  function clearSession() {
+    hydrationVersion++;
+    disconnect();
+    authenticated.value = false;
+    canControlDemo.value = false;
+    profile.value = null;
+    schedule.value = null;
+    rooms.value = [];
+    scoredTalks.value = [];
+    sensoryHavens.value = [];
+    hallwayMatches.value = [];
+    handshakes.value = [];
+    activeSurgeAlert.value = null;
+    lastElasticDsl.value = null;
+    badge.value = null;
+    qrPeer.value = "";
+    selectedRoomId.value = "";
+    isQrModalOpen.value = false;
+    isVaultOpen.value = false;
+    dnaSyncSteps.value = [];
+    syncUsername.value = "";
+    sseEventLog.value = [];
+    liveRoomRevisions.clear();
+    requestTelemetry.lastTraceId = "";
+    hasConnected = false;
+  }
+  async function initialize() {
+    try {
+      const status = await apiFetch<{ oauth_configured: boolean }>(
+        "/auth/status",
+      );
+      oauthConfigured.value = status.oauth_configured;
+    } catch {
+      oauthConfigured.value = null;
+    }
+    await refresh();
+  }
+  async function logout() {
     await run(async () => {
-      syncUsername.value = username;
-      dnaSyncSteps.value = [];
-      badge.value = null;
-      if (preset)
-        await apiFetch<BuilderProfile>(
-          "/auth/impersonate",
-          send("POST", { username }),
-        );
-      else
-        await apiFetch(
-          "/sync-github",
-          send("POST", { username, linkedin_url: linkedin || null }),
-        );
-      activeSurgeAlert.value = null;
-      selectedRoomId.value = "";
+      await apiFetch("/auth/logout", send("POST"));
+      clearSession();
+    });
+  }
+  async function sync() {
+    if (!profile.value) return;
+    await run(async () => {
+      await apiFetch(
+        "/sync-github",
+        send("POST", { username: profile.value!.username }),
+      );
       await hydrate();
     });
   }
@@ -348,6 +388,12 @@ export const useVectorStore = defineStore("vector", () => {
     }
   }
   return {
+    authenticated,
+    oauthConfigured,
+    canControlDemo,
+    initialize,
+    logout,
+    clearSession,
     profile,
     schedule,
     scoredTalks,

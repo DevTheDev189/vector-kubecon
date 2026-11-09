@@ -32,7 +32,8 @@ impl AppState {
 
         let elastic = ElasticClient::new(&config.elasticsearch_url, http.clone());
         let openai = OpenAiEngine::new(config.clone(), http.clone());
-        let github = GitHubScraper::new(http.clone());
+        let mut github = GitHubScraper::new(http.clone());
+        github.api_base_url = config.github_api_base_url.clone();
         let metrics = TelemetryMetrics::new();
         let (sse_tx, _) = broadcast::channel(1024);
 

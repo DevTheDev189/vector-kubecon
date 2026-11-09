@@ -1,9 +1,10 @@
+mod common;
 use axum::{
     body::{to_bytes, Body},
     http::{Request, StatusCode},
     Router,
 };
-use backend_api::{app_router, models::SseEvent, AppConfig, AppState};
+use backend_api::{app_router, models::SseEvent, AppState};
 use serde_json::{json, Value};
 use tower::ServiceExt;
 
@@ -15,6 +16,10 @@ async fn call(app: &Router, method: &str, path: &str, body: Value) -> (StatusCod
                 .method(method)
                 .uri(path)
                 .header("content-type", "application/json")
+                .header(
+                    "cookie",
+                    common::cookie(&common::config(), "zircon-dev", 123456),
+                )
                 .body(Body::from(body.to_string()))
                 .unwrap(),
         )
@@ -27,7 +32,7 @@ async fn call(app: &Router, method: &str, path: &str, body: Value) -> (StatusCod
 
 #[tokio::test]
 async fn checkins_surge_and_reset_preserve_live_state() {
-    let mut config = AppConfig::from_env();
+    let mut config = common::config();
     config.openai_api_key = None;
     let state = AppState::new(config);
     state.elastic().ensure_indices_and_seed().await.unwrap();
@@ -131,7 +136,7 @@ async fn checkins_surge_and_reset_preserve_live_state() {
 
 #[tokio::test]
 async fn room_audit_retains_all_samples_and_reports_latency() {
-    let mut config = AppConfig::from_env();
+    let mut config = common::config();
     config.openai_api_key = None;
     let state = AppState::new(config);
     state.elastic().ensure_indices_and_seed().await.unwrap();
