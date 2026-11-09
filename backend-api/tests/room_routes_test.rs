@@ -141,6 +141,8 @@ async fn room_audit_retains_all_samples_and_reports_latency() {
         let (status, audit) = call(&app, "POST", "/api/rooms/audit-unbatched", json!({})).await;
         assert_eq!(status, StatusCode::OK, "{audit}");
         assert_eq!(audit["rooms"].as_array().unwrap().len(), 15);
+        assert_eq!(audit["elastic_requests"], 1);
+        assert_eq!(audit["rooms"][0]["room_id"], audit["rooms"][12]["room_id"]);
         assert!(audit["rooms"][0]["accessibility"].is_object());
         elapsed.push(audit["elapsed_ms"].as_f64().unwrap());
     }

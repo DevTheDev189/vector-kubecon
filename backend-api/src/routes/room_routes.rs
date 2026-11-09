@@ -238,25 +238,36 @@ pub async fn reset_surge_handler(State(state): State<AppState>) -> Result<Json<V
     ))
 }
 
-// Deliberate diagnostic baseline for the Phase 4 performance exercise.
-// Replaced with one batched request in the immediately following fix commit.
+// Keep the original route for reproducible before/after comparisons.
+#[tracing::instrument(skip_all, fields(http.route = "/api/rooms/audit-unbatched"))]
 pub async fn audit_rooms_handler(State(state): State<AppState>) -> Result<Json<Value>, ApiError> {
     let started = std::time::Instant::now();
     let rooms: Vec<RoomState> =
         serde_json::from_str(include_str!("../../../seed/kubecon_rooms.json"))?;
-    let mut samples = Vec::with_capacity(15);
-    for index in 0..15 {
-        let body = elastic_json(state.http().get(format!(
-            "{}/rooms_state/_doc/{}",
-            state.elastic().base_url,
-            rooms[index % rooms.len()].room_id
-        )))
-        .await?;
-        samples.push(serde_json::from_value::<RoomState>(
-            body["_source"].clone(),
-        )?);
+    let ids: Vec<&str> = (0..15)
+        .map(|index| rooms[index % rooms.len()].room_id.as_str())
+        .collect();
+    let body = elastic_json(
+        state
+            .http()
+            .post(format!("{}/rooms_state/_mget", state.elastic().base_url))
+            .json(&json!({"ids": ids})),
+    )
+    .await?;
+    let docs = body["docs"]
+        .as_array()
+        .ok_or_else(|| ApiError::ElasticError("Missing audit documents".into()))?;
+    let mut samples = Vec::with_capacity(docs.len());
+    for doc in docs {
+        if doc["error"].is_object() {
+            return Err(ApiError::ElasticError("Failed to read audit room".into()));
+        }
+        if doc["found"] != true {
+            return Err(ApiError::NotFound("Audit room not found".into()));
+        }
+        samples.push(serde_json::from_value::<RoomState>(doc["_source"].clone())?);
     }
     Ok(Json(
-        json!({"rooms": samples, "elastic_requests": 15, "elapsed_ms": started.elapsed().as_secs_f64() * 1000.0, "trace_id": current_trace_id(), "timestamp_utc": Utc::now()}),
+        json!({"rooms": samples, "elastic_requests": 1, "elapsed_ms": started.elapsed().as_secs_f64() * 1000.0, "trace_id": current_trace_id(), "timestamp_utc": Utc::now()}),
     ))
 }

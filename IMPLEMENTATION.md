@@ -235,13 +235,13 @@ You are an autonomous principal engineer executing this specification from top t
 
 ### 4.3 THE MANDATORY TWO-COMMIT SPONSOR RUBRIC TRAP (Do Not Skip!)
 *Why this exists: The judging rubrics for Sonar Gitar ($4k), Dash0 ($4k), and Radar ($4k) explicitly award top points for showing a real issue caught and fixed during development.*
-- [ ] **Step 4.3A (Commit 1 on `feat/phase-4-crowd-surge-and-sre-trap` — The Deliberate Bottleneck):**
+- [x] **Step 4.3A (Commit 1 on `feat/phase-4-crowd-surge-and-sre-trap` — The Deliberate Bottleneck):**
   - Add a diagnostic endpoint `POST /api/rooms/audit-unbatched` that intentionally performs an unbatched N+1 sequential Elasticsearch HTTP loop (15 sequential requests inside a loop) AND omits `#[tracing::instrument]`, then push Commit 1 to `feat/phase-4-crowd-surge-and-sre-trap` and open **PR #4**.
-- [ ] **Step 4.3B (Commit 2 on `feat/phase-4-crowd-surge-and-sre-trap` — The Verified Fix):**
+- [x] **Step 4.3B (Commit 2 on `feat/phase-4-crowd-surge-and-sre-trap` — The Verified Fix):**
   - Immediately replace the N+1 sequential loop in `POST /api/rooms/audit-unbatched` with a single batched Elasticsearch `_mget` / single query, add `#[tracing::instrument(skip_all)]` and UTC timestamps per `.gitar/rules.md`, and document the before/after latency (`~185ms -> ~8ms`) in `docs/SRE_INCIDENT_REPORT.md` so the user can show the exact commit diff and incident report to the Dash0, Radar, and Sonar judges!
 
 ### 4.4 Phase 4 Verification Gate & PR #4
-- [ ] Run `cargo test --workspace` and test `POST /api/surge` followed by `POST /api/surge/reset`.
+- [x] Run `cargo test --workspace` and test `POST /api/surge` followed by `POST /api/surge/reset`.
 - [ ] Push Commit 2 to **PR #4**, verify CI passes cleanly, and merge to `main`.
 
 ---
