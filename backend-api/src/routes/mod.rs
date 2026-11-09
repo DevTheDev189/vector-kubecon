@@ -9,3 +9,6 @@ pub use handshake_routes::*;
 pub use profile_routes::*;
 pub use schedule_routes::*;
 pub use sse_routes::*;
+
+pub mod room_routes;
+pub use room_routes::*;

@@ -13,6 +13,7 @@ pub struct AppState {
 }
 
 pub struct InnerState {
+    pub room_updates: tokio::sync::Mutex<()>,
     pub config: AppConfig,
     pub http: Client,
     pub elastic: ElasticClient,
@@ -36,6 +37,7 @@ impl AppState {
         let (sse_tx, _) = broadcast::channel(1024);
 
         let inner = InnerState {
+            room_updates: tokio::sync::Mutex::new(()),
             config,
             http,
             elastic,
