@@ -1,0 +1,8 @@
+vector.winslow.plus {
+    encode zstd gzip
+
+    reverse_proxy 127.0.0.1:8080 {
+        # Disable response buffering for Server-Sent Events (SSE)
+        flush_interval -1
+    }
+}
