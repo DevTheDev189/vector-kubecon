@@ -65,6 +65,10 @@ jobs:
         working-directory: frontend-pwa
         run: npm run typecheck
 
+      - name: Frontend State Tests
+        working-directory: frontend-pwa
+        run: npm test -- --maxWorkers=1
+
       - name: Build
         working-directory: frontend-pwa
         run: npm run build

@@ -251,17 +251,17 @@ You are an autonomous principal engineer executing this specification from top t
 **Goal:** Build the ultra-polished obsidian dark-mode Vue 3 (`<script setup lang="ts">`) + Tailwind CSS + Pinia frontend inside `frontend-pwa/`, featuring the Unified "Uber / Flighty" Spatial Radar UX inside the 430px Mobile Shell on the left + Live Judge & Chaos Control Dock on the right on desktop screens.
 
 ### 5.1 Frontend Scaffolding & Typed API / SSE Store Layer (`frontend-pwa/`)
-- [ ] **Initialize `frontend-pwa/` (`package.json`, `vite.config.ts`, `tsconfig.json`, `index.html`)**
+- [x] **Initialize `frontend-pwa/` (`package.json`, `vite.config.ts`, `tsconfig.json`, `index.html`)**
   - Dependencies: `vue@^3.5`, `pinia@^2.2`, `lucide-vue-next`, `qrcode@^1.5` (plus `@types/qrcode` for instant client-side SVG/Canvas QR generation), `tailwindcss@^3.4`, `postcss`, `autoprefixer`.
   - Configure `vite.config.ts` with dev proxy `/api -> http://127.0.0.1:8080` and build output `outDir: 'dist'`.
   - Load `Inter` and `JetBrains Mono` Google Fonts in `index.html`, set viewport theme-color `#07090E`, and title `VECTOR // Zero-Config KubeCon OS`.
-- [ ] **Create `frontend-pwa/src/styles/main.css` (~140 LOC)**
+- [x] **Create `frontend-pwa/src/styles/main.css` (~140 LOC)**
   - Define obsidian dark-mode theme variables, subtle radial grid backdrop, glassmorphic cards (`backdrop-blur-xl bg-[#0F1420]/90 border border-white/10`), smooth Vue `<Transition>` and `<TransitionGroup>` FLIP animations (`v-move`), and pulsing telemetry indicator keyframes.
-- [ ] **Create `frontend-pwa/src/types/vector.ts` (~180 LOC)**
+- [x] **Create `frontend-pwa/src/types/vector.ts` (~180 LOC)**
   - Exact 1:1 TypeScript interfaces matching all Rust structs in `backend-api/src/models/*.rs`.
-- [ ] **Create `frontend-pwa/src/api/client.ts` (~160 LOC)**
+- [x] **Create `frontend-pwa/src/api/client.ts` (~160 LOC)**
   - Typed `apiFetch<T>(path, options)` wrapper with `credentials: 'include'`, automatic latency timing (`lastRequestMs`), and active `trace_id` capture.
-- [ ] **Create `frontend-pwa/src/stores/vectorStore.ts` (~320 LOC)**
+- [x] **Create `frontend-pwa/src/stores/vectorStore.ts` (~320 LOC)**
   - Consolidated Pinia store managing:
     - `profile`, `schedule`, `scoredTalks`, `rooms`, `sensoryHavens`, `hallwayMatches`, `handshakes`.
     - `selectedSlotIndex`, `isMapExpanded`, `isVaultOpen`, `isQrModalOpen`.
@@ -271,12 +271,12 @@ You are an autonomous principal engineer executing this specification from top t
     - `connectSseStream()`: opens `new EventSource('/api/events/stream')` with auto-reconnect and reactive state mutation on every event variant.
 
 ### 5.2 Mobile Shell, Onboarding Terminal & Top Telemetry Pill (`src/components/`)
-- [ ] **Create `src/components/layout/TopTelemetryPill.vue` (~130 LOC)**
+- [x] **Create `src/components/layout/TopTelemetryPill.vue` (~130 LOC)**
   - Floating glass header inside the mobile viewport displaying:
     - Live status dot + active room status (e.g., `🟢 Ballroom B · 94%` or `🔴 SURGE REROUTED · Rm 250A`).
     - 1-Tap **[🧠 Quiet]** toggle button (`PATCH /api/sensory`) that shifts accent glow to calming teal (`#14B8A6`).
     - 1-Tap **[🏁 QR]** button opening `QrBadgeModal.vue`.
-- [ ] **Create `src/components/onboarding/GithubLoginHero.vue` & `DnaExtractionTerminal.vue` (~240 LOC)**
+- [x] **Create `src/components/onboarding/GithubLoginHero.vue` & `DnaExtractionTerminal.vue` (~240 LOC)**
   - Compact collapsible switcher + modal allowing instant switching between:
     - **[Sign in with GitHub OAuth]** (`/api/auth/github`),
     - **1-Click Judge Presets** (`@kelseyhightower`, `@saiyampathak`, `@estesp`, `@wesnovack`, `@zircon-dev`), or
@@ -285,25 +285,25 @@ You are an autonomous principal engineer executing this specification from top t
 
 ### 5.3 The Unified "Uber / Flighty" Spatial Radar UX (`src/components/`)
 *CRITICAL UX DIRECTIVE: Do NOT hide the Map, Schedule, and Hallway Matches behind separate isolated tabs. Render a unified vertical Spatial Live Radar inside `MobileShell.vue` so the Map, Active Talk Card, and Nearby Hallway Peers react simultaneously in a single frame!*
-- [ ] **Create `src/components/map/SaltPalaceSpatialMap.vue` (~300 LOC) (Top 42% of Mobile Viewport — Collapsible/Expandable)**
+- [x] **Create `src/components/map/SaltPalaceSpatialMap.vue` (~300 LOC) (Top 42% of Mobile Viewport — Collapsible/Expandable)**
   - Interactive dark-mode architectural SVG floorplan of the Salt Palace Convention Center rooms always visible at the top of the mobile screen (with a `[⤢ Expand]` button).
   - Rooms color dynamically by live `occupancy_ratio` (Emerald `<70%`, Amber `70–94%`, Crimson `>=95% FULL`, Calming Teal pulsing border for verified **Empty Sensory Haven Rooms**).
   - **Animated SVG Reroute Path (`<path stroke-dasharray="6,6">`):**
     - When `Ballroom B` surges to 100% FULL, automatically draws an animated glowing emerald vector path from `Ballroom B` to the rerouted open room (`Room 250A`).
     - When **Quiet / Sensory Mode** is toggled on, automatically draws a calming teal vector path from the user's current room to the quietest empty room (`Room 204B · 37.5 dB`).
-- [ ] **Create `src/components/feed/UnifiedLiveSheet.vue`, `SurgeRerouteAlert.vue` & `SensoryHavenBanner.vue` (~380 LOC) (Bottom 58% of Mobile Viewport)**
+- [x] **Create `src/components/feed/UnifiedLiveSheet.vue`, `SurgeRerouteAlert.vue` & `SensoryHavenBanner.vue` (~380 LOC) (Bottom 58% of Mobile Viewport)**
   - **Compact Builder DNA Bar:** Displays user avatar, `persona_title`, glowing `dna_tags`, and expandable `hallway_icebreaker` at the top of the sheet.
   - **Horizontal Time-Slot Scrubber:** Pills for `11:00 AM` · `1:00 PM` · `● 2:00 PM NOW` · `3:15 PM` · `4:30 PM`. Tapping any slot highlights that slot's recommended room on the map above and updates the card below.
   - **Merge Forward Sensory Haven Card (`SensoryHavenBanner.vue`):** When Quiet Mode is active, pins a calming teal card showing the #1 verified empty conference room (`Room 204B · 0 Talks Scheduled Until 3:30 PM · 7% Occupancy · 37.5 dB · Wheelchair & Low-Sensory Certified`).
   - **Active Session & Auto-Reshuffle Card:** Shows the active slot's top RRF talk with live capacity bar & decibel badge. When a surge hits, smoothly morphs via Vue `<Transition>` to show the crimson `Ballroom B (150/150 FULL)` banner transitioning into the `#2 RRF Match (Room 250A · 96.8% Match · 56 Seats Open)`.
-- [ ] **Create `src/components/hallway/HallwayProximityStrip.vue` & `QrBadgeModal.vue` (~300 LOC) (Pinned Directly Below Active Card)**
+- [x] **Create `src/components/hallway/HallwayProximityStrip.vue` & `QrBadgeModal.vue` (~300 LOC) (Pinned Directly Below Active Card)**
   - Horizontal / compact stack of the top 3 vector-matched attendees in the user's current zone (or who were also bumped from `Ballroom B` during a surge), showing avatar, `98.4% DNA Match`, shared tags, and a 1-tap **[⚡ Handshake]** button.
   - Tapping **[⚡ Handshake]** or the top **[QR Badge]** pill opens `QrBadgeModal.vue` (full-screen scannable QR code + 4-digit PIN `#4829` + live OpenAI GPT-6.1 Sol LinkedIn/Email follow-up generator).
-- [ ] **Create `src/components/hallway/ConnectionVaultDrawer.vue` (~200 LOC) (Slide-Up Bottom Drawer)**
+- [x] **Create `src/components/hallway/ConnectionVaultDrawer.vue` (~200 LOC) (Slide-Up Bottom Drawer)**
   - Persistent bottom bar (`🤝 Saved Connections Vault (N)`) that slides up a full drawer showing all captured hallway handshakes, meeting room/talk context, and 1-click **[Copy LinkedIn DM]** / **[Open Mail Client ↗]** buttons.
 
 ### 5.4 The Desktop Judge & Chaos Control Dock (`src/components/layout/JudgeControlDock.vue`)
-- [ ] **Create `src/components/layout/JudgeControlDock.vue` (~300 LOC)**
+- [x] **Create `src/components/layout/JudgeControlDock.vue` (~300 LOC)**
   - Rendered on the right half of desktop screens (`>= 1024px`) next to the `430px` mobile device frame so judges watching the projector see both the mobile UX AND the real cloud-native backend telemetry simultaneously:
     1. **1-Click Chaos & Demo Controls:**
        - **[⚡ Trigger Ballroom B Crowd Surge (`POST /api/surge`)]** & **[↺ Reset Surge]**
@@ -317,7 +317,7 @@ You are an autonomous principal engineer executing this specification from top t
        - **Live Phone QR Link:** Renders a scannable QR code pointing straight to `https://vector.winslow.plus` so any judge can scan the projector screen and test the live app on their own phone!
 
 ### 5.5 Phase 5 Verification Gate & PR #5
-- [ ] Run `npm run build` inside `frontend-pwa/` — must compile cleanly with zero TypeScript or Vite errors and generate `frontend-pwa/dist/index.html`.
+- [x] Run `npm run build` inside `frontend-pwa/` — must compile cleanly with zero TypeScript or Vite errors and generate `frontend-pwa/dist/index.html`.
 - [ ] Commit on `feat/phase-5-vue-spatial-pwa-and-judge-dock`, push to GitHub, open **PR #5**, verify Gitar/CI passes, and merge to `main`.
 
 ---
